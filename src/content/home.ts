@@ -44,8 +44,9 @@ export const HERO = {
   eyebrow: "Vedic astrologer and vastu consultant",
   /** The H1: the method in one plain line, not a slogan. */
   h1: "Vedic astrology and vastu, read together as one consultation",
+  /** One subhead above the fold; tightened for length, not meaning. */
   subhead:
-    "Your birth chart shows what is happening in your life and when. The vastu of your home shows what in your surroundings is helping or holding it back. Astrologer Kavita reads both in the same session, so the guidance you take away addresses the whole picture.",
+    "Your birth chart shows what is happening in your life and when; the vastu of your home shows what in your surroundings is helping or holding it back. Astrologer Kavita reads both in the same session, so the guidance addresses the whole picture.",
   /**
    * Entity prose (§9.9): plain declarative statement of who, what, where, and what is distinct.
    * `{practitioner}`, `{city}` and `{country}` are filled from `site_settings`.

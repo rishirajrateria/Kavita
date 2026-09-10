@@ -17,38 +17,47 @@ export function Comparison() {
   const [corner, astrology, vastu] = COMPARISON.columns;
 
   return (
-    <Section id={COMPARISON.id} spacing="md">
-      <Container size="wide" className="space-y-8">
-        <QuestionHeading block={COMPARISON} />
+    <Section id={COMPARISON.id} spacing="lg">
+      <Container size="wide" className="space-y-10">
+        <QuestionHeading block={COMPARISON} layout="split" />
 
-        <Table className="text-base">
-          <TableCaption className="text-left">{COMPARISON.caption}</TableCaption>
+        <Table
+          containerClassName="rounded-xl border border-t-2 border-t-accent-border shadow-sm"
+          className="text-base"
+        >
+          <TableCaption className="px-4 pb-4 text-left">{COMPARISON.caption}</TableCaption>
           <TableHeader>
-            <TableRow className="hover:bg-transparent">
-              <TableHead scope="col" className="w-[22%] whitespace-normal">
+            <TableRow className="border-b-2 hover:bg-transparent">
+              <TableHead scope="col" className="h-auto w-[22%] px-5 py-5 whitespace-normal">
                 <span className="sr-only">{corner || "Aspect"}</span>
               </TableHead>
-              <TableHead scope="col" className="font-serif text-lg whitespace-normal">
+              <TableHead
+                scope="col"
+                className="h-auto px-5 py-5 font-serif text-xl font-medium whitespace-normal text-foreground"
+              >
                 {astrology}
               </TableHead>
-              <TableHead scope="col" className="font-serif text-lg whitespace-normal">
+              <TableHead
+                scope="col"
+                className="h-auto px-5 py-5 font-serif text-xl font-medium whitespace-normal text-foreground"
+              >
                 {vastu}
               </TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {COMPARISON.rows.map(([aspect, a, v]) => (
-              <TableRow key={aspect} className="hover:bg-transparent">
+              <TableRow key={aspect} className="even:bg-surface-muted/40 hover:bg-transparent">
                 <th
                   scope="row"
-                  className="p-2 py-4 text-left align-top text-sm font-semibold tracking-wide text-accent-strong uppercase"
+                  className="px-5 py-5 text-left align-top text-sm font-medium text-foreground"
                 >
                   {aspect}
                 </th>
-                <TableCell className="py-4 align-top leading-relaxed whitespace-normal">
+                <TableCell className="min-w-[16rem] px-5 py-5 align-top leading-relaxed whitespace-normal">
                   {a}
                 </TableCell>
-                <TableCell className="py-4 align-top leading-relaxed whitespace-normal">
+                <TableCell className="min-w-[16rem] px-5 py-5 align-top leading-relaxed whitespace-normal">
                   {v}
                 </TableCell>
               </TableRow>

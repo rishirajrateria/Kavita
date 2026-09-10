@@ -99,7 +99,7 @@ export function MobileCtaBar({ bookHref, whatsappHref }: MobileCtaBarProps) {
           <Link href={bookHref}>Book a consultation</Link>
         </Button>
         {whatsappHref ? (
-          <Button asChild variant="gold" size="default" className="flex-1">
+          <Button asChild variant="gold-outline" size="default" className="flex-1">
             <a href={whatsappHref} target="_blank" rel="noopener" data-event="whatsapp_clicked">
               <SocialIcon name="whatsapp" size={18} />
               WhatsApp

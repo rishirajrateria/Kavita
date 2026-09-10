@@ -5,8 +5,9 @@ import { HOME_PLACEHOLDERS, KEY_FACTS } from "@/content/home";
 import type { Location, Service, SiteSettings } from "@/lib/data";
 
 /**
- * Compact definition list of the facts an answer engine lifts verbatim (CLAUDE.md §9.3).
- * Every value comes from settings, services or the location tree — nothing is typed in here.
+ * Compact definition list of the facts an answer engine lifts verbatim (CLAUDE.md §9.3), set
+ * as a parchment band ruled with gold hairlines. Every value comes from settings, services or
+ * the location tree — nothing is typed in here.
  */
 export function KeyFacts({
   settings,
@@ -37,18 +38,31 @@ export function KeyFacts({
   ];
 
   return (
-    <Section spacing="sm" tone="muted" bordered aria-labelledby="key-facts-heading">
-      <Container size="wide">
-        <Heading as="h2" level={5} id="key-facts-heading" className="mb-5">
+    <Section
+      spacing="none"
+      tone="muted"
+      className="border-y border-accent-border/40"
+      aria-labelledby="key-facts-heading"
+    >
+      <Container size="wide" className="py-8 sm:py-10">
+        <Heading
+          as="h2"
+          level={6}
+          id="key-facts-heading"
+          className="mb-6 text-center font-sans text-xs font-semibold tracking-[0.16em] text-accent-strong uppercase"
+        >
           {KEY_FACTS.heading}
         </Heading>
-        <dl className="grid gap-x-8 gap-y-4 text-sm sm:grid-cols-2 lg:grid-cols-4">
+        {/* 1px gaps over a gold-tinted ground draw the hairline grid between items. */}
+        <dl className="grid grid-cols-2 gap-px overflow-hidden rounded-lg border border-accent-border/30 bg-accent-border/30 lg:grid-cols-4">
           {facts.map(([label, value]) => (
-            <div key={label} className="border-t border-accent-border/40 pt-3">
-              <dt className="text-xs font-semibold tracking-wide text-accent-strong uppercase">
+            <div key={label} className="bg-surface-muted px-4 py-4 sm:px-5 sm:py-5">
+              <dt className="text-[0.65rem] font-semibold tracking-[0.1em] text-accent-strong uppercase sm:text-[0.68rem] sm:tracking-[0.12em]">
                 {label}
               </dt>
-              <dd className="mt-1 leading-relaxed text-foreground">{value}</dd>
+              <dd className="mt-1.5 font-serif text-[0.95rem] leading-snug text-foreground sm:text-lg">
+                {value}
+              </dd>
             </div>
           ))}
         </dl>

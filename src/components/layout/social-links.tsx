@@ -33,7 +33,10 @@ export async function SocialLinks({ placement, className, iconSize = 20 }: Socia
             target="_blank"
             aria-label={link.label || link.platform}
             title={link.label || link.platform}
-            className="inline-flex size-9 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-accent hover:text-accent-foreground"
+            className={cn(
+              "inline-flex items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-accent hover:text-accent-strong",
+              placement === "footer" ? "size-11" : "size-9",
+            )}
           >
             <SocialIcon name={resolveSocialIcon(link.icon, link.platform)} size={iconSize} />
           </a>

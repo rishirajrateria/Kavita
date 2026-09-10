@@ -55,7 +55,7 @@ export function MobileNav({ items, bookHref, children }: MobileNavProps) {
       <Button
         variant="ghost"
         size="icon"
-        className="md:hidden"
+        className="size-11 md:hidden"
         aria-label="Open menu"
         aria-haspopup="dialog"
         aria-expanded={open}
@@ -81,6 +81,8 @@ export function MobileNav({ items, bookHref, children }: MobileNavProps) {
         )}
       >
         <div
+          data-tone="inverse"
+          data-depth="deep"
           className={cn(
             "flex h-full w-[min(20rem,85vw)] flex-col bg-background text-foreground shadow-lg",
             "border-l border-border",
@@ -89,7 +91,7 @@ export function MobileNav({ items, bookHref, children }: MobileNavProps) {
         >
           <div className="flex items-start justify-between gap-4 border-b border-border p-4">
             <div>
-              <p id={`${id}-title`} className="font-serif text-lg font-medium">
+              <p id={`${id}-title`} className="font-serif text-xl font-medium">
                 Menu
               </p>
               <p id={`${id}-desc`} className="text-sm text-muted-foreground">
@@ -99,6 +101,7 @@ export function MobileNav({ items, bookHref, children }: MobileNavProps) {
             <Button
               variant="ghost"
               size="icon"
+              className="size-11"
               aria-label="Close menu"
               onClick={closeDrawer}
               autoFocus
@@ -113,7 +116,7 @@ export function MobileNav({ items, bookHref, children }: MobileNavProps) {
                   <Link
                     href={item.href}
                     onClick={onNavigate}
-                    className="block rounded-md px-3 py-3 text-base font-medium text-foreground hover:bg-accent hover:text-accent-foreground"
+                    className="block rounded-md px-3 py-3 font-serif text-lg font-medium text-foreground no-underline hover:bg-accent hover:text-accent-foreground"
                   >
                     {item.label}
                   </Link>
@@ -122,7 +125,7 @@ export function MobileNav({ items, bookHref, children }: MobileNavProps) {
             </ul>
           </nav>
           <div className="flex flex-col gap-4 border-t border-border p-4">
-            <Button asChild variant="gold" size="lg" className="w-full">
+            <Button asChild variant="gold" size="xl" className="w-full">
               <Link href={bookHref} onClick={onNavigate}>
                 Book a consultation
               </Link>

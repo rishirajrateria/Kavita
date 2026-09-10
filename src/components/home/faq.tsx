@@ -7,37 +7,44 @@ import { FAQ_SECTION } from "@/content/home";
 import type { Faq } from "@/lib/data";
 
 /**
- * Home FAQ as plain server-rendered HTML — every question an H3 under one question-phrased H2,
- * every answer visible in the markup (no accordion, nothing behind JS). The matching FAQPage
- * JSON-LD is emitted by the page from the same rows.
+ * Home FAQ as plain server-rendered HTML — every question an H3 under one question-phrased H2.
+ * Each item is a native `<details>`: the answer is always in the markup (no accordion JS), the
+ * gold "+" turns into "×" with CSS alone, and the matching FAQPage JSON-LD is emitted by the
+ * page from the same rows.
  */
 export function FaqSection({ faqs }: { faqs: Faq[] }) {
   if (faqs.length === 0) return null;
 
   return (
-    <Section id={FAQ_SECTION.id} spacing="md" tone="muted" bordered>
+    <Section id={FAQ_SECTION.id} spacing="lg">
       <Container size="wide" className="space-y-10">
-        <div className="space-y-5">
-          <Heading as="h2" level={2} eyebrow={FAQ_SECTION.eyebrow}>
+        <div className="reveal grid gap-6 lg:grid-cols-[1.1fr_1fr] lg:items-end lg:gap-12">
+          <Heading as="h2" level={2} eyebrow={FAQ_SECTION.eyebrow} className="max-w-[26ch]">
             {FAQ_SECTION.heading}
           </Heading>
           <p className="answer">{FAQ_SECTION.answer}</p>
         </div>
 
-        <dl className="grid gap-x-10 gap-y-8 lg:grid-cols-2">
+        <div className="divide-y divide-accent-border/40 border-y border-accent-border/40">
           {faqs.map((faq) => (
-            <div key={faq.id} className="border-t border-accent-border/50 pt-5">
-              <dt>
-                <Heading as="h3" level={4}>
+            <details key={faq.id} className="faq-item group">
+              <summary className="flex min-h-14 items-center justify-between gap-6 py-4 pr-1 text-left [&::marker]:hidden">
+                <Heading as="h3" level={4} className="text-lg sm:text-xl">
                   {faq.question}
                 </Heading>
-              </dt>
-              <dd className="mt-3">
+                <span
+                  aria-hidden="true"
+                  className="faq-marker inline-flex size-9 shrink-0 items-center justify-center rounded-full border border-accent-border/60 font-serif text-2xl leading-none text-accent-strong"
+                >
+                  +
+                </span>
+              </summary>
+              <div className="pb-6 lg:max-w-[70%]">
                 <p className="answer text-base">{faq.answer}</p>
-              </dd>
-            </div>
+              </div>
+            </details>
           ))}
-        </dl>
+        </div>
 
         <Button asChild variant="link" className="px-0">
           <Link href={FAQ_SECTION.allLink.href}>{FAQ_SECTION.allLink.label} →</Link>

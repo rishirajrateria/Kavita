@@ -95,8 +95,13 @@
   --color-info-foreground: var(--info-foreground);
   --color-info-soft: var(--info-soft);
 
+  --color-cta: var(--cta);
+  --color-cta-hover: var(--cta-hover);
+  --color-cta-foreground: var(--cta-foreground);
+
   --color-surface-muted: var(--surface-muted);
   --color-surface-inverse: var(--surface-inverse);
+  --color-surface-inverse-deep: var(--surface-inverse-deep);
   --color-surface-inverse-foreground: var(--surface-inverse-foreground);
   --color-surface-inverse-muted-foreground: var(--surface-inverse-muted-foreground);
   --color-surface-gold: var(--surface-gold);
@@ -157,6 +162,8 @@
   --shadow-lg: var(--shadow-lg);
   --shadow-xl: var(--shadow-xl);
   --shadow-gold: var(--shadow-gold);
+  --shadow-cta: var(--shadow-cta);
+  --shadow-cta-hover: var(--shadow-cta-hover);
 
   /* Motion → ease-standard …; durations via duration-(--duration-fast) */
   --ease-standard: var(--ease-standard);
@@ -219,6 +226,47 @@
     @apply max-w-full;
   }
 
+  /* Anchored sections and headings clear the sticky header when jumped to. */
+  :where(section[id], article[id], h2[id], h3[id], [data-anchor]) {
+    scroll-margin-top: 5.5rem;
+  }
+
+  /*
+   * Inverse (deep indigo) bands. Re-point the semantic tokens so every child — cards, badges,
+   * buttons, `.answer`, borders, focus rings — re-themes automatically. `tone="inverse"` on
+   * Section, the footer and the mobile drawer all set `data-tone="inverse"`.
+   */
+  [data-tone="inverse"] {
+    color-scheme: dark;
+    --background: var(--surface-inverse);
+    --foreground: var(--surface-inverse-foreground);
+    --card: var(--surface-inverse-card);
+    --card-foreground: var(--surface-inverse-foreground);
+    --popover: var(--surface-inverse-deep);
+    --popover-foreground: var(--surface-inverse-foreground);
+    --primary: var(--ivory-100);
+    --primary-foreground: var(--indigo-950);
+    --primary-hover: var(--ivory-50);
+    --secondary: var(--surface-inverse-muted);
+    --secondary-foreground: var(--surface-inverse-foreground);
+    --muted: var(--surface-inverse-muted);
+    --muted-foreground: var(--surface-inverse-muted-foreground);
+    --accent: var(--surface-inverse-accent);
+    --accent-foreground: var(--gold-200);
+    --accent-strong: var(--gold-300);
+    --accent-border: var(--gold-400);
+    --border: var(--surface-inverse-border);
+    --input: var(--indigo-400);
+    --ring: var(--gold-300);
+    --surface-muted: var(--surface-inverse-deep);
+    --selection: var(--gold-700);
+    --selection-foreground: var(--ivory-50);
+    --shadow-color: 0 0 0;
+  }
+  [data-tone="inverse"][data-depth="deep"] {
+    --background: var(--surface-inverse-deep);
+  }
+
   @media (prefers-reduced-motion: reduce) {
     html {
       scroll-behavior: auto;
@@ -241,6 +289,83 @@
     padding-inline-start: 1rem;
     border-inline-start: 2px solid var(--accent-border);
     font-weight: 450;
+  }
+
+  /* Hero / centrepiece backdrop linework and glow are positioned by their sections; the
+     paper grain is a 4%-opacity inline SVG noise so the indigo never reads as flat pixels. */
+  .grain::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0.045;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    background-size: 160px 160px;
+  }
+
+  /* Primary-nav link: gold underline grows from the left on hover / focus (no JS). */
+  .nav-link {
+    background-image: linear-gradient(var(--accent-border), var(--accent-border));
+    background-size: 0% 1px;
+    background-position: 0 calc(100% - 0.35rem);
+    background-repeat: no-repeat;
+    transition:
+      background-size var(--duration-base) var(--ease-standard),
+      color var(--duration-fast) var(--ease-standard);
+  }
+  .nav-link:hover,
+  .nav-link:focus-visible,
+  .nav-link[aria-current="page"] {
+    background-size: 100% 1px;
+  }
+
+  /* Tall arch portrait frame with an inset gold hairline. */
+  .arch {
+    border-radius: 999px 999px 1.5rem 1.5rem;
+  }
+  .arch-frame::after {
+    content: "";
+    position: absolute;
+    inset: 0.5rem;
+    border-radius: inherit;
+    border: 1px solid color-mix(in srgb, var(--accent-border) 55%, transparent);
+    pointer-events: none;
+  }
+
+  /* Double hairline panel: 1px border plus a second rule 6px outside it. */
+  .double-rule {
+    outline: 1px solid color-mix(in srgb, var(--accent-border) 35%, transparent);
+    outline-offset: 6px;
+  }
+
+  /* FAQ item: native <details>; the gold "+" turns into "×" purely in CSS. */
+  .faq-item > summary {
+    list-style: none;
+    cursor: pointer;
+  }
+  .faq-item > summary::-webkit-details-marker {
+    display: none;
+  }
+  .faq-item .faq-marker {
+    transition: transform var(--duration-base) var(--ease-emphasized);
+  }
+  .faq-item[open] .faq-marker {
+    transform: rotate(45deg);
+  }
+
+  /* Scroll-driven entrance for section headings: CSS only, no observers, off under
+     reduced motion, and never applied to the hero (the LCP element must not fade in). */
+  .reveal {
+    animation: none;
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    @supports (animation-timeline: view()) {
+      .reveal {
+        animation: reveal-up linear both;
+        animation-timeline: view();
+        animation-range: entry 0% entry 28%;
+      }
+    }
   }
 
   /* Skip link: visually hidden until focused. */
@@ -277,7 +402,9 @@
     @apply leading-relaxed;
   }
   .prose a {
-    @apply text-accent-strong underline decoration-accent-border/60 hover:decoration-accent-strong;
+    @apply text-accent-strong underline decoration-accent-border/70 hover:decoration-accent-strong;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 3px;
   }
   .prose strong {
     @apply font-semibold;
@@ -325,5 +452,16 @@
   }
   .prose figure figcaption {
     @apply mt-2 text-sm text-muted-foreground;
+  }
+}
+
+@keyframes reveal-up {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
   }
 }

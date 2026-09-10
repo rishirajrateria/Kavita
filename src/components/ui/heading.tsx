@@ -32,7 +32,10 @@ export interface HeadingProps
   extends Omit<React.ComponentProps<"h2">, "children">, VariantProps<typeof headingVariants> {
   /** Semantic element. Defaults to h{level} (or h1 for "display"). */
   as?: HeadingTag;
-  /** Optional small serif eyebrow line rendered above the heading text. */
+  /**
+   * Optional small-caps eyebrow with a short gold hairline before it, rendered above the
+   * heading text. Centre it with `[&>[data-slot=eyebrow]]:justify-center` on the heading.
+   */
   eyebrow?: React.ReactNode;
   children: React.ReactNode;
 }
@@ -60,7 +63,10 @@ function Heading({
       {...props}
     >
       {eyebrow ? (
-        <span className="mb-3 block font-sans text-xs font-semibold tracking-wide text-accent-strong uppercase">
+        <span
+          data-slot="eyebrow"
+          className="mb-4 flex items-center gap-3 font-sans text-xs font-semibold tracking-[0.14em] text-accent-strong uppercase before:h-px before:w-8 before:shrink-0 before:bg-accent-border"
+        >
           {eyebrow}
         </span>
       ) : null}

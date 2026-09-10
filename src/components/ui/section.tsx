@@ -14,8 +14,8 @@ const sectionVariants = cva("relative w-full", {
       default: "bg-background text-foreground",
       muted: "bg-surface-muted text-foreground",
       gold: "bg-surface-gold text-foreground",
-      inverse:
-        "bg-surface-inverse text-surface-inverse-foreground [&_.text-muted-foreground]:text-surface-inverse-muted-foreground",
+      /** Deep indigo band. `data-tone="inverse"` re-points every semantic token (globals.css). */
+      inverse: "bg-background text-foreground",
       transparent: "",
     },
     bordered: {
@@ -34,6 +34,8 @@ export interface SectionProps
   extends React.ComponentProps<"section">, VariantProps<typeof sectionVariants> {
   /** Element to render (defaults to section). */
   as?: "section" | "div" | "article" | "aside" | "header" | "footer";
+  /** Inverse only: use the deeper indigo (footer, final CTA) instead of the default band. */
+  depth?: "default" | "deep";
 }
 
 /** Full-width vertical band with consistent block spacing and surface tone. */
@@ -43,6 +45,7 @@ function Section({
   tone = "default",
   bordered = false,
   as = "section",
+  depth = "default",
   ...props
 }: SectionProps) {
   // All accepted tags share HTMLElement props; typing via "section" keeps ref types consistent.
@@ -51,6 +54,7 @@ function Section({
     <Comp
       data-slot="section"
       data-tone={tone}
+      data-depth={tone === "inverse" && depth === "deep" ? "deep" : undefined}
       className={cn(sectionVariants({ spacing, tone, bordered }), className)}
       {...props}
     />

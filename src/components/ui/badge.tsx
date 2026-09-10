@@ -17,6 +17,8 @@ const badgeVariants = cva(
         ghost: "[a&]:hover:bg-accent [a&]:hover:text-accent-foreground",
         link: "text-accent-strong underline-offset-4 [a&]:hover:underline",
         gold: "border-accent-border bg-transparent text-accent-strong [a&]:hover:bg-accent",
+        /** Small-caps pill used for service lead labels. */
+        caps: "border-accent-border/50 bg-accent/60 px-2.5 text-[0.68rem] font-semibold tracking-[0.12em] text-accent-foreground uppercase",
       },
     },
     defaultVariants: {
