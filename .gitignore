@@ -55,3 +55,6 @@ ruvector.db
 .claude-flow/data/
 .claude-flow/logs/
 .claude-flow/sessions/
+
+# keep the template
+!.env.example

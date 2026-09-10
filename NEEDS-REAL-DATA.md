@@ -75,3 +75,54 @@ All of these are managed in `/admin/integrations` and are **off until an ID is e
 - [ ] Bing Webmaster API key. Used in: IndexNow submissions and in-admin Bing performance panel.
 - [ ] Other verification codes (Pinterest, Yandex, Facebook domain verification). Used in: generic `verification_tags` editor.
 - [ ] Decision on AI-crawler training access: allow or disallow `Google-Extended`, `GPTBot`, `Applebot-Extended`, `CCBot` (these govern training use, not just retrieval; brief defaults to allow — a deliberate business decision). Used in: generated `robots.txt`, per-bot toggles in the AEO panel (Phase 6).
+
+## 7. Seed data placeholders (Phase 1)
+
+Introduced by the Supabase foundation. Each is a literal `{{PLACEHOLDER}}` string in the seed
+content (`src/content/seed/*.ts`) and is upserted as-is by `pnpm db:seed`; `pnpm test:seed`
+fails if any token below disappears from this file while still present in the seed.
+
+### `src/content/seed/site-settings.ts` (`site_settings`)
+
+- [ ] `{{LEGAL_ENTITY}}` — field `legalEntity`.
+- [ ] `{{FULL_NAME}}` — field `practitionerName`.
+- [ ] `{{PHONE with country code}}` — field `phone`.
+- [ ] `{{WHATSAPP}}` — field `whatsapp`.
+- [ ] `{{EMAIL}}` — field `email`.
+- [ ] `{{CITY}}` — field `city`.
+- [ ] `{{COUNTRY}}` — field `country`.
+- [ ] **Assumption:** field `timezone` is seeded as `Asia/Kolkata` (`ASSUMED_PRACTITIONER_TIMEZONE`) because the primary market is India. Confirm or replace with the practitioner's real IANA timezone.
+- [ ] **Assumption:** field `businessHours` is seeded as Mon–Fri 10:00–18:00, Sat 10:00–14:00, Sun closed (`{{WORKING_HOURS}}`) so consultation-window maths has an input. Replace with real hours.
+- [ ] **Assumption:** `inPersonAvailable: false` and `responseTimeHours: 24` until confirmed.
+- [ ] Address fields (`addressLine1/2`, `addressPostalCode`, `addressRegion`) are `null` until a public address is confirmed.
+
+### `src/content/seed/social-links.ts` (`social_links`)
+
+- [ ] `https://instagram.com/{{INSTAGRAM_HANDLE}}` — Instagram profile URL.
+- [ ] `https://youtube.com/@{{YOUTUBE_HANDLE}}` — YouTube channel URL.
+- [ ] `https://facebook.com/{{FACEBOOK_PAGE}}` — Facebook page URL.
+- [ ] `https://linkedin.com/in/{{LINKEDIN_HANDLE}}` — LinkedIn profile URL.
+- [ ] `{{GOOGLE_BUSINESS_PROFILE_URL}}` — Google Business Profile share URL (`include_in_sameas`).
+- [ ] `https://wa.me/{{WHATSAPP_NUMBER_DIGITS}}` — WhatsApp number, digits only with country code.
+
+### `src/content/seed/services.ts` (`services`)
+
+- [ ] `{{PRICE}}` — field `priceNote` on all nine services; `priceMinor`, `currency` and `prices` are empty until prices per currency (INR/USD/GBP/AED) are supplied.
+- [ ] **Assumption:** the nine services are the example list from CLAUDE.md §1, not a confirmed list. Confirm names, which to keep, and lead type (astrology / vastu / integrated).
+- [ ] **Assumption:** durations not given in the brief were set to: Vastu for Home 60 min, Vastu for Commercial 90 min, Muhurat 30 min, Career & Business 60 min, Gemstone & Remedial 45 min. Brief-given: Integrated 90, Kundli 60, Kundli Milan 45, Follow-up 30.
+- [ ] **Assumption:** `bufferAfterMinutes: 15` on every service; `deliveryModes` per service are assumed.
+- [ ] Service copy (`shortDescription`, `description`, `whatToPrepare`, `whatYouReceive`) is drafted from the brief's method description and must be reviewed by the practitioner.
+
+### `src/content/seed/locations.ts` (`locations`)
+
+- [ ] All 19 rows (7 countries, 6 states/regions, 6 cities: Mumbai, Delhi, Bengaluru, London, Dubai, Toronto) are `researchStatus: "stub"`, `isPublished: false`, with every §7 research field `null` (`landmarks`, `tradition`, `climateArchitecture`, `clientConcerns`, `faqs`, `consultationWindow`, `bodyAstrologyMd`, `bodyVastuMd`). Phase 2 researches them; the validation gate keeps them out of the sitemap until then.
+- [ ] `languages` per location are common consultation languages assumed for that place — confirm against the languages she actually consults in.
+- [ ] `currency` per location is the billing currency (one of INR/USD/GBP/AED); Canada, Australia and Singapore are seeded as USD — confirm.
+
+### `src/content/seed/faqs.ts` (`faqs`)
+
+- [ ] Six home-page FAQs are drafted (no prices, no outcome claims); the practitioner should confirm the wording reflects how she works.
+
+### `src/content/PLACEHOLDERS.ts`
+
+- [ ] Three placeholder testimonials (`isPlaceholder: true`, marker `{{PLACEHOLDER_TESTIMONIAL}}`) back the no-database fallback only. They are never seeded and the build gate blocks production while they render. Replace with real, consented testimonials (see §4).

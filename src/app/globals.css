@@ -1,26 +1,329 @@
 @import "tailwindcss";
+@import "tw-animate-css";
+@import "../styles/tokens.css";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+/*
+ * `dark:` utilities fire when either
+ *   a) <html data-theme="dark"> is set (manual toggle), or
+ *   b) the OS prefers dark AND the user has not forced data-theme="light".
+ * Colour tokens already flip through CSS variables; this variant exists for
+ * the handful of shadcn utilities that need a structural dark override.
+ */
+@custom-variant dark {
+  &:where([data-theme="dark"], [data-theme="dark"] *) {
+    @slot;
+  }
+  @media (prefers-color-scheme: dark) {
+    &:where(:root:not([data-theme="light"]), :root:not([data-theme="light"]) *) {
+      @slot;
+    }
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@theme inline {
+  /* Primitive ramps → bg-ivory-100, text-indigo-900, border-gold-500 … */
+  --color-ivory-50: var(--ivory-50);
+  --color-ivory-100: var(--ivory-100);
+  --color-ivory-200: var(--ivory-200);
+  --color-ivory-300: var(--ivory-300);
+  --color-ivory-400: var(--ivory-400);
+  --color-ivory-500: var(--ivory-500);
+  --color-ivory-600: var(--ivory-600);
+  --color-ivory-700: var(--ivory-700);
+  --color-ivory-800: var(--ivory-800);
+  --color-ivory-900: var(--ivory-900);
+  --color-ivory-950: var(--ivory-950);
+
+  --color-indigo-50: var(--indigo-50);
+  --color-indigo-100: var(--indigo-100);
+  --color-indigo-200: var(--indigo-200);
+  --color-indigo-300: var(--indigo-300);
+  --color-indigo-400: var(--indigo-400);
+  --color-indigo-500: var(--indigo-500);
+  --color-indigo-600: var(--indigo-600);
+  --color-indigo-700: var(--indigo-700);
+  --color-indigo-800: var(--indigo-800);
+  --color-indigo-900: var(--indigo-900);
+  --color-indigo-950: var(--indigo-950);
+
+  --color-gold-50: var(--gold-50);
+  --color-gold-100: var(--gold-100);
+  --color-gold-200: var(--gold-200);
+  --color-gold-300: var(--gold-300);
+  --color-gold-400: var(--gold-400);
+  --color-gold-500: var(--gold-500);
+  --color-gold-600: var(--gold-600);
+  --color-gold-700: var(--gold-700);
+  --color-gold-800: var(--gold-800);
+  --color-gold-900: var(--gold-900);
+  --color-gold-950: var(--gold-950);
+
+  /* Semantic (shadcn contract) */
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary-hover: var(--primary-hover);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent-strong: var(--accent-strong);
+  --color-accent-border: var(--accent-border);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  --color-success: var(--success);
+  --color-success-foreground: var(--success-foreground);
+  --color-success-soft: var(--success-soft);
+  --color-warning: var(--warning);
+  --color-warning-foreground: var(--warning-foreground);
+  --color-warning-soft: var(--warning-soft);
+  --color-error: var(--error);
+  --color-error-foreground: var(--error-foreground);
+  --color-error-soft: var(--error-soft);
+  --color-info: var(--info);
+  --color-info-foreground: var(--info-foreground);
+  --color-info-soft: var(--info-soft);
+
+  --color-surface-muted: var(--surface-muted);
+  --color-surface-inverse: var(--surface-inverse);
+  --color-surface-inverse-foreground: var(--surface-inverse-foreground);
+  --color-surface-inverse-muted-foreground: var(--surface-inverse-muted-foreground);
+  --color-surface-gold: var(--surface-gold);
+
+  /* Fonts — `--font-fraunces` / `--font-inter` are set by next/font in src/lib/fonts.ts */
+  --font-serif: var(--font-fraunces), Georgia, "Times New Roman", serif;
+  --font-sans: var(--font-inter), system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+
+  /* Fluid type scale → text-xs … text-6xl */
+  --text-xs: var(--font-size-xs);
+  --text-xs--line-height: var(--leading-normal);
+  --text-sm: var(--font-size-sm);
+  --text-sm--line-height: var(--leading-normal);
+  --text-base: var(--font-size-base);
+  --text-base--line-height: var(--leading-relaxed);
+  --text-lg: var(--font-size-lg);
+  --text-lg--line-height: var(--leading-relaxed);
+  --text-xl: var(--font-size-xl);
+  --text-xl--line-height: var(--leading-snug);
+  --text-2xl: var(--font-size-2xl);
+  --text-2xl--line-height: var(--leading-snug);
+  --text-3xl: var(--font-size-3xl);
+  --text-3xl--line-height: var(--leading-tight);
+  --text-4xl: var(--font-size-4xl);
+  --text-4xl--line-height: var(--leading-tight);
+  --text-5xl: var(--font-size-5xl);
+  --text-5xl--line-height: var(--leading-tight);
+  --text-6xl: var(--font-size-6xl);
+  --text-6xl--line-height: 1;
+
+  --tracking-tight: var(--tracking-tight);
+  --tracking-wide: var(--tracking-wide);
+
+  /* Spacing → py-section-md, px-gutter … */
+  --spacing-gutter: var(--space-gutter);
+  --spacing-section-sm: var(--space-section-sm);
+  --spacing-section-md: var(--space-section-md);
+  --spacing-section-lg: var(--space-section-lg);
+
+  /* Containers → max-w-prose, max-w-narrow, max-w-content, max-w-wide */
+  --container-prose: var(--container-prose);
+  --container-narrow: var(--container-narrow);
+  --container-content: var(--container-default);
+  --container-wide: var(--container-wide);
+
+  /* Radii → rounded-sm … rounded-2xl */
+  --radius-xs: var(--radius-xs);
+  --radius-sm: var(--radius-sm);
+  --radius-md: var(--radius-md);
+  --radius-lg: var(--radius-lg);
+  --radius-xl: var(--radius-xl);
+  --radius-2xl: var(--radius-2xl);
+
+  /* Shadows → shadow-xs … shadow-xl, shadow-gold */
+  --shadow-xs: var(--shadow-xs);
+  --shadow-sm: var(--shadow-sm);
+  --shadow-md: var(--shadow-md);
+  --shadow-lg: var(--shadow-lg);
+  --shadow-xl: var(--shadow-xl);
+  --shadow-gold: var(--shadow-gold);
+
+  /* Motion → ease-standard …; durations via duration-(--duration-fast) */
+  --ease-standard: var(--ease-standard);
+  --ease-emphasized: var(--ease-emphasized);
+  --ease-out: var(--ease-out);
+  --ease-in: var(--ease-in);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+
+  html {
+    @apply h-full scroll-smooth antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  body {
+    @apply bg-background font-sans text-base text-foreground;
+    min-height: 100%;
+    font-feature-settings:
+      "kern" 1,
+      "liga" 1,
+      "calt" 1;
+  }
+
+  ::selection {
+    background-color: var(--selection);
+    color: var(--selection-foreground);
+  }
+
+  :focus-visible {
+    @apply outline-2 outline-offset-2 outline-ring;
+    border-radius: var(--radius-xs);
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    @apply font-serif font-medium tracking-tight text-foreground;
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  a {
+    @apply underline-offset-4;
+    transition: color var(--duration-fast) var(--ease-standard);
+  }
+
+  img,
+  svg,
+  video {
+    @apply max-w-full;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}
+
+@layer components {
+  /* Self-contained answer paragraph placed directly under a question H2 (AEO). */
+  .answer {
+    @apply text-lg text-foreground;
+    max-width: var(--measure-prose);
+    padding-inline-start: 1rem;
+    border-inline-start: 2px solid var(--accent-border);
+    font-weight: 450;
+  }
+
+  /* Skip link: visually hidden until focused. */
+  .skip-link {
+    @apply sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-50 focus:rounded-md focus:bg-primary focus:px-4 focus:py-2 focus:text-primary-foreground;
+  }
+
+  /* Long-form typography. Kept intentionally small; no @tailwindcss/typography dependency. */
+  .prose {
+    max-width: var(--measure-prose);
+    @apply text-base text-foreground;
+  }
+  .prose > * + * {
+    margin-block-start: var(--space-stack);
+  }
+  .prose h2 {
+    @apply text-3xl;
+    margin-block-start: calc(var(--space-stack) * 2);
+  }
+  .prose h3 {
+    @apply text-2xl;
+    margin-block-start: calc(var(--space-stack) * 1.5);
+  }
+  .prose h4 {
+    @apply text-xl;
+  }
+  .prose h2 + *,
+  .prose h3 + *,
+  .prose h4 + * {
+    margin-block-start: calc(var(--space-stack) / 2);
+  }
+  .prose p,
+  .prose li {
+    @apply leading-relaxed;
+  }
+  .prose a {
+    @apply text-accent-strong underline decoration-accent-border/60 hover:decoration-accent-strong;
+  }
+  .prose strong {
+    @apply font-semibold;
+  }
+  .prose ul,
+  .prose ol {
+    padding-inline-start: 1.5rem;
+  }
+  .prose ul {
+    list-style: disc;
+  }
+  .prose ol {
+    list-style: decimal;
+  }
+  .prose li + li {
+    margin-block-start: 0.5rem;
+  }
+  .prose blockquote {
+    @apply border-l-2 border-accent-border pl-4 font-serif text-lg text-muted-foreground italic;
+  }
+  .prose dl {
+    display: grid;
+    grid-template-columns: max-content 1fr;
+    column-gap: 1.5rem;
+    row-gap: 0.5rem;
+  }
+  .prose dt {
+    @apply font-medium text-muted-foreground;
+  }
+  .prose table {
+    @apply w-full border-collapse text-sm;
+  }
+  .prose th,
+  .prose td {
+    @apply border-b px-3 py-2 text-left align-top;
+  }
+  .prose th {
+    @apply font-semibold text-foreground;
+  }
+  .prose hr {
+    @apply border-t;
+  }
+  .prose code {
+    @apply rounded-sm bg-muted px-1 py-0.5 font-mono text-[0.9em];
+  }
+  .prose figure figcaption {
+    @apply mt-2 text-sm text-muted-foreground;
+  }
 }

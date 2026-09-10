@@ -1,0 +1,27 @@
+{
+  "version": "7",
+  "dialect": "postgresql",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "7",
+      "when": 1789065588641,
+      "tag": "20260910183948_rls_helpers",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1789065590892,
+      "tag": "20260910183950_init",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1789065593137,
+      "tag": "20260910183953_updated_at_triggers",
+      "breakpoints": true
+    }
+  ]
+}
