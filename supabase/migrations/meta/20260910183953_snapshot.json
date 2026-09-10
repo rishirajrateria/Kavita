@@ -114,13 +114,9 @@
         "admin_audit_log_admin_user_id_admin_users_id_fk": {
           "name": "admin_audit_log_admin_user_id_admin_users_id_fk",
           "tableFrom": "admin_audit_log",
-          "columnsFrom": [
-            "admin_user_id"
-          ],
+          "columnsFrom": ["admin_user_id"],
           "tableTo": "admin_users",
-          "columnsTo": [
-            "id"
-          ],
+          "columnsTo": ["id"],
           "onUpdate": "no action",
           "onDelete": "set null"
         }
@@ -132,9 +128,7 @@
           "name": "admin_audit_log_admin_all",
           "as": "PERMISSIVE",
           "for": "ALL",
-          "to": [
-            "authenticated"
-          ],
+          "to": ["authenticated"],
           "using": "(select public.is_admin())",
           "withCheck": "(select public.is_admin())"
         }
@@ -241,9 +235,7 @@
           "name": "admin_users_admin_all",
           "as": "PERMISSIVE",
           "for": "ALL",
-          "to": [
-            "authenticated"
-          ],
+          "to": ["authenticated"],
           "using": "(select public.is_admin())",
           "withCheck": "(select public.is_admin())"
         }
@@ -348,9 +340,7 @@
           "name": "analytics_daily_rollup_admin_all",
           "as": "PERMISSIVE",
           "for": "ALL",
-          "to": [
-            "authenticated"
-          ],
+          "to": ["authenticated"],
           "using": "(select public.is_admin())",
           "withCheck": "(select public.is_admin())"
         }
@@ -464,13 +454,9 @@
         "analytics_events_session_id_analytics_sessions_id_fk": {
           "name": "analytics_events_session_id_analytics_sessions_id_fk",
           "tableFrom": "analytics_events",
-          "columnsFrom": [
-            "session_id"
-          ],
+          "columnsFrom": ["session_id"],
           "tableTo": "analytics_sessions",
-          "columnsTo": [
-            "id"
-          ],
+          "columnsTo": ["id"],
           "onUpdate": "no action",
           "onDelete": "cascade"
         }
@@ -482,9 +468,7 @@
           "name": "analytics_events_admin_all",
           "as": "PERMISSIVE",
           "for": "ALL",
-          "to": [
-            "authenticated"
-          ],
+          "to": ["authenticated"],
           "using": "(select public.is_admin())",
           "withCheck": "(select public.is_admin())"
         }
@@ -591,13 +575,9 @@
         "analytics_pageviews_session_id_analytics_sessions_id_fk": {
           "name": "analytics_pageviews_session_id_analytics_sessions_id_fk",
           "tableFrom": "analytics_pageviews",
-          "columnsFrom": [
-            "session_id"
-          ],
+          "columnsFrom": ["session_id"],
           "tableTo": "analytics_sessions",
-          "columnsTo": [
-            "id"
-          ],
+          "columnsTo": ["id"],
           "onUpdate": "no action",
           "onDelete": "cascade"
         }
@@ -609,9 +589,7 @@
           "name": "analytics_pageviews_admin_all",
           "as": "PERMISSIVE",
           "for": "ALL",
-          "to": [
-            "authenticated"
-          ],
+          "to": ["authenticated"],
           "using": "(select public.is_admin())",
           "withCheck": "(select public.is_admin())"
         }
@@ -765,9 +743,7 @@
           "name": "analytics_sessions_admin_all",
           "as": "PERMISSIVE",
           "for": "ALL",
-          "to": [
-            "authenticated"
-          ],
+          "to": ["authenticated"],
           "using": "(select public.is_admin())",
           "withCheck": "(select public.is_admin())"
         }
@@ -857,9 +833,7 @@
           "name": "availability_exceptions_admin_all",
           "as": "PERMISSIVE",
           "for": "ALL",
-          "to": [
-            "authenticated"
-          ],
+          "to": ["authenticated"],
           "using": "(select public.is_admin())",
           "withCheck": "(select public.is_admin())"
         }
@@ -951,13 +925,9 @@
         "availability_rules_service_id_services_id_fk": {
           "name": "availability_rules_service_id_services_id_fk",
           "tableFrom": "availability_rules",
-          "columnsFrom": [
-            "service_id"
-          ],
+          "columnsFrom": ["service_id"],
           "tableTo": "services",
-          "columnsTo": [
-            "id"
-          ],
+          "columnsTo": ["id"],
           "onUpdate": "no action",
           "onDelete": "cascade"
         }
@@ -969,9 +939,7 @@
           "name": "availability_rules_admin_all",
           "as": "PERMISSIVE",
           "for": "ALL",
-          "to": [
-            "authenticated"
-          ],
+          "to": ["authenticated"],
           "using": "(select public.is_admin())",
           "withCheck": "(select public.is_admin())"
         }
@@ -1064,26 +1032,18 @@
         "booking_status_history_booking_id_bookings_id_fk": {
           "name": "booking_status_history_booking_id_bookings_id_fk",
           "tableFrom": "booking_status_history",
-          "columnsFrom": [
-            "booking_id"
-          ],
+          "columnsFrom": ["booking_id"],
           "tableTo": "bookings",
-          "columnsTo": [
-            "id"
-          ],
+          "columnsTo": ["id"],
           "onUpdate": "no action",
           "onDelete": "cascade"
         },
         "booking_status_history_admin_user_id_admin_users_id_fk": {
           "name": "booking_status_history_admin_user_id_admin_users_id_fk",
           "tableFrom": "booking_status_history",
-          "columnsFrom": [
-            "admin_user_id"
-          ],
+          "columnsFrom": ["admin_user_id"],
           "tableTo": "admin_users",
-          "columnsTo": [
-            "id"
-          ],
+          "columnsTo": ["id"],
           "onUpdate": "no action",
           "onDelete": "set null"
         }
@@ -1095,9 +1055,7 @@
           "name": "booking_status_history_admin_all",
           "as": "PERMISSIVE",
           "for": "ALL",
-          "to": [
-            "authenticated"
-          ],
+          "to": ["authenticated"],
           "using": "(select public.is_admin())",
           "withCheck": "(select public.is_admin())"
         }
@@ -1273,39 +1231,27 @@
         "bookings_client_id_clients_id_fk": {
           "name": "bookings_client_id_clients_id_fk",
           "tableFrom": "bookings",
-          "columnsFrom": [
-            "client_id"
-          ],
+          "columnsFrom": ["client_id"],
           "tableTo": "clients",
-          "columnsTo": [
-            "id"
-          ],
+          "columnsTo": ["id"],
           "onUpdate": "no action",
           "onDelete": "restrict"
         },
         "bookings_service_id_services_id_fk": {
           "name": "bookings_service_id_services_id_fk",
           "tableFrom": "bookings",
-          "columnsFrom": [
-            "service_id"
-          ],
+          "columnsFrom": ["service_id"],
           "tableTo": "services",
-          "columnsTo": [
-            "id"
-          ],
+          "columnsTo": ["id"],
           "onUpdate": "no action",
           "onDelete": "restrict"
         },
         "bookings_location_id_locations_id_fk": {
           "name": "bookings_location_id_locations_id_fk",
           "tableFrom": "bookings",
-          "columnsFrom": [
-            "location_id"
-          ],
+          "columnsFrom": ["location_id"],
           "tableTo": "locations",
-          "columnsTo": [
-            "id"
-          ],
+          "columnsTo": ["id"],
           "onUpdate": "no action",
           "onDelete": "set null"
         }
@@ -1317,9 +1263,7 @@
           "name": "bookings_admin_all",
           "as": "PERMISSIVE",
           "for": "ALL",
-          "to": [
-            "authenticated"
-          ],
+          "to": ["authenticated"],
           "using": "(select public.is_admin())",
           "withCheck": "(select public.is_admin())"
         }
@@ -1427,9 +1371,7 @@
           "name": "clients_admin_all",
           "as": "PERMISSIVE",
           "for": "ALL",
-          "to": [
-            "authenticated"
-          ],
+          "to": ["authenticated"],
           "using": "(select public.is_admin())",
           "withCheck": "(select public.is_admin())"
         }
@@ -1571,13 +1513,9 @@
         "payments_booking_id_bookings_id_fk": {
           "name": "payments_booking_id_bookings_id_fk",
           "tableFrom": "payments",
-          "columnsFrom": [
-            "booking_id"
-          ],
+          "columnsFrom": ["booking_id"],
           "tableTo": "bookings",
-          "columnsTo": [
-            "id"
-          ],
+          "columnsTo": ["id"],
           "onUpdate": "no action",
           "onDelete": "restrict"
         }
@@ -1589,9 +1527,7 @@
           "name": "payments_admin_all",
           "as": "PERMISSIVE",
           "for": "ALL",
-          "to": [
-            "authenticated"
-          ],
+          "to": ["authenticated"],
           "using": "(select public.is_admin())",
           "withCheck": "(select public.is_admin())"
         }
@@ -1675,19 +1611,14 @@
           "name": "article_categories_public_select",
           "as": "PERMISSIVE",
           "for": "SELECT",
-          "to": [
-            "anon",
-            "authenticated"
-          ],
+          "to": ["anon", "authenticated"],
           "using": "true"
         },
         "article_categories_admin_all": {
           "name": "article_categories_admin_all",
           "as": "PERMISSIVE",
           "for": "ALL",
-          "to": [
-            "authenticated"
-          ],
+          "to": ["authenticated"],
           "using": "(select public.is_admin())",
           "withCheck": "(select public.is_admin())"
         }
@@ -1843,13 +1774,9 @@
         "articles_category_id_article_categories_id_fk": {
           "name": "articles_category_id_article_categories_id_fk",
           "tableFrom": "articles",
-          "columnsFrom": [
-            "category_id"
-          ],
+          "columnsFrom": ["category_id"],
           "tableTo": "article_categories",
-          "columnsTo": [
-            "id"
-          ],
+          "columnsTo": ["id"],
           "onUpdate": "no action",
           "onDelete": "restrict"
         }
@@ -1861,19 +1788,14 @@
           "name": "articles_public_select",
           "as": "PERMISSIVE",
           "for": "SELECT",
-          "to": [
-            "anon",
-            "authenticated"
-          ],
+          "to": ["anon", "authenticated"],
           "using": "\"articles\".\"status\" = 'published'"
         },
         "articles_admin_all": {
           "name": "articles_admin_all",
           "as": "PERMISSIVE",
           "for": "ALL",
-          "to": [
-            "authenticated"
-          ],
+          "to": ["authenticated"],
           "using": "(select public.is_admin())",
           "withCheck": "(select public.is_admin())"
         }
@@ -1987,13 +1909,9 @@
         "faqs_location_id_locations_id_fk": {
           "name": "faqs_location_id_locations_id_fk",
           "tableFrom": "faqs",
-          "columnsFrom": [
-            "location_id"
-          ],
+          "columnsFrom": ["location_id"],
           "tableTo": "locations",
-          "columnsTo": [
-            "id"
-          ],
+          "columnsTo": ["id"],
           "onUpdate": "no action",
           "onDelete": "cascade"
         }
@@ -2005,19 +1923,14 @@
           "name": "faqs_public_select",
           "as": "PERMISSIVE",
           "for": "SELECT",
-          "to": [
-            "anon",
-            "authenticated"
-          ],
+          "to": ["anon", "authenticated"],
           "using": "\"faqs\".\"is_published\" = true"
         },
         "faqs_admin_all": {
           "name": "faqs_admin_all",
           "as": "PERMISSIVE",
           "for": "ALL",
-          "to": [
-            "authenticated"
-          ],
+          "to": ["authenticated"],
           "using": "(select public.is_admin())",
           "withCheck": "(select public.is_admin())"
         }
@@ -2127,19 +2040,14 @@
           "name": "glossary_terms_public_select",
           "as": "PERMISSIVE",
           "for": "SELECT",
-          "to": [
-            "anon",
-            "authenticated"
-          ],
+          "to": ["anon", "authenticated"],
           "using": "\"glossary_terms\".\"status\" = 'published'"
         },
         "glossary_terms_admin_all": {
           "name": "glossary_terms_admin_all",
           "as": "PERMISSIVE",
           "for": "ALL",
-          "to": [
-            "authenticated"
-          ],
+          "to": ["authenticated"],
           "using": "(select public.is_admin())",
           "withCheck": "(select public.is_admin())"
         }
@@ -2265,26 +2173,18 @@
         "testimonials_client_location_id_locations_id_fk": {
           "name": "testimonials_client_location_id_locations_id_fk",
           "tableFrom": "testimonials",
-          "columnsFrom": [
-            "client_location_id"
-          ],
+          "columnsFrom": ["client_location_id"],
           "tableTo": "locations",
-          "columnsTo": [
-            "id"
-          ],
+          "columnsTo": ["id"],
           "onUpdate": "no action",
           "onDelete": "set null"
         },
         "testimonials_service_id_services_id_fk": {
           "name": "testimonials_service_id_services_id_fk",
           "tableFrom": "testimonials",
-          "columnsFrom": [
-            "service_id"
-          ],
+          "columnsFrom": ["service_id"],
           "tableTo": "services",
-          "columnsTo": [
-            "id"
-          ],
+          "columnsTo": ["id"],
           "onUpdate": "no action",
           "onDelete": "set null"
         }
@@ -2296,29 +2196,21 @@
           "name": "testimonials_public_select",
           "as": "PERMISSIVE",
           "for": "SELECT",
-          "to": [
-            "anon",
-            "authenticated"
-          ],
+          "to": ["anon", "authenticated"],
           "using": "\"testimonials\".\"is_published\" = true and \"testimonials\".\"consent_given\" = true"
         },
         "testimonials_public_insert": {
           "name": "testimonials_public_insert",
           "as": "PERMISSIVE",
           "for": "INSERT",
-          "to": [
-            "anon",
-            "authenticated"
-          ],
+          "to": ["anon", "authenticated"],
           "withCheck": "\"testimonials\".\"is_published\" = false and \"testimonials\".\"is_placeholder\" = false and (\"testimonials\".\"rating\" is null or \"testimonials\".\"rating\" between 1 and 5)"
         },
         "testimonials_admin_all": {
           "name": "testimonials_admin_all",
           "as": "PERMISSIVE",
           "for": "ALL",
-          "to": [
-            "authenticated"
-          ],
+          "to": ["authenticated"],
           "using": "(select public.is_admin())",
           "withCheck": "(select public.is_admin())"
         }
@@ -2603,13 +2495,9 @@
         "locations_parent_id_locations_id_fk": {
           "name": "locations_parent_id_locations_id_fk",
           "tableFrom": "locations",
-          "columnsFrom": [
-            "parent_id"
-          ],
+          "columnsFrom": ["parent_id"],
           "tableTo": "locations",
-          "columnsTo": [
-            "id"
-          ],
+          "columnsTo": ["id"],
           "onUpdate": "no action",
           "onDelete": "restrict"
         }
@@ -2621,19 +2509,14 @@
           "name": "locations_public_select",
           "as": "PERMISSIVE",
           "for": "SELECT",
-          "to": [
-            "anon",
-            "authenticated"
-          ],
+          "to": ["anon", "authenticated"],
           "using": "true"
         },
         "locations_admin_all": {
           "name": "locations_admin_all",
           "as": "PERMISSIVE",
           "for": "ALL",
-          "to": [
-            "authenticated"
-          ],
+          "to": ["authenticated"],
           "using": "(select public.is_admin())",
           "withCheck": "(select public.is_admin())"
         }
@@ -2742,19 +2625,14 @@
           "name": "page_seo_public_select",
           "as": "PERMISSIVE",
           "for": "SELECT",
-          "to": [
-            "anon",
-            "authenticated"
-          ],
+          "to": ["anon", "authenticated"],
           "using": "true"
         },
         "page_seo_admin_all": {
           "name": "page_seo_admin_all",
           "as": "PERMISSIVE",
           "for": "ALL",
-          "to": [
-            "authenticated"
-          ],
+          "to": ["authenticated"],
           "using": "(select public.is_admin())",
           "withCheck": "(select public.is_admin())"
         }
@@ -2873,9 +2751,7 @@
           "name": "redirects_admin_all",
           "as": "PERMISSIVE",
           "for": "ALL",
-          "to": [
-            "authenticated"
-          ],
+          "to": ["authenticated"],
           "using": "(select public.is_admin())",
           "withCheck": "(select public.is_admin())"
         }
@@ -2966,13 +2842,9 @@
         "service_translations_service_id_services_id_fk": {
           "name": "service_translations_service_id_services_id_fk",
           "tableFrom": "service_translations",
-          "columnsFrom": [
-            "service_id"
-          ],
+          "columnsFrom": ["service_id"],
           "tableTo": "services",
-          "columnsTo": [
-            "id"
-          ],
+          "columnsTo": ["id"],
           "onUpdate": "no action",
           "onDelete": "cascade"
         }
@@ -2984,19 +2856,14 @@
           "name": "service_translations_public_select",
           "as": "PERMISSIVE",
           "for": "SELECT",
-          "to": [
-            "anon",
-            "authenticated"
-          ],
+          "to": ["anon", "authenticated"],
           "using": "true"
         },
         "service_translations_admin_all": {
           "name": "service_translations_admin_all",
           "as": "PERMISSIVE",
           "for": "ALL",
-          "to": [
-            "authenticated"
-          ],
+          "to": ["authenticated"],
           "using": "(select public.is_admin())",
           "withCheck": "(select public.is_admin())"
         }
@@ -3182,19 +3049,14 @@
           "name": "services_public_select",
           "as": "PERMISSIVE",
           "for": "SELECT",
-          "to": [
-            "anon",
-            "authenticated"
-          ],
+          "to": ["anon", "authenticated"],
           "using": "\"services\".\"is_active\" = true"
         },
         "services_admin_all": {
           "name": "services_admin_all",
           "as": "PERMISSIVE",
           "for": "ALL",
-          "to": [
-            "authenticated"
-          ],
+          "to": ["authenticated"],
           "using": "(select public.is_admin())",
           "withCheck": "(select public.is_admin())"
         }
@@ -3289,19 +3151,14 @@
           "name": "consent_log_public_insert",
           "as": "PERMISSIVE",
           "for": "INSERT",
-          "to": [
-            "anon",
-            "authenticated"
-          ],
+          "to": ["anon", "authenticated"],
           "withCheck": "true"
         },
         "consent_log_admin_all": {
           "name": "consent_log_admin_all",
           "as": "PERMISSIVE",
           "for": "ALL",
-          "to": [
-            "authenticated"
-          ],
+          "to": ["authenticated"],
           "using": "(select public.is_admin())",
           "withCheck": "(select public.is_admin())"
         }
@@ -3394,9 +3251,7 @@
           "name": "integrations_admin_all",
           "as": "PERMISSIVE",
           "for": "ALL",
-          "to": [
-            "authenticated"
-          ],
+          "to": ["authenticated"],
           "using": "(select public.is_admin())",
           "withCheck": "(select public.is_admin())"
         }
@@ -3567,19 +3422,14 @@
           "name": "site_settings_public_select",
           "as": "PERMISSIVE",
           "for": "SELECT",
-          "to": [
-            "anon",
-            "authenticated"
-          ],
+          "to": ["anon", "authenticated"],
           "using": "true"
         },
         "site_settings_admin_all": {
           "name": "site_settings_admin_all",
           "as": "PERMISSIVE",
           "for": "ALL",
-          "to": [
-            "authenticated"
-          ],
+          "to": ["authenticated"],
           "using": "(select public.is_admin())",
           "withCheck": "(select public.is_admin())"
         }
@@ -3713,19 +3563,14 @@
           "name": "social_links_public_select",
           "as": "PERMISSIVE",
           "for": "SELECT",
-          "to": [
-            "anon",
-            "authenticated"
-          ],
+          "to": ["anon", "authenticated"],
           "using": "\"social_links\".\"is_visible\" = true"
         },
         "social_links_admin_all": {
           "name": "social_links_admin_all",
           "as": "PERMISSIVE",
           "for": "ALL",
-          "to": [
-            "authenticated"
-          ],
+          "to": ["authenticated"],
           "using": "(select public.is_admin())",
           "withCheck": "(select public.is_admin())"
         }
@@ -3834,9 +3679,7 @@
           "name": "verification_tags_admin_all",
           "as": "PERMISSIVE",
           "for": "ALL",
-          "to": [
-            "authenticated"
-          ],
+          "to": ["authenticated"],
           "using": "(select public.is_admin())",
           "withCheck": "(select public.is_admin())"
         }
@@ -3849,30 +3692,17 @@
     "public.currency": {
       "name": "currency",
       "schema": "public",
-      "values": [
-        "INR",
-        "USD",
-        "GBP",
-        "AED"
-      ]
+      "values": ["INR", "USD", "GBP", "AED"]
     },
     "public.admin_role": {
       "name": "admin_role",
       "schema": "public",
-      "values": [
-        "owner",
-        "editor",
-        "viewer"
-      ]
+      "values": ["owner", "editor", "viewer"]
     },
     "public.booking_mode": {
       "name": "booking_mode",
       "schema": "public",
-      "values": [
-        "online_video",
-        "online_phone",
-        "in_person"
-      ]
+      "values": ["online_video", "online_phone", "in_person"]
     },
     "public.booking_status": {
       "name": "booking_status",
@@ -3892,72 +3722,37 @@
     "public.payment_status": {
       "name": "payment_status",
       "schema": "public",
-      "values": [
-        "created",
-        "pending",
-        "authorized",
-        "captured",
-        "refunded",
-        "failed",
-        "cancelled"
-      ]
+      "values": ["created", "pending", "authorized", "captured", "refunded", "failed", "cancelled"]
     },
     "public.content_status": {
       "name": "content_status",
       "schema": "public",
-      "values": [
-        "draft",
-        "published",
-        "archived"
-      ]
+      "values": ["draft", "published", "archived"]
     },
     "public.testimonial_source": {
       "name": "testimonial_source",
       "schema": "public",
-      "values": [
-        "website_form",
-        "email",
-        "whatsapp",
-        "google",
-        "other"
-      ]
+      "values": ["website_form", "email", "whatsapp", "google", "other"]
     },
     "public.location_type": {
       "name": "location_type",
       "schema": "public",
-      "values": [
-        "country",
-        "state",
-        "city"
-      ]
+      "values": ["country", "state", "city"]
     },
     "public.population_tier": {
       "name": "population_tier",
       "schema": "public",
-      "values": [
-        "mega",
-        "large",
-        "medium",
-        "small"
-      ]
+      "values": ["mega", "large", "medium", "small"]
     },
     "public.research_status": {
       "name": "research_status",
       "schema": "public",
-      "values": [
-        "complete",
-        "partial",
-        "stub"
-      ]
+      "values": ["complete", "partial", "stub"]
     },
     "public.service_lead": {
       "name": "service_lead",
       "schema": "public",
-      "values": [
-        "astrology",
-        "vastu",
-        "integrated"
-      ]
+      "values": ["astrology", "vastu", "integrated"]
     },
     "public.integration_provider": {
       "name": "integration_provider",
@@ -3999,10 +3794,7 @@
     "public.verification_kind": {
       "name": "verification_kind",
       "schema": "public",
-      "values": [
-        "meta",
-        "file"
-      ]
+      "values": ["meta", "file"]
     }
   },
   "schemas": {},

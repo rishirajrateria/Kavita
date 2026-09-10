@@ -58,3 +58,13 @@ ruvector.db
 
 # keep the template
 !.env.example
+
+# Ruflo runtime state written by hooks/daemon
+.claude-flow/daemon*
+.claude-flow/harness-active-policy.json
+.claude-flow/metrics/
+
+# Ruflo generated local config
+.claude/proven-config.json
+.claude/.proven-config-version
+.claude-flow/policy/

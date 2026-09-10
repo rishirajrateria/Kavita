@@ -478,6 +478,19 @@ touching the app.
   `ruvector.db`, `.claude-flow/data|logs|sessions`) is git-ignored. Use its personas
   (`core/coder`, `core/reviewer`, `core/tester`, `typescript-specialist`,
   `database-specialist`, `security-auditor`, `sparc/*`) when delegating phase work to subagents.
+- Migrations are validated offline with PGlite (`pnpm test:migrations`, part of `pnpm test`): every SQL file
+  in `supabase/migrations` is applied in order to Postgres-in-WASM with stubbed Supabase roles and `auth.uid()`,
+  then RLS/policy/trigger coverage is asserted. Run it after every `drizzle-kit generate`.
+- Performance decisions (Phase 1): only upright font faces are shipped/preloaded (italics synthesized);
+  the mobile nav uses a native `<dialog>` (focus trap, Escape, focus return) instead of the Radix Sheet so
+  the site-wide header adds ~1KB of client JS. Keep site-wide client components tiny; Radix-based primitives
+  are fine inside page-level interactive islands.
+- Lighthouse: `CHROME_PATH=/opt/pw-browsers/chromium-1194/chrome-linux/chrome pnpm exec lighthouse <url>
+--chrome-flags="--headless=new --no-sandbox" --form-factor=mobile` works in the remote env. Simulated
+  text-LCP is inflated by Lantern (it counts all JS as pre-paint); also record `--throttling-method=provided`.
+- Ruflo's background daemon (`.claude-flow/daemon.pid`) was found running after a session start even though
+  `daemon.autoStart` is false; its interval workers can spawn headless Claude sessions. Stop it with
+  `npx ruflo daemon stop` if it reappears — the user does not want background token spend.
 - Folder layout: `src/app` (routes), `src/components/{ui,layout,seo,motifs}`, `src/lib`,
   `src/hooks`, `src/db` (Drizzle schema + client), `src/content/{locations,articles}`,
   `src/styles`, `src/types`, `supabase/{migrations,seed}`, `scripts`, `tests`.

@@ -126,3 +126,10 @@ fails if any token below disappears from this file while still present in the se
 ### `src/content/PLACEHOLDERS.ts`
 
 - [ ] Three placeholder testimonials (`isPlaceholder: true`, marker `{{PLACEHOLDER_TESTIMONIAL}}`) back the no-database fallback only. They are never seeded and the build gate blocks production while they render. Replace with real, consented testimonials (see §4).
+
+## 8. Home page and layout placeholders (Phase 1)
+
+- [ ] `{{LANGUAGES OF CONSULTATION}}` — home key-facts block (`src/content/home.ts`); `site_settings` has no languages column yet, add one when the real list is known.
+- [ ] `{{CONFIRM IN-PERSON AVAILABILITY}}` — home key-facts block; `site_settings.in_person_available` is seeded `false` until the practitioner confirms where she sees clients in person.
+- [ ] `{{PRACTITIONER PHOTO}}` — `public/images/kavita-placeholder.svg` is a labelled placeholder; replace with a professional photograph (portrait, at least 960×1200) and update the hero `alt` text.
+- [ ] Person/ProfessionalService `sameAs` is currently empty because every social URL is a placeholder — fills automatically once real URLs land in `social_links`.
