@@ -100,6 +100,13 @@ and a Delhi homemaker would both trust.
 | -------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | Purple gradients, glowing crystal balls, animated stars, neon zodiac wheels, stock galaxy photos, Comic-Sans-adjacent "mystical" fonts | Warm ivory/parchment backgrounds; deep indigo/midnight text; restrained antique-gold accent; generous whitespace; refined serif headings (Fraunces, Cormorant or Marcellus) + clean humanist sans body (Inter or Source Sans 3); fine line-art inline-SVG motifs (subtle chart square, vastu compass rose, thin astronomical linework) as quiet accents, never loud decoration |
 
+- **Client mandate (Phase 1 feedback): the site must look stunning and be very easy to use; aesthetics are
+  non-negotiable.** Within the palette above, that means visual rhythm (alternating ivory / parchment /
+  deep-indigo sections), a cinematic but quiet hero, large low-opacity gold line-art motifs as backdrops,
+  solid antique-gold primary CTAs, editorial typography (Fraunces display sizes, balanced headings),
+  hairline gold rules and ornaments, hover micro-interactions, and an indigo footer. Every new page must
+  be screenshot-reviewed at 1440px and 390px, light and dark, before it is reported done. Never let a page
+  read as a plain document.
 - Build a proper design system first: CSS custom properties for the full colour scale, type
   scale, spacing scale, radii, shadows. Every component reads from tokens.
 - Full dark mode via CSS variables: light palette on `:root`, overrides under
