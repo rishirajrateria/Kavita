@@ -1,43 +1,36 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { Breadcrumbs } from "@/components/layout/breadcrumbs";
-import { Ornament } from "@/components/motifs";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import { BookingFlow } from "@/components/booking/booking-flow";
+import type { BookableService, BookingChannels } from "@/components/booking/types";
+import { CtaBand, FaqBlock, PageHero, QuestionSection } from "@/components/content";
 import { Callout } from "@/components/ui/callout";
 import { Container } from "@/components/ui/container";
-import { Heading } from "@/components/ui/heading";
 import { Section } from "@/components/ui/section";
 import { isPublishable } from "@/content/locations/schema";
-import {
-  getLocationByPath,
-  getServiceBySlug,
-  getServices,
-  getSiteSettings,
-  locationHref,
-} from "@/lib/data";
+import { BOOK_ERRORS, BOOK_FAQ, BOOK_HERO, BOOK_HOW, BOOK_META } from "@/content/pages/book";
+import { dateKeyInZone, monthKeyOf } from "@/lib/booking/format";
+import { getLocationByPath, getServiceBySlug, getServices, getSiteSettings } from "@/lib/data";
 import { mailtoHref, realValue, telHref, whatsappHref } from "@/lib/site";
 
-const LEAD_LABEL = {
-  astrology: "Astrology-led",
-  vastu: "Vastu-led",
-  integrated: "Integrated",
-} as const;
-
 export const metadata: Metadata = {
-  title: "Book a consultation",
-  description:
-    "Book a consultation with Astrologer Kavita: choose a service, tell her where you are, and arrange a time by WhatsApp, email or phone while online booking is being built.",
+  title: { absolute: BOOK_META.title },
+  description: BOOK_META.description,
+  /** Transactional page with query variants: reachable, followed, never indexed. */
   robots: { index: false, follow: true },
   alternates: { canonical: "/book" },
 };
 
 const one = (v: string | string[] | undefined) => (typeof v === "string" ? v : undefined);
+const slugify = (s: string) =>
+  s
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-|-$/g, "");
 
 /**
- * Interim booking page (Phase 2). Honest and minimal: it shows the service and place the
- * visitor chose, explains that online booking with live availability arrives in Phase 4, and
- * offers the real contact channels from `site_settings`. Server-rendered, `noindex`, no client JS.
+ * `/book` — the seven-step booking flow. The server renders the hero, the island's first step,
+ * the how-it-works answer and the FAQ; the island fetches availability and posts the booking.
+ * With JavaScript off, a `<noscript>` block offers the real channels from `site_settings`.
  */
 export default async function BookPage({ searchParams }: PageProps<"/book">) {
   const sp = await searchParams;
@@ -51,145 +44,140 @@ export default async function BookPage({ searchParams }: PageProps<"/book">) {
     locationPath ? getLocationByPath(locationPath) : Promise.resolve(null),
   ]);
 
-  const wa = whatsappHref(settings.whatsapp);
-  const mail = mailtoHref(settings.email);
-  const tel = telHref(settings.phone);
-  const hasChannel = Boolean(wa || mail || tel);
   const place = location && isPublishable(location) ? location : null;
+  const channels: BookingChannels = {
+    whatsapp: whatsappHref(settings.whatsapp),
+    email: mailtoHref(settings.email),
+    tel: telHref(settings.phone),
+    emailText: realValue(settings.email),
+    phoneText: realValue(settings.phone),
+  };
+  const practiceCity = realValue(settings.city);
+  const matchesCity =
+    !place || (practiceCity !== undefined && slugify(place.name) === slugify(practiceCity));
+  const inPersonOffered = settings.inPersonAvailable && matchesCity;
+
+  const now = new Date();
+  const clientTz = place?.timezone ?? settings.timezone;
+  const initialMonth = monthKeyOf(dateKeyInZone(now, clientTz));
+  const horizonEnd = new Date(now.getTime() + settings.horizonDays * 86_400_000);
+  const maxMonth = monthKeyOf(dateKeyInZone(horizonEnd, clientTz));
+
+  const bookable: BookableService[] = services.map((s) => ({
+    slug: s.slug,
+    name: s.name,
+    lead: s.lead,
+    durationMinutes: s.durationMinutes,
+    bufferAfterMinutes: s.bufferAfterMinutes,
+    shortDescription: s.shortDescription,
+    whatToPrepare: s.whatToPrepare,
+    deliveryModes: s.deliveryModes,
+    priceNote: s.priceNote,
+    priceMinor: s.priceMinor,
+    currency: s.currency,
+  }));
 
   return (
     <>
-      <Section as="header" spacing="none" className="overflow-hidden pt-4 pb-12 sm:pb-16">
-        <Container size="default" className="relative">
-          <Breadcrumbs items={[{ name: "Book", href: "/book" }]} className="mb-8" />
-          <Heading as="h1" level={1} eyebrow="Book a consultation">
-            {service
-              ? `Book ${service.name}${place ? ` from ${place.name}` : ""}`
-              : "Book a consultation with Astrologer Kavita"}
-          </Heading>
-          <p className="answer mt-6">
-            Booking with Astrologer Kavita is arranged directly for now: choose the service, say
-            where you are, and send a message by WhatsApp, email or phone with your preferred days.
-            You receive a confirmed time in your local hours, and what to prepare before the
-            session.
-          </p>
-        </Container>
-      </Section>
+      <PageHero
+        eyebrow={BOOK_HERO.eyebrow}
+        title={service ? `Book ${service.name}` : BOOK_HERO.title}
+        lede={BOOK_HERO.lede}
+        motif="lines"
+        breadcrumbs={[{ name: "Book", href: "/book" }]}
+        className="pb-10 sm:pb-12 lg:pb-14"
+      />
 
-      <Section spacing="lg" tone="muted" bordered>
-        <Container size="default" className="space-y-10">
-          <Callout variant="info" title="Online booking with live availability is coming">
-            Choosing a slot on a calendar and paying online arrives in the next phase of this site.
-            Until then Astrologer Kavita confirms every booking personally, usually within{" "}
-            {settings.responseTimeHours} hours.
-          </Callout>
-
-          {service ? (
-            <article className="rounded-2xl border border-accent-border/40 bg-background p-6 sm:p-8">
-              <div className="flex items-center justify-between gap-4">
-                <Badge variant="caps">{LEAD_LABEL[service.lead]}</Badge>
-                <span className="text-sm text-muted-foreground">{service.durationMinutes} min</span>
-              </div>
-              <Heading as="h2" level={3} className="mt-4">
-                {service.name}
-              </Heading>
-              <p className="mt-3 leading-relaxed text-muted-foreground">
-                {service.shortDescription}
-              </p>
-              {place ? (
-                <p className="mt-4 border-t border-accent-border/30 pt-4 text-sm text-muted-foreground">
-                  For a client in{" "}
-                  <Link href={locationHref(place, "astrologer")} className="text-accent-strong">
-                    {place.name}
-                  </Link>{" "}
-                  ({place.timezone}). Sessions are scheduled in {place.name}&rsquo;s own hours.
-                </p>
-              ) : null}
-              {service.whatToPrepare.length > 0 ? (
-                <>
-                  <Heading
-                    as="h3"
-                    level={6}
-                    className="mt-6 font-sans text-xs tracking-[0.14em] text-accent-strong uppercase"
-                  >
-                    What to have ready
-                  </Heading>
-                  <ul className="mt-3 space-y-2 text-sm leading-relaxed">
-                    {service.whatToPrepare.map((item) => (
-                      <li key={item} className="flex gap-3">
-                        <Ornament className="mt-1.5 size-3 shrink-0 text-accent-strong" />
-                        <span>{item}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </>
-              ) : null}
-              <p className="mt-6 text-sm">
-                <Link href="/book" className="text-accent-strong">
-                  Choose a different service
-                </Link>
-              </p>
-            </article>
-          ) : (
-            <div>
-              <Heading as="h2" level={3}>
-                Which consultation?
-              </Heading>
-              <ul className="mt-5 grid gap-3 sm:grid-cols-2">
-                {services.map((s) => (
-                  <li key={s.slug}>
-                    <Link
-                      href={`/book?service=${s.slug}${locationPath ? `&location=${encodeURIComponent(locationPath)}` : ""}`}
-                      className="flex min-h-14 items-center justify-between gap-4 rounded-lg border bg-background px-4 py-3 no-underline hover:border-accent-border"
+      <Section id="booking" spacing="md" tone="muted" bordered className="scroll-mt-20">
+        <Container size="wide" className="space-y-6">
+          <noscript>
+            <Callout variant="warn" title={BOOK_ERRORS.noScript.title}>
+              <p>{BOOK_ERRORS.noScript.body}</p>
+              <ul className="mt-2 flex flex-wrap gap-x-5 gap-y-1">
+                {channels.whatsapp ? (
+                  <li>
+                    <a
+                      href={channels.whatsapp}
+                      rel="noopener"
+                      className="font-medium text-accent-strong"
                     >
-                      <span className="font-serif text-lg">{s.name}</span>
-                      <span className="text-sm text-muted-foreground">{s.durationMinutes} min</span>
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
-
-          <div>
-            <Heading as="h2" level={3}>
-              Send your request
-            </Heading>
-            {hasChannel ? (
-              <div className="mt-5 flex flex-wrap gap-3">
-                {wa ? (
-                  <Button asChild variant="gold" size="xl">
-                    <a href={wa} rel="noopener">
                       WhatsApp
                     </a>
-                  </Button>
+                  </li>
                 ) : null}
-                {mail ? (
-                  <Button asChild variant="gold-outline" size="xl">
-                    <a href={mail}>Email {realValue(settings.email)}</a>
-                  </Button>
+                {channels.email ? (
+                  <li>
+                    <a href={channels.email} className="font-medium text-accent-strong">
+                      {channels.emailText}
+                    </a>
+                  </li>
                 ) : null}
-                {tel ? (
-                  <Button asChild variant="ghost" size="xl">
-                    <a href={tel}>Call {realValue(settings.phone)}</a>
-                  </Button>
-                ) : null}
-              </div>
-            ) : (
-              <Callout variant="warn" className="mt-5" title="Contact details are being confirmed">
-                The practice&rsquo;s WhatsApp number, email address and phone number have not yet
-                been published on this site. Please use the{" "}
-                <Link href="/contact">contact page</Link> in the meantime.
-              </Callout>
-            )}
-            <p className="mt-5 max-w-prose text-sm leading-relaxed text-muted-foreground">
-              Include the service, where you are, two or three days that suit you, and — for a chart
-              reading — your date, time and place of birth. Birth details are personal data: they
-              are used only for your reading and never published.
-            </p>
-          </div>
+                <li>
+                  <Link href="/contact" className="font-medium text-accent-strong">
+                    Contact page
+                  </Link>
+                </li>
+              </ul>
+            </Callout>
+          </noscript>
+          <BookingFlow
+            services={bookable}
+            initialServiceSlug={service?.slug}
+            location={
+              place ? { path: place.path, name: place.name, timezone: place.timezone } : null
+            }
+            practitionerTz={settings.timezone}
+            practitionerCity={practiceCity ?? "the practice city"}
+            inPersonOffered={inPersonOffered}
+            channels={channels}
+            rescheduleNoticeHours={settings.rescheduleNoticeHours}
+            initialMonth={initialMonth}
+            maxMonth={maxMonth}
+            now={now.toISOString()}
+            brandName={settings.brandName}
+          />
         </Container>
       </Section>
+
+      <QuestionSection
+        id={BOOK_HOW.id}
+        eyebrow={BOOK_HOW.eyebrow}
+        question={BOOK_HOW.question}
+        answer={BOOK_HOW.answer}
+      >
+        <ol className="grid max-w-[60rem] gap-x-10 gap-y-5 sm:grid-cols-2">
+          {BOOK_HOW.steps.map((step, i) => (
+            <li key={step} className="flex gap-4">
+              <span
+                aria-hidden="true"
+                className="inline-flex size-8 shrink-0 items-center justify-center rounded-full border border-accent-border/60 font-serif text-sm text-accent-strong"
+              >
+                {i + 1}
+              </span>
+              <span className="leading-relaxed">{step}</span>
+            </li>
+          ))}
+        </ol>
+      </QuestionSection>
+
+      <FaqBlock
+        heading={BOOK_FAQ.heading}
+        answer={BOOK_FAQ.answer}
+        eyebrow={BOOK_FAQ.eyebrow}
+        items={[...BOOK_FAQ.items]}
+        tone="muted"
+      />
+
+      <CtaBand
+        eyebrow="Prefer to ask first?"
+        title="Not sure which consultation fits?"
+        body="Send a short message describing what is going on and Astrologer Kavita will say which session suits, and whether astrology, vastu or both are the right instrument for it."
+        primaryHref="/contact"
+        primaryLabel="Ask a question"
+        secondaryHref={channels.whatsapp ?? "/services"}
+        secondaryLabel={channels.whatsapp ? "WhatsApp" : "Compare the services"}
+        motif="compass"
+      />
     </>
   );
 }

@@ -9,7 +9,7 @@ phase ends with a working, deployable site. Read `CLAUDE.md` first in every phas
 - [x] **Phase 1 — Design system, layout, home page, Supabase foundation.** Tokens (`styles/tokens.css`) with full light/dark palettes, next/font, `/design-system` primitives and inline-SVG motifs; header/footer/`<Integrations />` slot reading `site_settings`, `social_links`, `integrations`; full §10 schema as migrations with RLS on every table, typed client, seed; the home page carrying the combined-method positioning with answer blocks, key-facts block, comparison table and FAQPage schema.
 - [x] **Phase 2 — SEO infrastructure and the geo page engine.** Typed location data layer (`content/locations/*.ts` → Supabase) with `researchStatus`; `scripts/validate-content.ts` uniqueness/placeholder gate in CI and `prebuild`; astrologer × vastu-consultant templates at country/state/city; `generateMetadata`, OG images, typed JSON-LD generators, split sitemaps, `robots.txt` with the AI-crawler allow-list, `/llms.txt`, `/llms-full.txt`, `.md` mirror, `/for-ai`, IndexNow, internal-linking engine.
 - [x] **Phase 3 — Content pages: about, astrology, vastu, services, learn, testimonials, contact.** `/about` E-E-A-T anchor, `/astrology` and `/vastu` intent hubs, `/services/[slug]`, `/learn` MDX pipeline with 8 seed articles, `/glossary/[term]` with 25 terms, `/testimonials` + `/share-your-experience` intake, `/contact`, `/faq`, `/privacy`, `/terms`, `/disclaimer`.
-- [ ] **Phase 4 — Booking and calendar system.** Availability rules/exceptions in Kavita's IANA timezone, server-side UTC slot generation with DST and IST half-hour tests, 7-step booking flow with dual-timezone display, race-safe slot insert, Resend/React Email notifications and cron reminders, token-based client self-service, payment seam (§11) with `NoopPaymentProvider`, private floor-plan uploads, rate limiting and audit trail.
+- [x] **Phase 4 — Booking and calendar system.** Availability rules/exceptions in Kavita's IANA timezone, server-side UTC slot generation with DST and IST half-hour tests, 7-step booking flow with dual-timezone display, race-safe slot insert, Resend/React Email notifications and cron reminders, token-based client self-service, payment seam (§11) with `NoopPaymentProvider`, private floor-plan uploads, rate limiting and audit trail.
 - [ ] **Phase 5 — Admin panel and first-party analytics.** `/admin` behind Supabase Auth + RLS with `admin_audit_log`; cookieless first-party tracker (`public/t.js` < 4KB) with the §13.D event fan-out registry, edge-geo ingest, daily rollups; dashboard (realtime, traffic, geography, pages incl. geo-page performance, behaviour, acquisition incl. AI-referral panel, technology, conversions); bookings, content, settings and site-identity management.
 - [ ] **Phase 6 — SEO control backend and redirect engine.** `page_seo` per-route control with SERP preview and keyword checker, FAQ manager, AEO control panel (answer-block linter, llms.txt editor, per-bot crawler toggles, citability check), social/OG control, `redirects` engine in `middleware.ts` with loop/chain detection, 404 log and automatic 301 on slug change, sitemap/IndexNow/GSC/Bing control, `/admin/integrations` implementing §13 in full (pixels, CAPI, event mapping, geo-aware consent, "what's loading" preview), SEO health crawl, audit log with revert; update `CLAUDE.md`/`ROADMAP.md` and write `HANDOVER.md`.
 
@@ -67,6 +67,28 @@ phase ends with a working, deployable site. Read `CLAUDE.md` first in every phas
   Accessibility 100, Best Practices 100, SEO 100, CLS 0, TBT 150 ms, LCP 2.9 s simulated.
 - Remaining placeholders: practitioner identity, credentials, contact, socials, prices, photo,
   legal retention/refund/governing-law values (NEEDS-REAL-DATA §1–§11).
+
+## Phase 4 report (2026-09-11)
+
+- Built: availability rules/exceptions in the practitioner's IANA zone; UTC slot generation with
+  `TZDate`, buffers, lead time, horizon and step; availability API with offline seed rules; 7-step
+  booking flow (service → format → time with dual-zone slots and a grouped zone selector → details
+  with inline "why we need this" and floor-plan upload → question → review → indigo confirmation
+  with .ics and Google/Outlook/Apple links); server-side slot re-verification and a transactional
+  insert protected by a partial unique index with "just taken" alternatives; signed expiring
+  `/booking/[token]` self-service (view, reschedule within the notice period, cancel) with full
+  status history; AES-256-GCM birth-detail encryption with key rotation; floor plans in a private
+  Supabase Storage bucket via short-lived signed URLs; React Email confirmations, practitioner
+  notifications, 24h/1h reminders, reschedule and cancellation notices, each showing both
+  timezones with plain-text alternates; idempotent `notification_log`; Vercel Cron every 15 min;
+  PaymentProvider seam with NoopPaymentProvider, `PAYMENTS_ENABLED` flag, webhook stub, and the
+  Razorpay/Stripe how-to in CLAUDE.md §11; rate limiting and no personal data in logs.
+- Tests: Kolkata vs all seven market zones in January and July (half-hour offset), New York March
+  and November DST, London BST practitioner, lead/horizon/buffers/exceptions, token sign/verify/
+  expiry/tamper, encryption round-trip and rotation, ICS, PGlite integration incl. a raw double-
+  booking race (exactly one insert wins), reschedule window, cancel, 503 without DB; template
+  rendering, dedupe, cron windows; UI format helpers. Playwright drove the whole flow at 390/1440.
+- Not testable here: reschedule/cancel against a live database (no Supabase connected).
 
 ## Definition of done for every phase
 

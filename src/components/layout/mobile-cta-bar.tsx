@@ -2,6 +2,7 @@
 
 import * as React from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { XIcon } from "lucide-react";
 import { SocialIcon } from "@/components/icons/social";
 import { Button } from "@/components/ui/button";
@@ -40,6 +41,9 @@ function subscribeDismissed(onChange: () => void) {
  * it never captures focus off-screen.
  */
 export function MobileCtaBar({ bookHref, whatsappHref }: MobileCtaBarProps) {
+  const pathname = usePathname();
+  // The booking flow and self-service pages have their own primary actions; never overlay them.
+  const suppressed = pathname === "/book" || pathname.startsWith("/booking");
   const [visible, setVisible] = React.useState(false);
   const dismissed = React.useSyncExternalStore(subscribeDismissed, readDismissed, () => false);
 
@@ -69,7 +73,7 @@ export function MobileCtaBar({ bookHref, whatsappHref }: MobileCtaBarProps) {
     };
   }, [dismissed]);
 
-  const shown = visible && !dismissed;
+  const shown = visible && !dismissed && !suppressed;
 
   const dismiss = () => {
     try {
