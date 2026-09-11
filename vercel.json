@@ -1,6 +1,5 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
-  "comment": "Vercel's Hobby plan allows at most one run per day per cron. These schedules are Hobby-safe. On Pro, tighten them to '*/15 * * * *' (reminders), '15 * * * *' (analytics rollup) and set CRON_REMINDER_INTERVAL_MINUTES=15 so the 1-hour reminder is delivered. See HANDOVER.md.",
   "crons": [
     {
       "path": "/api/cron/reminders",
