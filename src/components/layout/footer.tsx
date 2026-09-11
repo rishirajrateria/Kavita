@@ -295,14 +295,14 @@ function LocationColumn({
   return (
     <FooterColumn title={`${GEO_LABEL[service]} by location`}>
       {countries.map((c) => (
-        <li key={c.id}>
+        <li key={c.path}>
           <Link href={locationHref(c, service)} className={linkClass}>
             {c.name}
           </Link>
         </li>
       ))}
       {cities.map((c) => (
-        <li key={c.id}>
+        <li key={c.path}>
           <Link href={locationHref(c, service)} className={linkClass}>
             {c.name}
           </Link>

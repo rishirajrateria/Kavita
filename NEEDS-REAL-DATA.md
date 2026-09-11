@@ -133,3 +133,21 @@ fails if any token below disappears from this file while still present in the se
 - [ ] `{{CONFIRM IN-PERSON AVAILABILITY}}` — home key-facts block; `site_settings.in_person_available` is seeded `false` until the practitioner confirms where she sees clients in person.
 - [ ] `{{PRACTITIONER PHOTO}}` — `public/images/kavita-placeholder.svg` is a labelled placeholder; replace with a professional photograph (portrait, at least 960×1200) and update the hero `alt` text.
 - [ ] Person/ProfessionalService `sameAs` is currently empty because every social URL is a placeholder — fills automatically once real URLs land in `social_links`.
+
+## 9. Locations — research needed (Phase 2)
+
+The location tree lives in `src/content/locations/` (base geography in `base/*.ts`, hand-written
+§7 research in `research/<path-with-slashes-as-double-hyphens>.ts`). Status is derived, never
+set: `stub` (no research file) → the page is not generated; `partial` (all research fields
+present and within limits) → renders `noindex`; `complete` (partial + practitioner-supplied
+`clientConcerns`) → indexable and sitemapped. `pnpm test:seed` prints the counts and
+`scripts/validate-content.ts` lists every stub/partial location by path — that output is the
+per-location to-do list, so it is not duplicated here.
+
+### Practitioner-only fields (cannot be researched; must come from Kavita)
+
+- [ ] `research.clientConcerns` for every location — the 2–3 concerns clients from that place most often bring. Left `[]` in every research file until she supplies them; no page becomes `complete` (indexable) without them (§7, §12). Used in: geo page "what clients here ask about" block, key-facts, FAQ selection.
+- [ ] `research.testimonialId` per location — a real, consented, attributable client experience from that region, referenced by its `testimonials` row id. Omitted entirely where none exists; the block does not render. Used in: geo page client-experience block, `Review` schema only if real.
+- [ ] `languages` per location (in `base/*.ts`) are assumed consultation-demand languages — confirm against the languages she actually consults in.
+- [ ] `currency` per location is the billing currency offered there. Canada, Australia and Singapore now use CAD/AUD/SGD (contract) although §11 lists INR/USD/GBP/AED as the accepted set — confirm which currencies she will invoice in.
+- [ ] Practitioner business hours and IANA timezone (`site_settings`) — every consultation window on every geo page is computed from these; while the seeded 10:00–18:00 IST stands, windows are shown against those hours. If hours are absent the code assumes 09:00–20:00 and says so in the page note.

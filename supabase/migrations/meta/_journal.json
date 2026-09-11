@@ -22,6 +22,20 @@
       "when": 1789065593137,
       "tag": "20260910183953_updated_at_triggers",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1789094911047,
+      "tag": "20260911024831_locations_phase2_columns",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1789094914437,
+      "tag": "20260911024834_locations_phase2_drop_legacy",
+      "breakpoints": true
     }
   ]
 }

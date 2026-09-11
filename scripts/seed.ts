@@ -15,8 +15,8 @@ import {
   SEED_NS,
   SITE_SETTINGS_KEY,
   faqsSeed,
+  getLocationSeedRows,
   integrationsSeed,
-  locationsSeed,
   servicesSeed,
   siteSettingsSeed,
   socialLinksSeed,
@@ -86,29 +86,16 @@ async function main() {
       });
     console.log(`services: ${serviceRows.length}`);
 
-    // locations: parent-first order in the seed satisfies the self-referencing FK. Research
-    // fields are never overwritten by the seed once a row exists (Phase 2 fills them in admin).
+    // locations: parent-first order in the source satisfies the self-referencing FK. The content
+    // files (src/content/locations) are the source of truth, so research is upserted too.
+    const locationRows = await getLocationSeedRows();
     let inserted = 0;
-    for (const r of locationsSeed) {
+    for (const r of locationRows) {
       const row = { id: stableId(SEED_NS.locations, r.path), ...r };
-      const {
-        landmarks: _l,
-        tradition: _t,
-        climateArchitecture: _c,
-        clientConcerns: _cc,
-        faqs: _f,
-        consultationWindow: _w,
-        bodyAstrologyMd: _ba,
-        bodyVastuMd: _bv,
-        isPublished: _p,
-        researchStatus: _rs,
-        contentUpdatedAt: _cu,
-        ...geographic
-      } = row;
       await tx
         .insert(locations)
         .values(row)
-        .onConflictDoUpdate({ target: locations.id, set: excludedSet(locations, geographic) });
+        .onConflictDoUpdate({ target: locations.id, set: excludedSet(locations, row) });
       inserted += 1;
     }
     console.log(`locations: ${inserted}`);
