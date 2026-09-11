@@ -1,6 +1,6 @@
 /**
- * Site-wide settings, social profiles, third-party integrations, search-engine verification
- * and visitor consent (CLAUDE.md §10, §13).
+ * Site-wide settings and social profiles (CLAUDE.md §10, §13A). Integrations, verification
+ * tags and consent moved to `integrations.ts` in Phase 6.
  */
 import { sql } from "drizzle-orm";
 import {
@@ -13,7 +13,7 @@ import {
   text,
   uniqueIndex,
 } from "drizzle-orm/pg-core";
-import { adminAll, publicInsert, publicSelect } from "./_policies";
+import { adminAll, publicSelect } from "./_policies";
 import { currencyEnum, id, timestamps } from "./_shared";
 
 // ---------------------------------------------------------------------------------------------
@@ -114,105 +114,5 @@ export const socialLinks = pgTable(
     adminAll("social_links"),
     uniqueIndex("social_links_url_uidx").on(t.url),
     index("social_links_sort_idx").on(t.sortOrder),
-  ],
-);
-
-// ---------------------------------------------------------------------------------------------
-// integrations — every pixel/tag/API connection, off until an ID is entered (§13).
-// ---------------------------------------------------------------------------------------------
-
-export const INTEGRATION_PROVIDERS = [
-  "google_search_console",
-  "bing_webmaster",
-  "meta_pixel",
-  "meta_capi",
-  "google_tag",
-  "google_ads",
-  "ga4",
-  "linkedin_insight",
-  "pinterest_tag",
-  "tiktok_pixel",
-  "microsoft_uet",
-  "gtm",
-  "custom_head",
-  "custom_body",
-] as const;
-export type IntegrationProvider = (typeof INTEGRATION_PROVIDERS)[number];
-export const integrationProviderEnum = pgEnum("integration_provider", INTEGRATION_PROVIDERS);
-
-/** Provider-specific config; secrets inside it are encrypted by the admin layer before insert. */
-export type IntegrationConfig = Record<string, string | number | boolean | null>;
-
-export const integrations = pgTable(
-  "integrations",
-  {
-    id: id(),
-    provider: integrationProviderEnum("provider").notNull(),
-    config: jsonb("config").$type<IntegrationConfig>().notNull().default({}),
-    isEnabled: boolean("is_enabled").notNull().default(false),
-    /** ISO 3166-1 alpha-2 codes the tag may load in; empty = everywhere (subject to consent). */
-    loadsInRegions: text("loads_in_regions").array().notNull().default([]),
-    updatedBy: text("updated_by"),
-    ...timestamps,
-  },
-  (t) => [
-    /** Contains credentials: admin-only; the server component reads it with the service role. */
-    adminAll("integrations"),
-    uniqueIndex("integrations_provider_uidx").on(t.provider),
-  ],
-);
-
-// ---------------------------------------------------------------------------------------------
-// verification_tags — search-engine site verification (meta tag or hosted file).
-// ---------------------------------------------------------------------------------------------
-
-export const VERIFICATION_KINDS = ["meta", "file"] as const;
-export const verificationKindEnum = pgEnum("verification_kind", VERIFICATION_KINDS);
-
-export const verificationTags = pgTable(
-  "verification_tags",
-  {
-    id: id(),
-    /** e.g. google, bing, pinterest, facebook_domain, yandex, other */
-    provider: text("provider").notNull(),
-    kind: verificationKindEnum("kind").notNull(),
-    metaName: text("meta_name"),
-    metaContent: text("meta_content"),
-    filePath: text("file_path"),
-    fileContent: text("file_content"),
-    isEnabled: boolean("is_enabled").notNull().default(true),
-    ...timestamps,
-  },
-  (t) => [
-    /** Admin-only; rendered server-side, never queried from the browser. */
-    adminAll("verification_tags"),
-    uniqueIndex("verification_tags_provider_kind_uidx").on(t.provider, t.kind),
-  ],
-);
-
-// ---------------------------------------------------------------------------------------------
-// consent_log — append-only record of cookie/pixel consent choices (§13E).
-// ---------------------------------------------------------------------------------------------
-
-export type ConsentChoices = { analytics: boolean; marketing: boolean };
-
-export const consentLog = pgTable(
-  "consent_log",
-  {
-    id: id(),
-    /** Random anonymous visitor id kept in the consent cookie; never a user identity. */
-    visitorId: text("visitor_id").notNull(),
-    /** ISO 3166-1 alpha-2 from the edge geo header. */
-    region: text("region"),
-    choices: jsonb("choices").$type<ConsentChoices>().notNull(),
-    policyVersion: text("policy_version").notNull(),
-    userAgent: text("user_agent"),
-    ...timestamps,
-  },
-  (t) => [
-    /** Visitors may record a choice but never read the log back. */
-    publicInsert("consent_log", sql`true`),
-    adminAll("consent_log"),
-    index("consent_log_visitor_idx").on(t.visitorId, t.createdAt),
   ],
 );

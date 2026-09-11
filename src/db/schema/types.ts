@@ -22,9 +22,11 @@ import type {
 import type { bookingNotes, featureFlags, notificationTemplates } from "./flags";
 import type { articleCategories, articles, faqs, glossaryTerms, testimonials } from "./content";
 import type { locations } from "./locations";
-import type { pageSeo, redirects } from "./seo";
+import type { redirects } from "./redirects";
+import type { pageSeo } from "./seo";
 import type { serviceTranslations, services } from "./services";
-import type { consentLog, integrations, siteSettings, socialLinks, verificationTags } from "./site";
+import type { consentLog, integrations, verificationTags } from "./integrations";
+import type { siteSettings, socialLinks } from "./site";
 
 export type SiteSettings = typeof siteSettings.$inferSelect;
 export type NewSiteSettings = typeof siteSettings.$inferInsert;

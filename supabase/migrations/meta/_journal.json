@@ -71,6 +71,34 @@
       "when": 1789113963265,
       "tag": "20260911080603_analytics_phase5_rollup",
       "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "7",
+      "when": 1789115968973,
+      "tag": "20260911083928_phase6_redirects",
+      "breakpoints": true
+    },
+    {
+      "idx": 11,
+      "version": "7",
+      "when": 1789116078141,
+      "tag": "20260911084118_phase6_seo_health",
+      "breakpoints": true
+    },
+    {
+      "idx": 12,
+      "version": "7",
+      "when": 1789116096040,
+      "tag": "20260911084136_phase6_integrations",
+      "breakpoints": true
+    },
+    {
+      "idx": 13,
+      "version": "7",
+      "when": 1789116190104,
+      "tag": "20260911084310_phase6_seo_control",
+      "breakpoints": true
     }
   ]
 }
