@@ -79,5 +79,9 @@ export const research: LocationResearch = {
         "Yes. For the Telugu, Kannada and Tamil families who make up much of the Bay Area's Indian community, Astrologer Kavita draws the South Indian square kundli with their own calendar's month names. For a couple from different regions she can draw both the square and the North Indian diamond so each family in India can follow.",
     },
   ],
-  clientConcerns: [],
+  clientConcerns: [
+    "Reviewing a Sunnyvale or Fremont house before an offer deadline closes",
+    "Remodelling an Eichler or ranch home on a slab rather than replacing it",
+    "A Telugu or Tamil family choosing a townhouse near a technology campus",
+  ],
 };

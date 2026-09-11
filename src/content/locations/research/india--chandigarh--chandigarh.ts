@@ -82,5 +82,9 @@ export const research: LocationResearch = {
         "Not in itself. A Chandigarh plot whose front faces genuinely north-east, toward the hills and the morning light, is close to the vastu ideal, and many sector plots have exactly that. Astrologer Kavita reads the actual bearing, the internal plan and the household's charts before saying whether a particular kothi needs balancing or simply sensible arrangement.",
     },
   ],
-  clientConcerns: [],
+  clientConcerns: [
+    "Buying a Mohali, Panchkula or Zirakpur flat versus a sector kothi in Chandigarh",
+    "Working with the off-cardinal facings that Chandigarh's rotated sector grid produces",
+    "Marriage matching for a Chandigarh family whose children live in Toronto or Melbourne",
+  ],
 };

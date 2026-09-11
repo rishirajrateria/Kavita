@@ -85,5 +85,9 @@ export const research: LocationResearch = {
         "Not automatically. In Surat the west is the direction of the sea breeze that makes the humid climate bearable, as well as of the monsoon rain, so Astrologer Kavita reads a west-facing Vesu or Pal flat for its own door, kitchen and bedroom positions and floor, and advises shading and drainage for the balcony rather than closing it off.",
     },
   ],
-  clientConcerns: [],
+  clientConcerns: [
+    "Laying out a diamond unit in Varachha or a textile showroom in the market",
+    "Choosing a Vesu or Pal flat when the family remembers the 2006 Tapi flood",
+    "Timing a partner's move between Surat and Antwerp for the diamond trade",
+  ],
 };

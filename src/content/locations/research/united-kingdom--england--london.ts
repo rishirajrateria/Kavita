@@ -79,5 +79,9 @@ export const research: LocationResearch = {
         "Yes. Astrologer Kavita draws the South Indian square chart with Tamil solar months for Sri Lankan and Indian Tamil families in Harrow, Tooting and East Ham, the format their relatives would recognise. Gujarati families in Brent and Punjabi families in Southall receive the North Indian diamond chart with their own calendar references instead.",
     },
   ],
-  clientConcerns: [],
+  clientConcerns: [
+    "A loft or rear extension on a Southall terrace and what it changes",
+    "A leasehold conversion flat in Wembley where only the interior can move",
+    "A Sri Lankan Tamil family in Harrow matching a proposal with relatives in Jaffna",
+  ],
 };

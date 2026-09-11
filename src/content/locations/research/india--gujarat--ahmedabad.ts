@@ -84,5 +84,9 @@ export const research: LocationResearch = {
         "Largely, yes. A pol house in Ahmedabad's walled city keeps an open central chowk, thick walls and a protected interior, which matches the classical preference for an open centre and a shaded south-west. Astrologer Kavita's advice when such a house is restored or divided is usually to preserve what its builders got right.",
     },
   ],
-  clientConcerns: [],
+  clientConcerns: [
+    "Fixing a Chopda Pujan or new-venture muhurat by the Gujarati Kartak new year",
+    "Leaving a walled-city pol house for a Satellite or Bodakdev tower",
+    "Coordinating a family reading across Ahmedabad, Leicester and Nairobi branches",
+  ],
 };

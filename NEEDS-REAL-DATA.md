@@ -169,3 +169,46 @@ per-location to-do list, so it is not duplicated here.
   confirm this process description.
 - No `testimonialId` is set anywhere; regional testimonial blocks stay hidden until a real,
   consented testimonial exists for that region.
+
+## 11. Client concerns to review (2026-09-11)
+
+At the owner's request (CLAUDE.md, "Owner decisions (2026-09-11)"), all 60 `clientConcerns` sets
+in `src/content/locations/research/` were written by the build team rather than left empty. They
+are informed generalisations of the topics people from each place and housing context typically
+bring to an integrated astrology-and-vastu consultation, grounded in the verifiable facts already
+in each file (housing stock, calendar, birth-records history, time zone, diaspora pattern). They
+are phrased as topics, never as claims about Kavita's actual clients, and contain no numbers.
+Every geo page is now `complete` (indexable) on their strength, so Kavita should read and edit
+them in her own words — each file's `clientConcerns` array, 2–3 entries:
+
+- [ ] `australia.ts`, `australia--new-south-wales--sydney.ts`, `australia--victoria--melbourne.ts`
+- [ ] `canada.ts`, `canada--british-columbia.ts`, `canada--british-columbia--vancouver.ts`, `canada--ontario.ts`, `canada--ontario--brampton.ts`, `canada--ontario--toronto.ts`
+- [ ] `india.ts`, `india--chandigarh.ts`, `india--chandigarh--chandigarh.ts`, `india--delhi.ts`, `india--delhi--delhi.ts`, `india--gujarat.ts`, `india--gujarat--ahmedabad.ts`, `india--gujarat--surat.ts`, `india--haryana.ts`, `india--haryana--gurugram.ts`, `india--karnataka.ts`, `india--karnataka--bengaluru.ts`, `india--kerala.ts`, `india--kerala--kochi.ts`, `india--madhya-pradesh.ts`, `india--madhya-pradesh--indore.ts`, `india--maharashtra.ts`, `india--maharashtra--mumbai.ts`, `india--maharashtra--pune.ts`, `india--rajasthan.ts`, `india--rajasthan--jaipur.ts`, `india--tamil-nadu.ts`, `india--tamil-nadu--chennai.ts`, `india--telangana.ts`, `india--telangana--hyderabad.ts`, `india--uttar-pradesh.ts`, `india--uttar-pradesh--lucknow.ts`, `india--uttar-pradesh--noida.ts`, `india--west-bengal.ts`, `india--west-bengal--kolkata.ts`
+- [ ] `singapore.ts`, `singapore--singapore--singapore-city.ts`
+- [ ] `united-arab-emirates.ts`, `united-arab-emirates--abu-dhabi--abu-dhabi.ts`, `united-arab-emirates--dubai--dubai.ts`, `united-arab-emirates--sharjah--sharjah.ts`
+- [ ] `united-kingdom.ts`, `united-kingdom--england.ts`, `united-kingdom--england--birmingham.ts`, `united-kingdom--england--leicester.ts`, `united-kingdom--england--london.ts`
+- [ ] `united-states.ts`, `united-states--california.ts`, `united-states--california--san-francisco-bay-area.ts`, `united-states--illinois--chicago.ts`, `united-states--new-jersey.ts`, `united-states--new-jersey--edison.ts`, `united-states--new-york--new-york-city.ts`, `united-states--texas.ts`, `united-states--texas--dallas.ts`, `united-states--texas--houston.ts`
+
+If a set is wrong for a place, replace it or set it back to `[]` — the validator then returns
+that location to `partial` (`noindex`) automatically. The header comments in these files and the
+"§9 Practitioner-only fields" entry above still describe the field as practitioner-supplied; that
+remains the intent for the final wording.
+
+## 11. Legal pages (Phase 3, P3-D)
+
+Copy lives in `src/content/legal/{privacy,terms,disclaimer}.ts`; the identity fields (legal entity,
+practitioner name, email, city/country) are read from `site_settings` and are already listed in §1–2.
+Every item below renders as "… ({{PLACEHOLDER}} — to confirm)" next to a sensible default until the
+practitioner confirms or replaces it.
+
+- [ ] `{{RETENTION_CONTACT_MONTHS}}` — how long contact-form messages are kept (default shown: 12 months). Used in: `/privacy` retention table and answer.
+- [ ] `{{RETENTION_BOOKING_YEARS}}` — how long booking/consultation records are kept for tax and accounting (default shown: 7 years; confirm against the rules of her jurisdiction). Used in: `/privacy` retention table.
+- [ ] `{{RETENTION_TESTIMONIAL_UNPUBLISHED_MONTHS}}` — how long an unpublished testimonial submission is kept (default shown: 6 months). Used in: `/privacy` retention table.
+- [ ] `{{HOSTING_REGION}}` — the Supabase project region (e.g. `ap-south-1 (Mumbai)`) and, if different, the Vercel function region. Used in: `/privacy` "who is data shared with" and international-transfers section.
+- [ ] `{{PRIVACY_CONTACT_EMAIL}}` — confirm that `site_settings.email` is the address for privacy/GDPR requests, or supply a dedicated one. Used in: `/privacy` controller block, rights section and contact block.
+- [ ] `{{RESCHEDULE_NOTICE_HOURS}}` — minimum notice to reschedule or cancel (default shown: 24 hours). Used in: `/terms` rescheduling section; Phase 4 self-service reschedule page must use the same value.
+- [ ] `{{CANCELLATION_POLICY}}` — what happens on a late cancellation or no-show (default wording shown in `/terms`). Used in: `/terms`, booking emails (Phase 4).
+- [ ] `{{REFUND_POLICY}}` — when fees are refunded (default wording shown in `/terms`). Used in: `/terms`, booking emails (Phase 4).
+- [ ] `{{GOVERNING_LAW_JURISDICTION}}` — governing law and courts (e.g. "India, courts of {{CITY}}"). Used in: `/terms` governing-law section.
+- [ ] Practitioner to read and approve all three pages; they state what the code does (encryption of birth details, private storage with signed links, cookieless analytics with 90-day raw retention, no payment data in v1, 18+ to book) and must be revised in the same change as any behaviour change. The `/privacy#analytics` section describes the Phase 5 tracker in advance so the policy and the code match when it ships.
+- [ ] The `/privacy` marketing-pixels section is generated from enabled `integrations` rows at build time; when the owner enables a tag from the admin, rebuild (or revalidate) the page so the list updates.

@@ -79,5 +79,9 @@ export const research: LocationResearch = {
         "Yes. A laneway house is a second dwelling on the same plot, and vastu shastra reads it for the corner it occupies and for who will live in it. Send the site plan, a compass bearing and the intended occupants' birth details, and Astrologer Kavita will advise on placement by video from India before the design is fixed.",
     },
   ],
-  clientConcerns: [],
+  clientConcerns: [
+    "Reading a Vancouver Special where the family lives upstairs and a suite is rented below",
+    "Placing a laneway house on a Vancouver lot without unsettling the main home",
+    "Comparing a Surrey subdivision house with a Metrotown condominium for a growing family",
+  ],
 };

@@ -83,5 +83,9 @@ export const research: LocationResearch = {
         "Yes. When a north Kolkata house with a thakur dalan is partitioned between branches, Astrologer Kavita reads the plan to keep the central courtyard open, to place each branch's kitchen and entrance sensibly, and to address the damp of the north-east, alongside the charts of the family members who will live in each part.",
     },
   ],
-  clientConcerns: [],
+  clientConcerns: [
+    "Whether a south-open dakshin khola flat contradicts north-Indian vastu advice",
+    "Dividing an old north Kolkata thakur dalan house among heirs",
+    "Correcting Calcutta Time for a grandparent's koshthi from before 1948",
+  ],
 };

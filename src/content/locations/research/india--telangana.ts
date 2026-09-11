@@ -86,5 +86,9 @@ export const research: LocationResearch = {
         "Not by itself. A Telangana venture's compliance claim usually means a gridded plot with an east or north facing. Astrologer Kavita reads the plot's slope, the placement of water and heavy rooms, the plan the family intends to build and the household's charts, and tells the buyer which claims are substantive and which are decorative.",
     },
   ],
-  clientConcerns: [],
+  clientConcerns: [
+    "Choosing an akshara abhyasam date for a child by the Telugu panchangam",
+    "A venture plot in Warangal or Karimnagar near a Kakatiya-era tank",
+    "A jatakam issued under united Andhra Pradesh read for a Telangana family today",
+  ],
 };

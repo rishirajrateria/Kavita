@@ -84,5 +84,9 @@ export const research: LocationResearch = {
         "Lucknow's loo blows hot and dusty from the west through May and June, so Astrologer Kavita advises a Gomti Nagar kothi to keep its west and south-west heavy and shaded, its kitchen in the south-east and its north-east open toward the morning and the river, which is both the classical vastu layout and the comfortable one.",
     },
   ],
-  clientConcerns: [],
+  clientConcerns: [
+    "A Bada Mangal or Diwali muhurat for a Lucknow household",
+    "Moving from a Chowk courtyard house to a Gomti Nagar kothi facing the loo",
+    "A janam patri drawn by a family pandit in an Awadh village, read today",
+  ],
 };

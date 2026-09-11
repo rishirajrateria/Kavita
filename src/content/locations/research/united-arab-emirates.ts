@@ -78,5 +78,9 @@ export const research: LocationResearch = {
         "The Emirates' afternoon sun from the west and south-west is far harsher than in most of India, and the prevailing Shamal wind comes from the north-west. Astrologer Kavita takes that into account: keeping the south-west heavy and shaded and the north-east light follows both vastu shastra and the comfort logic of a Gulf home.",
     },
   ],
-  clientConcerns: [],
+  clientConcerns: [
+    "Whether to buy in a master-planned community or keep renting near work",
+    "Refining a parent's approximate Indian birth time while the children have exact UAE records",
+    "Keeping a Kerala or Tamil calendar alive in an Emirates household",
+  ],
 };

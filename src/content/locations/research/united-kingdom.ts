@@ -78,5 +78,9 @@ export const research: LocationResearch = {
         "For Gujarati and Punjabi families across the United Kingdom, Astrologer Kavita draws the North Indian diamond chart with Vikram Samvat calendar references, the style their relatives in India would recognise. Tamil families in London receive the South Indian square chart instead. The reading itself follows the same jyotish principles in either format.",
     },
   ],
-  clientConcerns: [],
+  clientConcerns: [
+    "A birth between 1968 and 1971 under year-round British Standard Time",
+    "A north-facing garden that buyers mark down, and whether vastu agrees",
+    "Fitting a UK morning slot around school runs and an Indian afternoon",
+  ],
 };

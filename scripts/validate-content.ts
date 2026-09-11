@@ -201,7 +201,7 @@ async function checkPlaceholders(pages: PageText[]) {
 function holdBackReason(rec: LocationRecord): string {
   if (rec.researchStatus === "stub") return "no research file";
   const n = rec.research?.clientConcerns.length ?? 0;
-  return `clientConcerns: ${n}/${RESEARCH_LIMITS.clientConcerns.completeMin} (practitioner-supplied)`;
+  return `clientConcerns: ${n}/${RESEARCH_LIMITS.clientConcerns.completeMin} (practitioner to review)`;
 }
 
 function printReport(records: LocationRecord[], pages: PageText[]) {

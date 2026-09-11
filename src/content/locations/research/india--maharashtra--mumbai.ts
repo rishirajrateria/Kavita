@@ -83,5 +83,9 @@ export const research: LocationResearch = {
         "Yes. Send the floor plate with the units marked and their orientation, and Astrologer Kavita compares the entrances, kitchen and bedroom positions of each Mumbai flat against the buyers' birth charts, with the west-facing monsoon exposure and the afternoon sun weighed as practical factors alongside the classical vastu directions.",
     },
   ],
-  clientConcerns: [],
+  clientConcerns: [
+    "Choosing between two flats in a new redevelopment launch when nothing can be altered",
+    "Correcting a pre-1955 Bombay Time birth in a grandparent's chart",
+    "A sea-facing west flat versus a garden-facing east flat in Bandra or Dadar",
+  ],
 };

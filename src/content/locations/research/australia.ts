@@ -78,5 +78,9 @@ export const research: LocationResearch = {
         "Yes. Send the estate plan showing the candidate blocks, their dimensions and street orientation, and Astrologer Kavita will compare them for vastu by video from India, taking the southern-hemisphere sun into account. Choosing the block is the one moment when vastu can be applied without any compromise, before the house is designed.",
     },
   ],
-  clientConcerns: [],
+  clientConcerns: [
+    "Deciding between an outer-suburban block and an inner-city apartment after settling in Australia",
+    "Correcting a daylight-saving birth time for a child born in Sydney or Melbourne",
+    "Fitting an Indian wedding muhurat around Australian school terms and long-haul travel",
+  ],
 };

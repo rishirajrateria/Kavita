@@ -79,5 +79,9 @@ export const research: LocationResearch = {
         "Yes, within limits. A condominium has one exposure and no compound, so Astrologer Kavita concentrates on the direction the unit faces, the entrance, the bed and desk positions and the kitchen's relation to the door. Structural change is impossible under Canadian strata rules, so every recommendation for a condo is about use and arrangement.",
     },
   ],
-  clientConcerns: [],
+  clientConcerns: [
+    "Timing a move between two Canadian provinces with different time zones and winters",
+    "Choosing a first Canadian home when winter sun and snow load shape the plan",
+    "Keeping a chart readable for relatives in Punjab, Gujarat or Tamil Nadu",
+  ],
 };

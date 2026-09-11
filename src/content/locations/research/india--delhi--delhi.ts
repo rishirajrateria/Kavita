@@ -83,5 +83,9 @@ export const research: LocationResearch = {
         "It reinforces it. Delhi's loo blows from the west and south-west, so the classical vastu preference for a heavy, closed south-west and an open, light north-east is also the comfortable way to build in the capital. Astrologer Kavita explains both reasons so that a Delhi family understands the advice rather than following it blindly.",
     },
   ],
-  clientConcerns: [],
+  clientConcerns: [
+    "Choosing which floor of a Delhi builder-floor building suits the family",
+    "Reconstructing an elder's Partition-era birth time from remembered family events",
+    "Deciding between a Dwarka DDA flat and a farmhouse on the southern ridge",
+  ],
 };

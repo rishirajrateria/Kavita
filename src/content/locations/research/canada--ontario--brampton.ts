@@ -79,5 +79,9 @@ export const research: LocationResearch = {
         "It is a point vastu shastra takes seriously, because the north-east is meant to be light and open and a double garage is the heaviest element on a Brampton house's street side. Astrologer Kavita reads the garage's actual corner from a compass bearing and the plan before saying whether the house suits the family.",
     },
   ],
-  clientConcerns: [],
+  clientConcerns: [
+    "Fitting parents into a Brampton basement apartment while keeping the household's vastu coherent",
+    "Choosing among Springdale or Castlemore crescents where houses face every direction",
+    "Timing a parent's arrival from Punjab and which room they will take",
+  ],
 };

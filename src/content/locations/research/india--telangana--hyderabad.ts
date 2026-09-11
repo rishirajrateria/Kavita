@@ -84,5 +84,9 @@ export const research: LocationResearch = {
         "For Hyderabad clients Astrologer Kavita works from the Telugu panchangam, Shalivahana Shaka era with amanta months and the sixty-year Jovian cycle, which is the almanac families in the city already follow for Ugadi, Bonalu and house-warmings. She notes any difference from a north Indian almanac when a family straddles both traditions.",
     },
   ],
-  clientConcerns: [],
+  clientConcerns: [
+    "Whether a 'vaastu-compliant' Kokapet or Tellapur villa listing means what it says",
+    "Reading a Telugu jatakam with ghati time alongside the hospital clock",
+    "Preparing a Gachibowli family for a work move to the United States",
+  ],
 };

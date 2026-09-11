@@ -87,5 +87,9 @@ export const research: LocationResearch = {
         "A client in India sends birth details for the household and a floor plan, compass reading and photographs of the home. Astrologer Kavita reads the charts and the plan together over video or phone in Indian Standard Time, explains how the two agree or conflict, and follows up with a written summary of timing and vastu adjustments.",
     },
   ],
-  clientConcerns: [],
+  clientConcerns: [
+    "Choosing a flat by facing and floor when the plot itself is fixed",
+    "Rectifying a birth time remembered as 'just after sunrise' rather than recorded",
+    "How one integrated reading combines a kundli with a home's layout",
+  ],
 };

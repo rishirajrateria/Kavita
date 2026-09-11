@@ -78,5 +78,9 @@ export const research: LocationResearch = {
         "Somewhat. Vastu shastra favours an open north and north-east, and Chicago's winter wind off Lake Michigan and from the north-west makes such an entrance cold. Astrologer Kavita keeps the vastu preference but notes the vestibule or storm door that Chicago houses usually have, and advises how the entry area is arranged so openness and shelter coexist.",
     },
   ],
-  clientConcerns: [],
+  clientConcerns: [
+    "A two-flat on the true-north Chicago grid shared by an extended family",
+    "A north-facing entrance against the Lake Michigan winter wind",
+    "Moving from Devon Avenue to a Naperville colonial with a full basement",
+  ],
 };

@@ -85,5 +85,9 @@ export const research: LocationResearch = {
         "Yes. For Jain families in Gujarat, Astrologer Kavita reads the Jain festival calendar, notably Paryushan in Bhadarva, within the shared Vikram Samvat almanac, and fixes a wedding or house-warming muhurat that respects those observances as well as the tithi, nakshatra and the couple's charts, naming any dates the community sets aside.",
     },
   ],
-  clientConcerns: [],
+  clientConcerns: [
+    "Placing a new house on a plot in a Town Planning Scheme layout anywhere in Gujarat",
+    "Reading a family spread across Saurashtra, Kenya and Britain from one janmakshar",
+    "Whether a delo courtyard house or Kutch bhunga needs any vastu change at all",
+  ],
 };

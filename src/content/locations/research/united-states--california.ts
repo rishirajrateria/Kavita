@@ -79,5 +79,9 @@ export const research: LocationResearch = {
         "Yes, for those who ask; Sikh teaching discourages astrology and she never presses. For Punjabi Hindu and mixed families in Yuba City, Fresno and the Sacramento Valley, Astrologer Kavita draws the North Indian diamond kundli with purnimanta months, and can cast first charts from Californian birth records that go back several generations.",
     },
   ],
-  clientConcerns: [],
+  clientConcerns: [
+    "A Los Angeles hillside lot that no flat grid governs",
+    "Punjabi families of Yuba City and the Central Valley building on farmland",
+    "Choosing between the foggy coast and the hot inland valleys for a first home",
+  ],
 };

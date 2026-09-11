@@ -84,5 +84,9 @@ export const research: LocationResearch = {
         "Jaipur's summer wind arrives hot and dusty from the west and south-west and its winter nights are cold, so Astrologer Kavita's advice for a Jaipur kothi keeps the south-west heavy and shaded, opens the north-east toward the morning and the Aravalli ridge, and favours a courtyard or deep veranda, exactly as the walled city's havelis do.",
     },
   ],
-  clientConcerns: [],
+  clientConcerns: [
+    "Restoring a walled-city haveli inside Jaipur's original nine-square grid",
+    "A wedding muhurat from the Vikram Samvat almanac for a Jaipur family",
+    "Choosing between a JDA colony kothi and a Jagatpura tower on the Tonk Road",
+  ],
 };

@@ -84,5 +84,9 @@ export const research: LocationResearch = {
         "Telugu, Tamil, Kannada and Malayali families in the United States receive the South Indian square chart, with their own calendar's month names; Gujarati, Punjabi, Marathi and Hindi-speaking families receive the North Indian diamond chart. Astrologer Kavita asks which style the family reads so relatives in India can follow the same chart.",
     },
   ],
-  clientConcerns: [],
+  clientConcerns: [
+    "A front door set behind a projecting garage on a cul-de-sac lot",
+    "Checking the birthplace's daylight-saving rule before an American chart is cast",
+    "Timing a move between two American time zones and a family still in India",
+  ],
 };

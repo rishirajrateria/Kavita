@@ -84,5 +84,9 @@ export const research: LocationResearch = {
         "Yes. The cardinal-gridded layouts of Mysuru, Hubballi, Davanagere and other Karnataka towns give sites a clear facing, and Astrologer Kavita advises on the gate and door, the kitchen and bedroom zones, the sump and tank and the shaded south-west before the plan is finalised, adjusting for the mild plateau or the hot northern districts.",
     },
   ],
-  clientConcerns: [],
+  clientConcerns: [
+    "Siting a house on a sloping Kodagu or Malnad estate that no grid governs",
+    "Whether a Kukke Subramanya rite is really indicated by the chart",
+    "Reading a Tulu solar-calendar jataka alongside a Kannada panchanga",
+  ],
 };

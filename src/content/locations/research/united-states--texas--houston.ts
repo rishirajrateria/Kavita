@@ -78,5 +78,9 @@ export const research: LocationResearch = {
         "Very much. Houston's summer sun makes west- and south-west-facing rooms the hardest to cool, and vastu shastra already wants those quarters heavy and enclosed. Astrologer Kavita treats the two as one consideration for Houston homes, placing the master bedroom and storage there and keeping the north-east and the breezy south-east open.",
     },
   ],
-  clientConcerns: [],
+  clientConcerns: [
+    "Choosing a lot in Sugar Land, Katy or The Woodlands from the developer's plat",
+    "A house with no basement and every room above grade",
+    "West-facing rooms under the Houston sun and flood-conscious siting",
+  ],
 };

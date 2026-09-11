@@ -83,5 +83,9 @@ export const research: LocationResearch = {
         "Send the floor plate with the units marked and their orientation, and Astrologer Kavita compares each Pune unit's entrance direction, kitchen and bedroom positions, wind side and floor against the household's birth charts, with the township's overall plan and the westerly monsoon wind weighed as practical factors alongside the classical directions.",
     },
   ],
-  clientConcerns: [],
+  clientConcerns: [
+    "Comparing units in a Hinjawadi or Magarpatta township on a hillside slope",
+    "Guna milan for a Pune engineer marrying while posted in Germany or the United States",
+    "Leaving a Peth wada for a Kothrud or Baner bungalow plot",
+  ],
 };

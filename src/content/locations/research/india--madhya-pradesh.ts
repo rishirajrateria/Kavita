@@ -85,5 +85,9 @@ export const research: LocationResearch = {
         "The Simhastha Kumbh comes to Ujjain every twelve years when Jupiter enters Leo, and it is a fixed point in the state's pilgrimage calendar rather than a muhurat for private events. Astrologer Kavita fixes a Madhya Pradesh family's wedding, house-warming or business muhurat from the purnimanta almanac and the family's charts in the usual way.",
     },
   ],
-  clientConcerns: [],
+  clientConcerns: [
+    "A Bhopal plot that slopes toward the Upper or Lower Lake",
+    "Rectifying an Adivasi or village elder's birth remembered by season",
+    "Timing a family event around the Simhastha Kumbh at Ujjain",
+  ],
 };

@@ -80,5 +80,9 @@ export const research: LocationResearch = {
         "Yes. For the large Telugu community of Frisco, Plano and Irving, Astrologer Kavita draws the South Indian square kundli with Telugu month names and the Ugadi new year, the format family astrologers in Hyderabad and Vijayawada use. Gujarati and Punjabi families in the Metroplex receive the North Indian diamond chart instead.",
     },
   ],
-  clientConcerns: [],
+  clientConcerns: [
+    "Reviewing a Frisco or Prosper builder plan before the slab is poured",
+    "A corner lot in a Collin County master-planned community",
+    "A Telugu family in Plano keeping grandparents in Hyderabad on the same call",
+  ],
 };

@@ -79,5 +79,9 @@ export const research: LocationResearch = {
         "The fierce west sun agrees with vastu shastra's wish for a heavy, enclosed west and south-west, and the winter northers from the north mean an open north-facing entrance wants a covered porch. On the Gulf coast the south-east sea breeze freshens the kitchen's classical quarter. Astrologer Kavita reads these local conditions with the vastu grid for every Texas house.",
     },
   ],
-  clientConcerns: [],
+  clientConcerns: [
+    "Picking the lot before the plan in a Texas master-planned community",
+    "Blue northers, spring tornadoes and how the Texas climate shapes room placement",
+    "A Telugu-style chart for a family that moved from Hyderabad to Austin or Dallas",
+  ],
 };

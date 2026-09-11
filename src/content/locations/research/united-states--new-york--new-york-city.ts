@@ -80,5 +80,9 @@ export const research: LocationResearch = {
         "It does, within limits. Astrologer Kavita treats the co-op's fixed kitchen, bathrooms and walls as given and works on what a New York resident can change: which apartment to choose, which room is the bedroom, where the bed, desk and altar sit, and how a single-exposure living room is arranged. The advice never requires board approval.",
     },
   ],
-  clientConcerns: [],
+  clientConcerns: [
+    "A co-op apartment where building rules forbid moving plumbing or walls",
+    "Reading a Manhattan window that faces 29 degrees off true north",
+    "A first kundli for an Indo-Caribbean family in Richmond Hill",
+  ],
 };

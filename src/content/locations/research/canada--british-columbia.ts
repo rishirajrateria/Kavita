@@ -79,5 +79,9 @@ export const research: LocationResearch = {
         "Only when asked. Sikh teaching discourages astrology, and Astrologer Kavita never presses a reading on anyone. British Columbia's Punjabi Hindu families, mixed households and Gujarati and South Indian families who want a kundli or a vastu review receive the chart in the format their family uses, by video from India.",
     },
   ],
-  clientConcerns: [],
+  clientConcerns: [
+    "Setting up a Fraser Valley acreage or orchard property against vastu principles",
+    "Rectifying a Punjab village birth time for a parent now living in Abbotsford",
+    "Moving from a Surrey basement suite into a first owned home in Langley",
+  ],
 };

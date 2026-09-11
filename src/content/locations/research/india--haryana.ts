@@ -84,5 +84,9 @@ export const research: LocationResearch = {
         "Because Panchkula's sectors continue Chandigarh's grid, which is rotated toward the Shivalik hills, so its plots face intercardinal directions rather than the cardinal facings of Haryana's other towns. Astrologer Kavita reads a Panchkula house from a measured bearing at the gate and door before applying vastu, as she does in Chandigarh itself.",
     },
   ],
-  clientConcerns: [],
+  clientConcerns: [
+    "Dividing a village haveli between brothers without breaking its courtyard",
+    "Gotra and got rules for a Haryana marriage match before charts are compared",
+    "Buying an HSVP sector plot in Rohtak, Karnal or Hisar and fixing its orientation",
+  ],
 };

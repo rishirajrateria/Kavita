@@ -79,5 +79,9 @@ export const research: LocationResearch = {
         "Yes. Both the timing of the move and the choice of house can be read: Astrologer Kavita reads the family's charts for the timing and compares candidate houses in Waterloo Region or Ottawa from their floor plans, compass bearings and photographs, by video from India, so the vastu view is ready before an offer is made.",
     },
   ],
-  clientConcerns: [],
+  clientConcerns: [
+    "Relocating from Peel Region to Waterloo or Ottawa for a new posting",
+    "Treating a legal secondary suite in an Ontario house within a family vastu reading",
+    "Reading a parent's uncertain Indian birth time alongside precise Ontario hospital records",
+  ],
 };

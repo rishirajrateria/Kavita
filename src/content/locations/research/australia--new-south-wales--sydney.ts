@@ -80,5 +80,9 @@ export const research: LocationResearch = {
         "It is the hardest aspect to live with, because the western suburbs miss the sea breeze and a west-facing yard and living area take the full summer afternoon sun. Vastu shastra already prefers a heavy, enclosed west, so Astrologer Kavita advises on which rooms sit on that side and how they are shaded and used.",
     },
   ],
-  clientConcerns: [],
+  clientConcerns: [
+    "Choosing a block on a new Schofields or Marsden Park estate before building",
+    "Reconciling Indian vastu guidance with Sydney's northern midday sun and rear-yard advice",
+    "Keeping a Punjabi or Telugu grandparent in India part of a Parramatta family reading",
+  ],
 };

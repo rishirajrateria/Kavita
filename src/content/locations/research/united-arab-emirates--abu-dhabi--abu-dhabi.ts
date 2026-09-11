@@ -78,5 +78,9 @@ export const research: LocationResearch = {
         "The Shamal blows from the north-west across the Gulf, so a Corniche-facing home in Abu Dhabi takes the wind and the afternoon glare on the same side. Astrologer Kavita notes it when advising which rooms should sit on that face and where heavier furniture and enclosed spaces belong, alongside the ordinary vastu directions.",
     },
   ],
-  clientConcerns: [],
+  clientConcerns: [
+    "Choosing between an Al Reem tower and a Khalifa City villa within a lease",
+    "A Corniche-facing home looking into the Shamal and the afternoon glare",
+    "A Malayali family in the capital keeping a Kerala-style jathakam for grandparents",
+  ],
 };

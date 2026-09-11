@@ -224,7 +224,7 @@ export const locationResearchSchema = z.object({
     "consultingFrom",
   ),
   faqs: z.array(locationFaqSchema).min(RESEARCH_LIMITS.faqs.min).max(RESEARCH_LIMITS.faqs.max),
-  /** PRACTITIONER-SUPPLIED ONLY (§12). `[]` until Kavita provides them; 2–3 when she does. */
+  /** owner-approved generalisations, reviewed by the practitioner (NEEDS-REAL-DATA §11) (§12). `[]` until Kavita provides them; 2–3 when she does. */
   clientConcerns: z
     .array(z.string().min(5))
     .refine(

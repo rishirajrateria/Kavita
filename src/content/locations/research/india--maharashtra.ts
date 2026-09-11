@@ -84,5 +84,9 @@ export const research: LocationResearch = {
         "Yes. The gridded layouts of Nagpur, Nashik and Aurangabad give Maharashtra plots clean cardinal facings, and Astrologer Kavita advises on the gate, the kitchen and bedroom zones, the stair and tank and the shaded south-west, with Vidarbha's extreme summer heat in mind, before the architect finalises the plan.",
     },
   ],
-  clientConcerns: [],
+  clientConcerns: [
+    "A Konkan coastal house whose west face takes several metres of monsoon rain",
+    "Confirming Kalsarpa dosha before a Trimbakeshwar rite is undertaken",
+    "A plot in a Nagpur or Nashik layout before construction begins",
+  ],
 };

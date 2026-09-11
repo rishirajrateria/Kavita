@@ -79,5 +79,9 @@ export const research: LocationResearch = {
         "Yes. Astrologer Kavita draws the North Indian diamond kundli with Vikram Samvat months and the Kartik new year for Gujarati families in Edison, exactly as an astrologer in Surat or Ahmedabad would. Telugu and Tamil families in Middlesex County receive the South Indian square chart with their own calendar references instead.",
     },
   ],
-  clientConcerns: [],
+  clientConcerns: [
+    "Comparing several Edison colonials on curving streets before making an offer",
+    "Finishing a basement as a bedroom or office and what vastu says",
+    "An early-morning slot before the Metropark train that a parent in Gujarat can join",
+  ],
 };

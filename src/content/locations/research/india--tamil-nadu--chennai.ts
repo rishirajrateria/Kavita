@@ -83,5 +83,9 @@ export const research: LocationResearch = {
         "Both, and Astrologer Kavita says so. In Chennai the sea and the afternoon breeze lie to the east and south-east, so the traditional vastu preference for an open east coincides with the most comfortable way to build in a hot, humid climate. She still checks the internal plan, since facing alone does not make a house right.",
     },
   ],
-  clientConcerns: [],
+  clientConcerns: [
+    "The ten poruthams for a Chennai marriage match with a jathagam on each side",
+    "Choosing an OMR gated community after the December 2015 floods",
+    "A muhurtham for a Chennai house-warming on a ground-measured Anna Nagar plot",
+  ],
 };

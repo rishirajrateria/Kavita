@@ -82,5 +82,9 @@ export const research: LocationResearch = {
         "It matters practically and traditionally. Astrologer Kavita asks whether a Bengaluru project stands on a former tank bed or stormwater path, because standing water beneath or beside a home is treated seriously in vastu and has caused documented flooding in the city's eastern and south-eastern communities; the answer shapes her advice on water storage and basement use.",
     },
   ],
-  clientConcerns: [],
+  clientConcerns: [
+    "Building on a 30-by-40 site in a BDA layout, corner or interior",
+    "Checking whether a Whitefield or Electronic City community stands on a former kere bed",
+    "A South Indian jataka for a Bengaluru couple born in two different states",
+  ],
 };

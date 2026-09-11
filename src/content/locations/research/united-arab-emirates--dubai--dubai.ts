@@ -78,5 +78,9 @@ export const research: LocationResearch = {
         "Vastu shastra prefers the west and south-west of a home to be heavier and more enclosed, which a glass wall contradicts and Dubai's afternoon sun makes uncomfortable. Astrologer Kavita would look at the whole floor plan before advising, but curtains, the placement of heavy furniture and the choice of which room sits behind that glass are the usual levers.",
     },
   ],
-  clientConcerns: [],
+  clientConcerns: [
+    "The Springs villa or a Marina tower: which suits a family before signing",
+    "Non-structural remedies for an Ejari-registered tenancy that forbids alterations",
+    "Timing a move between Dubai and India, and which home to set up first",
+  ],
 };

@@ -79,5 +79,9 @@ export const research: LocationResearch = {
         "A terrace fixes the front door, kitchen and yard, so the advice is about room use. A detached Oadby house has four open sides, a drive and a garden, so Astrologer Kavita can advise on the main door's position, the master bedroom, the garage and any extension. Both are assessed from plans and a compass bearing.",
     },
   ],
-  clientConcerns: [],
+  clientConcerns: [
+    "A shop layout on Belgrave Road's Golden Mile",
+    "Leaving a Belgrave terrace for an Oadby semi with a different aspect",
+    "A Jain or Gujarati Hindu wedding date by the Kartik-year almanac",
+  ],
 };

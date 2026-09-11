@@ -85,5 +85,9 @@ export const research: LocationResearch = {
         "Yes. For the private apartment blocks around Manimajra, Astrologer Kavita compares each unit's door direction, balcony facing, kitchen and bedroom positions and floor, together with the block's relation to the old town and any nearby choe, against the household's birth charts, and says which differences between units are meaningful and which are not.",
     },
   ],
-  clientConcerns: [],
+  clientConcerns: [
+    "Comparing a Housing Board flat with a private block around Manimajra",
+    "Building on a village plot inside the grid, at Burail, Attawa or Kajheri",
+    "A kundli for a family whose PGIMER birth certificate says Chandigarh but home is Himachal",
+  ],
 };

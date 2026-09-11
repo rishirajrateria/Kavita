@@ -80,5 +80,9 @@ export const research: LocationResearch = {
         "Yes. Choosing a muhurat, an auspicious time, for a housewarming, key collection or a shop opening on Serangoon Road is a traditional part of jyotish, and Astrologer Kavita selects one from the family's charts and the panchangam, the almanac, by video from India, for Singapore clients of Tamil or North Indian background alike.",
     },
   ],
-  clientConcerns: [],
+  clientConcerns: [
+    "Comparing a slab-block and a point-block HDB flat before balloting",
+    "An auspicious date for collecting HDB keys or opening a shop on Serangoon Road",
+    "Casting a chart for a parent born on Singapore's pre-1982 UTC+7:30 clock",
+  ],
 };

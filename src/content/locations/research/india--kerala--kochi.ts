@@ -86,5 +86,9 @@ export const research: LocationResearch = {
         "Because Kochi stands on backwaters and reclaimed wetland, the water table is high, and the 2018 Kerala floods reached low-lying parts of the district. Astrologer Kavita asks where water stands after rain and where the well and drainage sit, since water placement is central to vastu and is a real risk to a Kochi house.",
     },
   ],
-  clientConcerns: [],
+  clientConcerns: [
+    "Building a new house on family land at Kakkanad or Tripunithura before the monsoon",
+    "A Kerala evening session that lets a member in the Emirates join",
+    "Whether a Marine Drive apartment suits a family used to a nalukettu",
+  ],
 };

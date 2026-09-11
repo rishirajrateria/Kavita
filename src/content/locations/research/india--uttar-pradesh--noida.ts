@@ -84,5 +84,9 @@ export const research: LocationResearch = {
         "Because Noida's low sectors near the Yamuna and Hindon floodplains waterlog in heavy rain, and standing water beneath or beside a home matters both in vastu and in practice. Astrologer Kavita asks about a society's drainage and basement parking, and about a kothi's plinth height, before advising on where water should sit in the plan.",
     },
   ],
-  clientConcerns: [],
+  clientConcerns: [
+    "Comparing towers and balcony directions in a new expressway society launch",
+    "Vastu for a rented Noida flat when the tenancy forbids alterations",
+    "A home-town janam patri from Bihar or eastern Uttar Pradesh for a Noida resident",
+  ],
 };

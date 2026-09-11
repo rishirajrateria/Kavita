@@ -79,5 +79,9 @@ export const research: LocationResearch = {
         "Yes. Send the floor plan, a compass reading at the main entrance and photographs, and Astrologer Kavita will assess a Soho Road shop, a Jewellery Quarter workshop or a wholesale unit by video from India. The entrance, the counter or reception, the owner's desk and storage are the usual points a commercial vastu review covers.",
     },
   ],
-  clientConcerns: [],
+  clientConcerns: [
+    "Three generations sharing a large Handsworth villa and how the rooms divide",
+    "A shop or warehouse review off Soho Road before the fit-out",
+    "Moving from Smethwick to a Solihull or Sutton Coldfield detached house",
+  ],
 };

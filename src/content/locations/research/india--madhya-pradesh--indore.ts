@@ -83,5 +83,9 @@ export const research: LocationResearch = {
         "For an Indore client whose elder was born in a Malwa or Nimar village with a remembered time, Astrologer Kavita tests candidate birth times against dated life events, such as the year of marriage, a first child or a major move, and reads the janam patri only once a candidate fits, saying how confident the result is.",
     },
   ],
-  clientConcerns: [],
+  clientConcerns: [
+    "Building an independent bungalow on an IDA colony plot on black cotton soil",
+    "Arranging a shop or godown in Indore's markets before a Diwali reopening",
+    "A muhurat that respects Ujjain's Mahakaleshwar tradition for an Indore family",
+  ],
 };

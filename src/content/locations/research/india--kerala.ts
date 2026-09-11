@@ -84,5 +84,9 @@ export const research: LocationResearch = {
         "Because Kerala's lowlands have a high water table, two monsoons and, in 2018, floods that reached most districts, so where the well, sump, drainage and rainwater sit decides whether a house stays dry. Astrologer Kavita settles those with the family first, keeping the north-east low, open and dry, before turning to the rooms.",
     },
   ],
-  clientConcerns: [],
+  clientConcerns: [
+    "Reconciling Thachu Shastra and the nadumittam courtyard with pan-Indian vastu",
+    "Planning a Gulf-funded house on a cent-measured plot with a high water table",
+    "Prasna and jathakam readings kept by nakshatra rather than clock time",
+  ],
 };

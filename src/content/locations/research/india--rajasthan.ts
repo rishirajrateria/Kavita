@@ -86,5 +86,9 @@ export const research: LocationResearch = {
         "Yes. Water to a house's north or east is read very differently in vastu from water to its south or west, so for an Udaipur or Kota home Astrologer Kavita asks where the lake or the Chambal lies relative to the plot and how the ground slopes toward it before advising on the entrance and the heavy rooms.",
     },
   ],
-  clientConcerns: [],
+  clientConcerns: [
+    "Where to place the tanka or stored water in a desert-village house",
+    "Shekhawati Marwari families reading a janam patri from a town they left generations ago",
+    "An Udaipur lakeside or Kota riverfront plot and what the water changes",
+  ],
 };

@@ -84,5 +84,9 @@ export const research: LocationResearch = {
         "For a rented Gurugram flat, Astrologer Kavita works entirely with movable choices: which bedroom the couple takes, the direction of sleep and study, where the mandir, the water and the heavy furniture go, and how the hot west-facing balcony is shaded. She lists only adjustments a tenant can make and reverse when the lease ends.",
     },
   ],
-  clientConcerns: [],
+  clientConcerns: [
+    "Making sense of 'east-facing' when the home is a tenth-floor Golf Course Road unit",
+    "Kundli milan for a couple from two different states who met in Cyber City",
+    "Non-structural vastu for a rented Gurugram flat with a corporate relocation clause",
+  ],
 };

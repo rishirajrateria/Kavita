@@ -80,5 +80,9 @@ export const research: LocationResearch = {
         "Yes. For Singapore's Tamil families Astrologer Kavita draws the South Indian square chart with Tamil solar month references, the format a temple astrologer on Serangoon Road would use. Families from North India receive the North Indian diamond chart instead. The underlying jyotish calculation is the same; only the presentation differs.",
     },
   ],
-  clientConcerns: [],
+  clientConcerns: [
+    "Avoiding a west-facing unit when the block, not the resident, sets the orientation",
+    "A Tamil family in Singapore keeping a South Indian chart style for relatives at home",
+    "Stepping up from an HDB flat to a private condominium or landed house",
+  ],
 };

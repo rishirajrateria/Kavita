@@ -79,5 +79,9 @@ export const research: LocationResearch = {
         "Yes. For the Telugu, Tamil and Kannada families of the Route 1 corridor, Bridgewater and Parsippany, Astrologer Kavita draws the South Indian square kundli with their own calendar's month names, the format their relatives in India would recognise. Gujarati and Punjabi families in New Jersey receive the North Indian diamond chart instead.",
     },
   ],
-  clientConcerns: [],
+  clientConcerns: [
+    "Choosing between Plainsboro, Monroe and South Brunswick new builds for a growing family",
+    "A finished New Jersey basement that houses visiting parents each summer",
+    "A South Indian family in Princeton or Bridgewater keeping the square chart",
+  ],
 };

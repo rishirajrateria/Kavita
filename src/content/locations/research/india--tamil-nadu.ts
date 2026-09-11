@@ -85,5 +85,9 @@ export const research: LocationResearch = {
         "Yes. Astrologer Kavita reads a Tamil Nadu client's nadi reading from Vaitheeswaran Koil as one source beside the jathagam, showing where the two agree, where the palm-leaf reading's remedies match what the birth chart shows and where they do not, so the family can weigh the nadi's guidance with a second, independent view.",
     },
   ],
-  clientConcerns: [],
+  clientConcerns: [
+    "Whether a Navagraha temple visit in the Cauvery delta is indicated by the chart",
+    "Reconciling a Vakya and a Thirukanitha almanac date for a family event",
+    "A house on the cardinal streets of a Tamil temple town like Madurai or Tiruvannamalai",
+  ],
 };

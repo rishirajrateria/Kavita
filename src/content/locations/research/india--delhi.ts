@@ -86,5 +86,9 @@ export const research: LocationResearch = {
         "Because lanes in the territory's urban villages and regularised colonies follow old field boundaries rather than a grid, so a house there rarely faces a clean cardinal direction. Astrologer Kavita reads the exact bearing from the gate and the door before applying vastu, since a guessed facing can be wrong by a full octant.",
     },
   ],
-  clientConcerns: [],
+  clientConcerns: [
+    "Rebuilding in east Delhi after the 2023 Yamuna flood with vastu in mind",
+    "Regularising or extending an urban-village house under the old lal dora boundary",
+    "Gotra and kundli milan for a Delhi village family marrying into the city",
+  ],
 };

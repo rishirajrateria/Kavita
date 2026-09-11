@@ -78,5 +78,9 @@ export const research: LocationResearch = {
         "Because Toronto's street grid is skewed from true north, a house on a 'north–south' street off Yonge actually faces somewhat east or west of the cardinal direction. Vastu shastra works on true bearings, so Astrologer Kavita asks every Toronto client for a phone-compass reading from the front door before assigning rooms.",
     },
   ],
-  clientConcerns: [],
+  clientConcerns: [
+    "Whether a downtown Toronto condominium with one window wall can be arranged for vastu",
+    "Matching a Scarborough-raised Tamil child with a proposal from Jaffna or Chennai",
+    "Trading a Yonge Street condo for a Markham or Vaughan subdivision house",
+  ],
 };

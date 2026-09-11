@@ -84,5 +84,9 @@ export const research: LocationResearch = {
         "Not in itself. Across the West Bengal delta the hot-season breeze comes from the south and a south-open house is the regional norm, so Astrologer Kavita reads it as a condition to balance through the north and east sides, the kitchen and the sleeping rooms, and checks the household's charts before deciding how much weight the south should carry.",
     },
   ],
-  clientConcerns: [],
+  clientConcerns: [
+    "Choosing between the two Bengali panjika traditions when puja dates disagree",
+    "Rebuilding a Sundarbans or coastal house after Amphan or Yaas",
+    "A koshthi for an elder whose papers were lost leaving East Bengal",
+  ],
 };

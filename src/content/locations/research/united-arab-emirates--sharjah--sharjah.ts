@@ -78,5 +78,9 @@ export const research: LocationResearch = {
         "Vastu shastra places prayer in the north-east, the quarter associated with clarity and light. In a compact Sharjah flat that usually means a shelf or alcove in the north-east corner of the living room rather than a separate room. Astrologer Kavita locates it on the floor plan using the compass reading from the front door.",
     },
   ],
-  clientConcerns: [],
+  clientConcerns: [
+    "Comparing two Al Nahda or Al Majaz flats before the tenancy is signed",
+    "Where a prayer corner belongs in a small Rolla apartment",
+    "A block facing the Dubai commute rather than the sea, and what that means",
+  ],
 };

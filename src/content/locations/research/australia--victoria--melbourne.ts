@@ -81,5 +81,9 @@ export const research: LocationResearch = {
         "Yes. For the Telugu, Tamil, Kannada and Malayali families of Melbourne's south-east, Astrologer Kavita draws the South Indian square kundli with their own calendar's month names, the format a family astrologer in Hyderabad or Chennai would use. Punjabi and Gujarati families in the western suburbs receive the North Indian diamond chart instead.",
     },
   ],
-  clientConcerns: [],
+  clientConcerns: [
+    "Reviewing a house-and-land package in Tarneit, Truganina or Clyde before construction starts",
+    "Living with Melbourne's hot northerly winds in a north-facing family room",
+    "Matching charts between a Melbourne-raised child and a family still in Punjab or Andhra",
+  ],
 };

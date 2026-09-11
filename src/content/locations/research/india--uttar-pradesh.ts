@@ -85,5 +85,9 @@ export const research: LocationResearch = {
         "Largely, yes. The courtyard house of the Uttar Pradesh village and district town keeps an open centre, thick walls and a protected interior, matching the classical brahmasthan and a heavy south-west against the loo. Astrologer Kavita's advice when such a house is rebuilt in brick is usually to keep the courtyard rather than fill it for extra rooms.",
     },
   ],
-  clientConcerns: [],
+  clientConcerns: [
+    "Rebuilding after Terai or Ghaghara flooding with the courtyard kept",
+    "Using the Varanasi almanac for a muhurat in Agra, Kanpur or Prayagraj",
+    "A remembered village birth time rectified against marriage and first-job dates",
+  ],
 };

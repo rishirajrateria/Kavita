@@ -80,5 +80,9 @@ export const research: LocationResearch = {
         "Yes. For the Gujarati communities of Preston, Bolton, Blackburn and Leicester, Astrologer Kavita draws the North Indian diamond kundli with amanta months and the Kartik new year, as a family astrologer in Gujarat would. Punjabi families in Slough, Coventry or Wolverhampton receive the same diamond with purnimanta month names instead.",
     },
   ],
-  clientConcerns: [],
+  clientConcerns: [
+    "A hillside terrace in a Lancashire or Yorkshire mill town that faces along the slope",
+    "Moving from Slough or Coventry to a new-build estate on the town's edge",
+    "A Gujarati family in Preston or Bolton keeping the chart their relatives use",
+  ],
 };
