@@ -376,13 +376,42 @@ route. Adding Razorpay or Stripe is: write the provider class, register it, impl
 `verifyWebhook` over the _raw_ body, map the events, set the keys, flip `PAYMENTS_ENABLED=true`.
 `CLAUDE.md` §11 has the exact request shapes, the event→status table and the test checklist.
 
+## D2. Deploying a preview before the real content exists
+
+The build normally refuses to ship while placeholder testimonials or `{{PLACEHOLDER}}` copy remain
+(CLAUDE.md §12). To put the site on a URL and look at it before Kavita's details exist, set one
+environment variable in Vercel:
+
+```
+ALLOW_PLACEHOLDER_CONTENT=true
+```
+
+The build then succeeds, and in exchange the site protects itself: every page is `noindex,
+nofollow`, `robots.txt` disallows all crawlers, the sitemaps are emptied, and a red banner across
+the top of every page says it is a preview with placeholder content. It cannot be mistaken for,
+or quietly become, the public launch.
+
+**Before going live, delete that variable.** The honesty gate comes back and the build will fail
+until the real details and consented testimonials are in place — which is the point.
+
 ## E. Scheduled jobs (`vercel.json`)
 
-| Path                         | Schedule (UTC)   | What it does                                                    |
-| ---------------------------- | ---------------- | --------------------------------------------------------------- |
-| `/api/cron/reminders`        | every 15 minutes | Booking reminder emails                                         |
-| `/api/cron/analytics-rollup` | hourly at :15    | Rolls raw analytics into daily aggregates; 90-day raw retention |
-| `/api/cron/seo-health`       | Mondays 03:30    | One budgeted segment of the SEO health crawl                    |
+| Path                         | Schedule (UTC) | What it does                                                    |
+| ---------------------------- | -------------- | --------------------------------------------------------------- |
+| `/api/cron/reminders`        | daily 02:00    | Booking reminder emails                                         |
+| `/api/cron/analytics-rollup` | daily 02:30    | Rolls raw analytics into daily aggregates; 90-day raw retention |
+| `/api/cron/seo-health`       | Mondays 03:30  | One budgeted segment of the SEO health crawl                    |
+
+**Why daily:** Vercel's free (Hobby) plan runs each scheduled job at most once a day, and refuses
+to deploy anything more frequent. These schedules work on the free plan. The practical effect is
+that a client gets one reminder email, between one and two days before the session, and there is
+no "starting in an hour" reminder — one run a day cannot send one.
+
+**If you upgrade to Vercel Pro** and want the tighter behaviour: in `vercel.json` change the
+reminder schedule to `*/15 * * * *` and the analytics one to `15 * * * *`, and add the environment
+variable `CRON_REMINDER_INTERVAL_MINUTES=15`. Clients then get a reminder about a day ahead and
+again in the final hour. Changing the schedule without adding that variable would send reminders
+at the wrong times, so always change both together.
 
 All three require `Authorization: Bearer $CRON_SECRET`. A crawl that does not finish inside its
 time budget is stored as `paused` with its cursor and resumes on the next firing or from the

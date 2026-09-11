@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Tracker } from "@/components/analytics/tracker";
 import { Footer } from "@/components/layout/footer";
+import { PREVIEW_BANNER_TEXT, isPreviewMode } from "@/lib/preview-mode";
 import { Header } from "@/components/layout/header";
 import { Integrations } from "@/components/layout/integrations";
 import { MobileCtaBar } from "@/components/layout/mobile-cta-bar";
@@ -35,11 +36,13 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
   },
-  robots: {
-    index: true,
-    follow: true,
-    googleBot: { index: true, follow: true, "max-image-preview": "large", "max-snippet": -1 },
-  },
+  robots: isPreviewMode()
+    ? { index: false, follow: false, googleBot: { index: false, follow: false } }
+    : {
+        index: true,
+        follow: true,
+        googleBot: { index: true, follow: true, "max-image-preview": "large", "max-snippet": -1 },
+      },
   formatDetection: { telephone: false, email: false, address: false },
 };
 
@@ -75,6 +78,21 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
         <a href="#main" className="skip-link">
           Skip to content
         </a>
+        {isPreviewMode() ? (
+          <p
+            role="status"
+            style={{
+              margin: 0,
+              padding: "10px 16px",
+              background: "#7a1f1f",
+              color: "#fff",
+              font: "500 13px/1.45 ui-sans-serif, system-ui, sans-serif",
+              textAlign: "center",
+            }}
+          >
+            {PREVIEW_BANNER_TEXT}
+          </p>
+        ) : null}
         <Header />
         <main id="main" tabIndex={-1} className="flex-1 outline-none">
           {children}

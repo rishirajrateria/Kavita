@@ -32,6 +32,15 @@ const MAX_SIMILARITY = 0.6;
 const SHINGLE_SIZE = 5;
 const IS_PRODUCTION =
   process.env.NODE_ENV === "production" || process.env.VERCEL_ENV === "production";
+/**
+ * Deliberate escape hatch for a preview deployment: lets a build ship while placeholder
+ * testimonials and `{{PLACEHOLDER}}` copy are still present, so the owner can see the real site
+ * before the client's details exist. It is not a way around the honesty rules (CLAUDE.md §12) —
+ * `src/lib/preview-mode.ts` reads the same variable and forces the whole site to `noindex`,
+ * blocks every crawler in `robots.txt`, empties the sitemaps and shows a standing banner, so a
+ * build with placeholders can never quietly become the public launch.
+ */
+const ALLOW_PLACEHOLDER_CONTENT = process.env.ALLOW_PLACEHOLDER_CONTENT === "true";
 
 const failures: string[] = [];
 const warnings: string[] = [];
@@ -178,7 +187,14 @@ async function checkPlaceholders(pages: PageText[]) {
     .replace(/^\s*\/\/.*$/gm, ""); // line comments
   const homePlaceholders = homeSource.match(/\{\{[^}]*\}\}/g) ?? [];
 
-  const report = (msg: string) => (IS_PRODUCTION ? fail(msg) : warn(msg));
+  const report = (msg: string) =>
+    IS_PRODUCTION && !ALLOW_PLACEHOLDER_CONTENT ? fail(msg) : warn(msg);
+  if (IS_PRODUCTION && ALLOW_PLACEHOLDER_CONTENT) {
+    warn(
+      "ALLOW_PLACEHOLDER_CONTENT=true — placeholders permitted for a PREVIEW deploy. " +
+        "The site is forced to noindex and shows a preview banner. Unset it before launch.",
+    );
+  }
   if (placeholderTestimonials > 0) {
     report(
       `${placeholderTestimonials} placeholder testimonial(s) would render (supply real, consented ones)`,

@@ -154,10 +154,19 @@ export function xmlResponse(xml: string): Response {
   });
 }
 
+/**
+ * A preview deploy (ALLOW_PLACEHOLDER_CONTENT) must not advertise any URL: `robots.txt` already
+ * blocks every crawler, and an empty sitemap keeps a stray fetch from finding placeholder pages.
+ */
+function previewSuppressed(): boolean {
+  return process.env.ALLOW_PLACEHOLDER_CONTENT === "true";
+}
+
 // --- entry sources ---------------------------------------------------------------------------
 
 /** Core routes that exist and are indexable, with their recorded dates. */
 export function pagesSitemapEntries(): SitemapEntry[] {
+  if (previewSuppressed()) return [];
   // The home page is listed as `https://site/` (trailing slash), as the sitemap protocol expects.
   return listIndexableCoreRoutes().map((r) => ({
     loc: r.path === "/" ? `${absoluteUrl("/")}/` : absoluteUrl(r.path),
@@ -169,6 +178,7 @@ export function pagesSitemapEntries(): SitemapEntry[] {
 
 /** Only `complete` geo pages (CLAUDE.md §7: partial pages are noindex, stubs 404). */
 export async function geoSitemapEntries(service: GeoService): Promise<SitemapEntry[]> {
+  if (previewSuppressed()) return [];
   const pages = await listGeoPages();
   return pages
     .filter((p) => p.service === service && p.status === "complete")

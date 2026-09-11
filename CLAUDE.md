@@ -630,9 +630,18 @@ API routes mirror the same shape under `src/app/api/admin/*`; every one goes thr
 
 | Path                         | Schedule (UTC) | Purpose                                                         |
 | ---------------------------- | -------------- | --------------------------------------------------------------- |
-| `/api/cron/reminders`        | `*/15 * * * *` | Booking reminder emails                                         |
-| `/api/cron/analytics-rollup` | `15 * * * *`   | Hourly rollups, 90-day raw retention                            |
+| `/api/cron/reminders`        | `0 2 * * *`    | Booking reminder emails                                         |
+| `/api/cron/analytics-rollup` | `30 2 * * *`   | Rollups, 90-day raw retention                                   |
 | `/api/cron/seo-health`       | `30 3 * * 1`   | One budgeted SEO-health crawl segment (resumes a paused cursor) |
+
+**Vercel's Hobby plan allows at most one run per day per cron**, so the shipped schedules are
+daily and the deploy succeeds on the free plan. The reminder windows in
+`src/lib/notifications/reminders.ts` are derived from `CRON_REMINDER_INTERVAL_MINUTES` (default 1440) precisely so this is correct rather than merely permitted: on a daily run each booking gets
+one reminder 1–48 h ahead, and the 1-hour reminder is disabled because a once-a-day job cannot
+deliver it. On Pro, set `*/15 * * * *` and `15 * * * *` in `vercel.json` and
+`CRON_REMINDER_INTERVAL_MINUTES=15`; the 1-hour reminder returns and the day-ahead reminder
+tightens to ~24 h. Never tighten the schedule without also setting the variable, or reminders
+will be sent from windows wider than the gap between runs.
 
 **Supabase Storage buckets:** `floor-plans` (private, client uploads, service-role access only)
 and `og-library` (public, share images; magic-byte sniffed, ≤ 4 MB).
