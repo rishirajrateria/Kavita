@@ -23,6 +23,11 @@ import {
 } from "@/lib/articles";
 import type { GeoService } from "@/lib/data/types";
 import { listGeoPages } from "@/lib/geo/pages";
+import {
+  applyPageOverrides,
+  getSitemapConfig,
+  type SitemapSection,
+} from "@/lib/redirects/sitemap-config";
 import { type ChangeFreq, listIndexableCoreRoutes } from "@/lib/routes";
 import { absoluteUrl } from "@/lib/site";
 
@@ -175,13 +180,40 @@ export async function geoSitemapEntries(service: GeoService): Promise<SitemapEnt
     }));
 }
 
+// --- sitemap control (Phase 6, P6-B) ---------------------------------------------------------
+
+/**
+ * Raw entries for a section, then the admin's `sitemap_config` applied: an excluded section is
+ * empty, excluded pages are dropped, priority/changefreq overrides win. Route handlers and the
+ * index go through this; the raw builders above stay pure for the tests.
+ */
+export async function sitemapSectionEntries(section: SitemapSection): Promise<SitemapEntry[]> {
+  const config = (await getSitemapConfig())[section];
+  const raw =
+    section === "pages"
+      ? pagesSitemapEntries()
+      : section === "geo-astrology"
+        ? await geoSitemapEntries("astrologer")
+        : section === "geo-vastu"
+          ? await geoSitemapEntries("vastu-consultant")
+          : section === "learn"
+            ? learnSitemapEntries()
+            : imageSitemapEntries();
+  return applyPageOverrides(raw, config);
+}
+
+const GEO_SECTION: Record<GeoService, SitemapSection> = {
+  astrologer: "geo-astrology",
+  "vastu-consultant": "geo-vastu",
+};
+
 /** Page `n` (1-based) of a geo family, or `null` when that page does not exist. */
 export async function geoSitemapPage(
   family: GeoSitemapFamily,
   page: number,
 ): Promise<string | null> {
   if (!Number.isInteger(page) || page < 1) return null;
-  const entries = await geoSitemapEntries(family.service);
+  const entries = await sitemapSectionEntries(GEO_SECTION[family.service]);
   const pages = chunk(entries, SITEMAP_MAX_URLS);
   // Page 1 must always exist (an empty urlset is valid); higher pages only when there is overflow.
   if (page === 1) return renderUrlset(pages[0] ?? []);
@@ -256,11 +288,15 @@ export function imageSitemapEntries(): SitemapEntry[] {
 /** Every file the index lists, overflow files included, with the latest child `lastmod`. */
 export async function sitemapIndexEntries(): Promise<SitemapIndexEntry[]> {
   const out: SitemapIndexEntry[] = [];
-  const pages = pagesSitemapEntries();
-  out.push({ loc: absoluteUrl("/sitemap-pages.xml"), lastmod: latestLastmod(pages) });
+  const config = await getSitemapConfig();
+  if (config.pages.included) {
+    const pages = await sitemapSectionEntries("pages");
+    out.push({ loc: absoluteUrl("/sitemap-pages.xml"), lastmod: latestLastmod(pages) });
+  }
 
   for (const family of Object.values(GEO_SITEMAP_FAMILIES)) {
-    const entries = await geoSitemapEntries(family.service);
+    if (!config[GEO_SECTION[family.service]].included) continue;
+    const entries = await sitemapSectionEntries(GEO_SECTION[family.service]);
     const chunks = chunk(entries, SITEMAP_MAX_URLS);
     const count = Math.max(1, chunks.length);
     for (let i = 0; i < count; i += 1) {
@@ -271,11 +307,13 @@ export async function sitemapIndexEntries(): Promise<SitemapIndexEntry[]> {
     }
   }
 
-  out.push({
-    loc: absoluteUrl("/sitemap-learn.xml"),
-    lastmod: latestLastmod(learnSitemapEntries()),
-  });
-  const images = imageSitemapEntries();
+  if (config.learn.included) {
+    out.push({
+      loc: absoluteUrl("/sitemap-learn.xml"),
+      lastmod: latestLastmod(await sitemapSectionEntries("learn")),
+    });
+  }
+  const images = await sitemapSectionEntries("images");
   if (images.length > 0) out.push({ loc: absoluteUrl("/sitemap-images.xml") });
   return out;
 }
