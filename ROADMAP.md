@@ -10,7 +10,7 @@ phase ends with a working, deployable site. Read `CLAUDE.md` first in every phas
 - [x] **Phase 2 — SEO infrastructure and the geo page engine.** Typed location data layer (`content/locations/*.ts` → Supabase) with `researchStatus`; `scripts/validate-content.ts` uniqueness/placeholder gate in CI and `prebuild`; astrologer × vastu-consultant templates at country/state/city; `generateMetadata`, OG images, typed JSON-LD generators, split sitemaps, `robots.txt` with the AI-crawler allow-list, `/llms.txt`, `/llms-full.txt`, `.md` mirror, `/for-ai`, IndexNow, internal-linking engine.
 - [x] **Phase 3 — Content pages: about, astrology, vastu, services, learn, testimonials, contact.** `/about` E-E-A-T anchor, `/astrology` and `/vastu` intent hubs, `/services/[slug]`, `/learn` MDX pipeline with 8 seed articles, `/glossary/[term]` with 25 terms, `/testimonials` + `/share-your-experience` intake, `/contact`, `/faq`, `/privacy`, `/terms`, `/disclaimer`.
 - [x] **Phase 4 — Booking and calendar system.** Availability rules/exceptions in Kavita's IANA timezone, server-side UTC slot generation with DST and IST half-hour tests, 7-step booking flow with dual-timezone display, race-safe slot insert, Resend/React Email notifications and cron reminders, token-based client self-service, payment seam (§11) with `NoopPaymentProvider`, private floor-plan uploads, rate limiting and audit trail.
-- [ ] **Phase 5 — Admin panel and first-party analytics.** `/admin` behind Supabase Auth + RLS with `admin_audit_log`; cookieless first-party tracker (`public/t.js` < 4KB) with the §13.D event fan-out registry, edge-geo ingest, daily rollups; dashboard (realtime, traffic, geography, pages incl. geo-page performance, behaviour, acquisition incl. AI-referral panel, technology, conversions); bookings, content, settings and site-identity management.
+- [x] **Phase 5 — Admin panel and first-party analytics.** `/admin` behind Supabase Auth + RLS with `admin_audit_log`; cookieless first-party tracker (`public/t.js` < 4KB) with the §13.D event fan-out registry, edge-geo ingest, daily rollups; dashboard (realtime, traffic, geography, pages incl. geo-page performance, behaviour, acquisition incl. AI-referral panel, technology, conversions); bookings, content, settings and site-identity management.
 - [ ] **Phase 6 — SEO control backend and redirect engine.** `page_seo` per-route control with SERP preview and keyword checker, FAQ manager, AEO control panel (answer-block linter, llms.txt editor, per-bot crawler toggles, citability check), social/OG control, `redirects` engine in `middleware.ts` with loop/chain detection, 404 log and automatic 301 on slug change, sitemap/IndexNow/GSC/Bing control, `/admin/integrations` implementing §13 in full (pixels, CAPI, event mapping, geo-aware consent, "what's loading" preview), SEO health crawl, audit log with revert; update `CLAUDE.md`/`ROADMAP.md` and write `HANDOVER.md`.
 
 ## Phase 1 report (2026-09-10)
@@ -89,6 +89,30 @@ phase ends with a working, deployable site. Read `CLAUDE.md` first in every phas
   booking race (exactly one insert wins), reschedule window, cancel, 503 without DB; template
   rendering, dedupe, cron windows; UI format helpers. Playwright drove the whole flow at 390/1440.
 - Not testable here: reschedule/cancel against a live database (no Supabase connected).
+
+## Phase 5 report (2026-09-11)
+
+- Tracker: `public/t.js` at 3.9 KB gzipped, cookieless, DNT/opt-out aware, sendBeacon batching;
+  captures pageviews, sessions, visibility-based time on page, scroll depth, clicks with
+  selector/text/position, rage and dead clicks, form abandonment, outbound and CTA clicks,
+  viewport, booking funnel; conversion fan-out registry with generated `event_id`.
+- Ingest: edge-geo derivation, UA parsing, bot detection, daily-salted visitor hash, no raw IP,
+  always 204; hourly rollups, 90-day raw retention, rollups kept.
+- Dashboard: overview, realtime (Supabase Realtime with polling fallback), traffic with 8 presets
+  and previous-period comparison, geography drill-down + SVG dot map, pages incl. geo-page
+  performance, behaviour (scroll heat strip, click heatmap overlay, rage/dead clicks), acquisition
+  incl. the AI-referral panel, technology, conversions funnel; every panel reads rollups and is
+  paginated; 69 panel queries measured on a 12-month seeded dataset, slowest 23 ms (budget 800 ms).
+- Admin: Supabase Auth with owner/editor/viewer roles, proxy guard, audited route handlers with
+  before/after diffs and secret redaction; bookings management (list, detail, calendar, actions,
+  notes, CSV/ICS), content (testimonials, services, FAQs, locations research editor, glossary
+  read-only), settings (availability, notification templates, users, feature flags incl.
+  PAYMENTS_ENABLED), site identity + social-links manager with per-platform validation and live
+  footer/sameAs preview. Gender is an optional self-identified booking field only, never inferred.
+- Offline: with no Supabase connected the admin shows honest "connect Supabase" states;
+  `ADMIN_DEV_BYPASS=true` (non-production only) renders the shell for review.
+- Follow-up noted: split the root layout into (site)/(admin) groups instead of hiding the site
+  header/footer on /admin with scoped CSS.
 
 ## Definition of done for every phase
 

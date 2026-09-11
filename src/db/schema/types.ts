@@ -19,6 +19,7 @@ import type {
   notificationLog,
   payments,
 } from "./booking";
+import type { bookingNotes, featureFlags, notificationTemplates } from "./flags";
 import type { articleCategories, articles, faqs, glossaryTerms, testimonials } from "./content";
 import type { locations } from "./locations";
 import type { pageSeo, redirects } from "./seo";
@@ -90,3 +91,10 @@ export type AdminUser = typeof adminUsers.$inferSelect;
 export type NewAdminUser = typeof adminUsers.$inferInsert;
 export type AdminAuditLogEntry = typeof adminAuditLog.$inferSelect;
 export type NewAdminAuditLogEntry = typeof adminAuditLog.$inferInsert;
+
+export type FeatureFlag = typeof featureFlags.$inferSelect;
+export type NewFeatureFlag = typeof featureFlags.$inferInsert;
+export type BookingNote = typeof bookingNotes.$inferSelect;
+export type NewBookingNote = typeof bookingNotes.$inferInsert;
+export type NotificationTemplate = typeof notificationTemplates.$inferSelect;
+export type NewNotificationTemplate = typeof notificationTemplates.$inferInsert;

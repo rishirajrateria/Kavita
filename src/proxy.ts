@@ -10,13 +10,66 @@
  * so the styled 404 page is never replaced. The matcher is limited to `.md`, `.txt` and `.xml`
  * URLs outside `/api` and `/_next`; pages and assets never run this code.
  */
+import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 import { MD_PATH_HEADER } from "@/lib/markdown/fetch-page";
 
 const OVERFLOW_SITEMAP = /^\/sitemap-geo-(astrology|vastu)-(\d+)\.xml$/;
 
-export function proxy(request: NextRequest) {
+/**
+ * Admin guard (Phase 5, P5-B). `/admin/*` (except the login page) and `/api/admin/*` (except
+ * the auth endpoints) need a Supabase session cookie; the proxy also refreshes expiring tokens
+ * (Supabase SSR pattern — Server Components cannot write cookies). The role check happens
+ * server-side in `requireAdmin()` / `adminRoute()`. When Supabase is not configured the request
+ * passes through: the admin layout renders "Not connected" (production) or, outside production
+ * with `ADMIN_DEV_BYPASS=true`, a synthetic owner session.
+ */
+async function guardAdmin(request: NextRequest): Promise<NextResponse> {
   const { pathname } = request.nextUrl;
+  const isApi = pathname.startsWith("/api/admin");
+  if (pathname === "/admin/login" || pathname.startsWith("/api/admin/auth/")) {
+    return NextResponse.next();
+  }
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+  if (!url || !anonKey) return NextResponse.next();
+
+  let response = NextResponse.next({ request });
+  const supabase = createServerClient(url, anonKey, {
+    cookies: {
+      getAll: () => request.cookies.getAll(),
+      setAll: (list) => {
+        for (const { name, value } of list) request.cookies.set(name, value);
+        response = NextResponse.next({ request });
+        for (const { name, value, options } of list) response.cookies.set(name, value, options);
+      },
+    },
+  });
+  const hasSessionCookie = request.cookies.getAll().some((c) => /^sb-.*-auth-token/.test(c.name));
+  const user = hasSessionCookie ? (await supabase.auth.getUser()).data.user : null;
+  if (user) return response;
+
+  if (isApi) {
+    return NextResponse.json(
+      { ok: false, reason: "unauthorized" },
+      { status: 401, headers: { "cache-control": "no-store" } },
+    );
+  }
+  const login = new URL("/admin/login", request.url);
+  if (pathname !== "/admin") login.searchParams.set("next", pathname);
+  return NextResponse.redirect(login);
+}
+
+export async function proxy(request: NextRequest) {
+  const { pathname } = request.nextUrl;
+
+  if (
+    pathname === "/admin" ||
+    pathname.startsWith("/admin/") ||
+    pathname.startsWith("/api/admin")
+  ) {
+    return guardAdmin(request);
+  }
 
   if (pathname.endsWith(".md")) {
     const stripped = pathname.slice(0, -".md".length);
@@ -45,5 +98,5 @@ export function proxy(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/((?!api/|_next/).*\\.(?:md|txt|xml))"],
+  matcher: ["/((?!api/|_next/).*\\.(?:md|txt|xml))", "/admin/:path*", "/api/admin/:path*"],
 };
