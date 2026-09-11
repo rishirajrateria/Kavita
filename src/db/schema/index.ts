@@ -7,6 +7,7 @@ export * from "./admin";
 export * from "./analytics";
 export * from "./booking";
 export * from "./contact";
+export * from "./flags";
 export * from "./content";
 export * from "./locations";
 export * from "./seo";

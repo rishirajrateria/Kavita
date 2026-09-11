@@ -14,6 +14,12 @@
  * row and never thrown: a notification must not break the booking path that fired it.
  */
 import { getDb } from "@/db";
+// Phase 5 (P5-C): admin-editable subject/intro overrides from `notification_templates`.
+import {
+  applyTemplateOverride,
+  getTemplateOverride,
+  templateVariables,
+} from "@/lib/admin/settings";
 import { realValue } from "@/lib/site";
 import { getNotificationEnv } from "./env";
 import { DbNotificationLog, MemoryNotificationLog, type NotificationLog } from "./log";
@@ -105,7 +111,13 @@ export function createNotifier(deps: NotifierDeps) {
       return;
     }
     try {
-      const rendered = await renderNotificationEmail(kind, step.recipient, data);
+      // Phase 5 (P5-C): an admin override replaces the subject and/or prepends an intro; with
+      // no database or no row this is a no-op. Never throws.
+      const rendered = applyTemplateOverride(
+        await renderNotificationEmail(kind, step.recipient, data),
+        await getTemplateOverride(kind, step.recipient),
+        templateVariables(data),
+      );
       const result = await deps.email.send({
         to,
         subject: rendered.subject,
