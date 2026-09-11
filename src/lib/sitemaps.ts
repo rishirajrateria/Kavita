@@ -7,13 +7,20 @@
  *   /sitemap-geo-astrology.xml      geo pages with status `complete`, ≤ 5,000 per file
  *   /sitemap-geo-astrology-2.xml    overflow (proxy rewrite → `src/app/api/sitemaps/[family]/[page]`)
  *   /sitemap-geo-vastu.xml, -2.xml
- *   /sitemap-learn.xml              empty urlset until Phase 3
+ *   /sitemap-learn.xml              /learn, category hubs, articles, /glossary and terms
  *   /sitemap-images.xml             practitioner photo + OG images once real ones exist
  *
  * `lastmod` always comes from content dates (`route-dates.ts`, `contentUpdatedAt`) — never
  * `new Date()`.
  */
 import { HERO } from "@/content/home";
+import {
+  articlesLastModified,
+  getArticleCategories,
+  getArticles,
+  getGlossaryTerms,
+  glossaryLastModified,
+} from "@/lib/articles";
 import type { GeoService } from "@/lib/data/types";
 import { listGeoPages } from "@/lib/geo/pages";
 import { type ChangeFreq, listIndexableCoreRoutes } from "@/lib/routes";
@@ -182,9 +189,53 @@ export async function geoSitemapPage(
   return selected ? renderUrlset(selected) : null;
 }
 
-/** Empty until Phase 3 wires articles and glossary terms. */
+/**
+ * The Learn family: `/learn`, each category hub, every article (`lastmod` = its
+ * `dateModified`), `/glossary` and every term (`lastmod` = the entry's `dateModified`).
+ */
 export function learnSitemapEntries(): SitemapEntry[] {
-  return [];
+  const articles = getArticles();
+  const terms = getGlossaryTerms();
+  const out: SitemapEntry[] = [
+    {
+      loc: absoluteUrl("/learn"),
+      lastmod: articlesLastModified(articles),
+      changefreq: "weekly",
+      priority: 0.8,
+    },
+  ];
+  for (const category of getArticleCategories()) {
+    if (category.count === 0) continue;
+    out.push({
+      loc: absoluteUrl(category.href),
+      lastmod: articlesLastModified(articles.filter((a) => a.category === category.slug)),
+      changefreq: "weekly",
+      priority: 0.7,
+    });
+  }
+  for (const a of articles) {
+    out.push({
+      loc: absoluteUrl(a.href),
+      lastmod: a.dateModified,
+      changefreq: "monthly",
+      priority: 0.7,
+    });
+  }
+  out.push({
+    loc: absoluteUrl("/glossary"),
+    lastmod: glossaryLastModified(),
+    changefreq: "monthly",
+    priority: 0.6,
+  });
+  for (const t of terms) {
+    out.push({
+      loc: absoluteUrl(`/glossary/${t.slug}`),
+      lastmod: t.dateModified,
+      changefreq: "monthly",
+      priority: 0.5,
+    });
+  }
+  return out;
 }
 
 /**
