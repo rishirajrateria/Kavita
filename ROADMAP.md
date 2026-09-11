@@ -7,7 +7,7 @@ phase ends with a working, deployable site. Read `CLAUDE.md` first in every phas
 
 - [x] **Phase 0 — Scaffold.** Next.js 16.3 + TypeScript (strict) + Tailwind + shadcn/ui via pnpm; ESLint, Prettier, strict tsconfig, `.env.example`; `CLAUDE.md`, `NEEDS-REAL-DATA.md`, `ROADMAP.md` written.
 - [x] **Phase 1 — Design system, layout, home page, Supabase foundation.** Tokens (`styles/tokens.css`) with full light/dark palettes, next/font, `/design-system` primitives and inline-SVG motifs; header/footer/`<Integrations />` slot reading `site_settings`, `social_links`, `integrations`; full §10 schema as migrations with RLS on every table, typed client, seed; the home page carrying the combined-method positioning with answer blocks, key-facts block, comparison table and FAQPage schema.
-- [ ] **Phase 2 — SEO infrastructure and the geo page engine.** Typed location data layer (`content/locations/*.ts` → Supabase) with `researchStatus`; `scripts/validate-content.ts` uniqueness/placeholder gate in CI and `prebuild`; astrologer × vastu-consultant templates at country/state/city; `generateMetadata`, OG images, typed JSON-LD generators, split sitemaps, `robots.txt` with the AI-crawler allow-list, `/llms.txt`, `/llms-full.txt`, `.md` mirror, `/for-ai`, IndexNow, internal-linking engine.
+- [x] **Phase 2 — SEO infrastructure and the geo page engine.** Typed location data layer (`content/locations/*.ts` → Supabase) with `researchStatus`; `scripts/validate-content.ts` uniqueness/placeholder gate in CI and `prebuild`; astrologer × vastu-consultant templates at country/state/city; `generateMetadata`, OG images, typed JSON-LD generators, split sitemaps, `robots.txt` with the AI-crawler allow-list, `/llms.txt`, `/llms-full.txt`, `.md` mirror, `/for-ai`, IndexNow, internal-linking engine.
 - [ ] **Phase 3 — Content pages: about, astrology, vastu, services, learn, testimonials, contact.** `/about` E-E-A-T anchor, `/astrology` and `/vastu` intent hubs, `/services/[slug]`, `/learn` MDX pipeline with 8 seed articles, `/glossary/[term]` with 25 terms, `/testimonials` + `/share-your-experience` intake, `/contact`, `/faq`, `/privacy`, `/terms`, `/disclaimer`.
 - [ ] **Phase 4 — Booking and calendar system.** Availability rules/exceptions in Kavita's IANA timezone, server-side UTC slot generation with DST and IST half-hour tests, 7-step booking flow with dual-timezone display, race-safe slot insert, Resend/React Email notifications and cron reminders, token-based client self-service, payment seam (§11) with `NoopPaymentProvider`, private floor-plan uploads, rate limiting and audit trail.
 - [ ] **Phase 5 — Admin panel and first-party analytics.** `/admin` behind Supabase Auth + RLS with `admin_audit_log`; cookieless first-party tracker (`public/t.js` < 4KB) with the §13.D event fan-out registry, edge-geo ingest, daily rollups; dashboard (realtime, traffic, geography, pages incl. geo-page performance, behaviour, acquisition incl. AI-referral panel, technology, conversions); bookings, content, settings and site-identity management.
@@ -26,6 +26,29 @@ phase ends with a working, deployable site. Read `CLAUDE.md` first in every phas
   ≈114 KB), fonts 83 KB, CSS 14 KB, HTML 40 KB.
 - Held back: real photo, all contact/social/credential values (see `NEEDS-REAL-DATA.md`); `/book` and the nav
   routes 404 until Phases 3–4 (the 404 page routes usefully).
+
+## Phase 2 report (2026-09-11)
+
+- Built: Zod location schema + 234 Tier-1 base records; 60 researched locations (7 countries,
+  20 states/regions, 33 cities) as reviewable TS files; data layer with tree queries and
+  consultation-window maths (tested); astrologer × vastu-consultant templates at country/state/city
+  with tier-specific block order, key-facts `<dl>`, question H2s + 40–60-word answers, tables,
+  `<details>` FAQ, real-only testimonial slot, generated link graph, location-prefilled CTA;
+  metadata builder (titles ≤60, descriptions 150–160, canonical, reciprocal hreflang on countries,
+  noindex for partial); LocalBusiness/Service/FAQPage/BreadcrumbList/speakable JSON-LD with tests;
+  on-brand `/api/og` images; sitemap index + split sitemaps with real lastmod and overflow files;
+  robots.txt with 15 named AI-crawler groups; `/llms.txt`, `/llms-full.txt`, `/{path}.md` mirror,
+  `/for-ai`; IndexNow utility + protected route + key file; `scripts/validate-content.ts` gate in
+  `prebuild` and CI; interim `/book` page so the primary CTA resolves.
+- Numbers: build 28 s clean (138 static routes, 120 geo pages); max cross-page similarity 39.5 %
+  (ceiling 60 %); Lighthouse mobile on `/astrologer/india/maharashtra/mumbai`: Performance 95,
+  Accessibility 100, Best Practices 100, LCP 2.8 s simulated (FCP 0.9 s), CLS 0, TBT 90 ms.
+- Held back, by the brief's own rule: **0 pages indexable, 120 held at `partial`/noindex** because
+  `clientConcerns` (2–3 per location) is practitioner-supplied and cannot be inferred honestly;
+  174 stub locations return 404. Geo sitemaps are therefore empty until the practitioner fills
+  concerns (see NEEDS-REAL-DATA §10).
+- Not met: geo-page JS is ~155 KB gzipped against the 100 KB target; ~114 KB is the React + Next
+  runtime floor with hydration on, so the target is unreachable without dropping hydration.
 
 ## Definition of done for every phase
 

@@ -151,3 +151,21 @@ per-location to-do list, so it is not duplicated here.
 - [ ] `languages` per location (in `base/*.ts`) are assumed consultation-demand languages — confirm against the languages she actually consults in.
 - [ ] `currency` per location is the billing currency offered there. Canada, Australia and Singapore now use CAD/AUD/SGD (contract) although §11 lists INR/USD/GBP/AED as the accepted set — confirm which currencies she will invoice in.
 - [ ] Practitioner business hours and IANA timezone (`site_settings`) — every consultation window on every geo page is computed from these; while the seeded 10:00–18:00 IST stands, windows are shown against those hours. If hours are absent the code assumes 09:00–20:00 and says so in the page note.
+
+## 10. Location research — Phase 2 status (2026-09-11)
+
+- **60 locations researched** (7 countries, 20 states/regions, 33 cities) and all held at `partial`
+  (rendered, `noindex`) because `clientConcerns` is practitioner-supplied. To make a page indexable,
+  add 2–3 concerns clients from that place most often bring to its file in
+  `src/content/locations/research/` — the validator promotes it to `complete` automatically and the
+  sitemap picks it up on the next build.
+- **174 locations are stubs** (404 until researched): all remaining Indian cities and states, most
+  US/UK/CA/AU regions and their cities. `pnpm validate:content` prints the full list.
+- Skipped deliberately for lack of verifiable facts: Manchester (no solid temple/neighbourhood
+  landmarks); Dubai/Abu Dhabi/Sharjah emirate-level pages (identical territory to the city);
+  New York/Illinois/New South Wales/Victoria state pages; Punjab (no in-scope city under it).
+- Every `consultingFrom` text states sessions are video/phone with a written summary afterwards and
+  that in-person availability depends on the practitioner's base city — the practitioner must
+  confirm this process description.
+- No `testimonialId` is set anywhere; regional testimonial blocks stay hidden until a real,
+  consented testimonial exists for that region.

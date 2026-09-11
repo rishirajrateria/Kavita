@@ -498,6 +498,16 @@ touching the app.
 - Ruflo's background daemon (`.claude-flow/daemon.pid`) was found running after a session start even though
   `daemon.autoStart` is false; its interval workers can spawn headless Claude sessions. Stop it with
   `npx ruflo daemon stop` if it reappears — the user does not want background token spend.
+- Phase 2 conventions: location base records live in `src/content/locations/base/*.ts`; research
+  prose lives in `src/content/locations/research/<path-with-double-dashes>.ts` and MUST be listed in
+  `research/index.ts` (regenerate that map from the directory listing rather than hand-editing when
+  many files change). `pnpm validate:content` (also `prebuild`) enforces status derivation, word
+  limits, the 60% similarity ceiling and the 700-word floor; run it before every commit that touches
+  research. `clientConcerns` is practitioner-only: never fill it from inference.
+- Geo pages: `src/components/geo/*` are server-only (zero client JS). Site-wide script transfer is
+  ~155KB gzipped, of which ~114KB is the React 19 + Next 16 runtime floor; the brief's 100KB geo
+  budget is not reachable with hydration on, so keep every site-wide client component tiny and
+  never add a client dependency to the layout.
 - Folder layout: `src/app` (routes), `src/components/{ui,layout,seo,motifs}`, `src/lib`,
   `src/hooks`, `src/db` (Drizzle schema + client), `src/content/{locations,articles}`,
   `src/styles`, `src/types`, `supabase/{migrations,seed}`, `scripts`, `tests`.
