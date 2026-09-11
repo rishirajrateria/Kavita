@@ -260,6 +260,14 @@ async function main() {
   const seconds = ((performance.now() - started) / 1000).toFixed(1);
   if (failures.length > 0) {
     console.error(`\nvalidate:content failed with ${failures.length} problem(s) in ${seconds}s`);
+    if (failures.some((f) => f.includes("placeholder") || f.includes("PLACEHOLDER"))) {
+      console.error(
+        "\nThis build is blocked only because the client's real details are not in yet.\n" +
+          "To deploy anyway as a PREVIEW (whole site noindex, crawlers blocked, banner shown),\n" +
+          "set ALLOW_PLACEHOLDER_CONTENT=true — it is already set in vercel.json, so on Vercel\n" +
+          "this should not fire. Locally: ALLOW_PLACEHOLDER_CONTENT=true pnpm build",
+      );
+    }
     process.exit(1);
   }
   console.log(`\nvalidate:content passed (${warnings.length} warning(s)) in ${seconds}s`);

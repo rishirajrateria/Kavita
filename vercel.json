@@ -1,5 +1,13 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
+  "build": {
+    "env": {
+      "ALLOW_PLACEHOLDER_CONTENT": "true"
+    }
+  },
+  "env": {
+    "ALLOW_PLACEHOLDER_CONTENT": "true"
+  },
   "crons": [
     {
       "path": "/api/cron/reminders",

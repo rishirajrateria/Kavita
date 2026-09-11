@@ -379,20 +379,25 @@ route. Adding Razorpay or Stripe is: write the provider class, register it, impl
 ## D2. Deploying a preview before the real content exists
 
 The build normally refuses to ship while placeholder testimonials or `{{PLACEHOLDER}}` copy remain
-(CLAUDE.md §12). To put the site on a URL and look at it before Kavita's details exist, set one
-environment variable in Vercel:
+(CLAUDE.md §12). So that the site deploys today, `vercel.json` already sets the one variable that
+relaxes that gate, for both the build and the running site:
 
-```
-ALLOW_PLACEHOLDER_CONTENT=true
+```json
+"build": { "env": { "ALLOW_PLACEHOLDER_CONTENT": "true" } },
+"env":   { "ALLOW_PLACEHOLDER_CONTENT": "true" }
 ```
 
-The build then succeeds, and in exchange the site protects itself: every page is `noindex,
+Nothing has to be typed into the Vercel dashboard. The build succeeds, and in exchange the site
+protects itself: every page is `noindex,
 nofollow`, `robots.txt` disallows all crawlers, the sitemaps are emptied, and a red banner across
 the top of every page says it is a preview with placeholder content. It cannot be mistaken for,
 or quietly become, the public launch.
 
-**Before going live, delete that variable.** The honesty gate comes back and the build will fail
-until the real details and consented testimonials are in place — which is the point.
+**Before going live, delete both `ALLOW_PLACEHOLDER_CONTENT` entries from `vercel.json`.** The
+honesty gate comes back and the build will fail until the real details and consented testimonials
+are in place — which is the point. Until they are deleted the site stays `noindex` and wears the
+preview banner, so forgetting fails in the safe direction: the site never quietly goes public with
+placeholder content, it just keeps announcing that it is a preview.
 
 ## E. Scheduled jobs (`vercel.json`)
 
