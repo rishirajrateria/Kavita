@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Tracker } from "@/components/analytics/tracker";
 import { Footer } from "@/components/layout/footer";
 import { Header } from "@/components/layout/header";
 import { Integrations } from "@/components/layout/integrations";
@@ -81,6 +82,7 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
         <Footer />
         <MobileCtaBar bookHref={BOOK_HREF} whatsappHref={whatsappHref(settings.whatsapp)} />
         <Integrations />
+        <Tracker />
         <JsonLd data={siteSchema} id="site-schema" />
       </body>
     </html>

@@ -17,6 +17,7 @@
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
     "db:seed": "tsx scripts/seed.ts",
+    "db:seed:analytics": "tsx scripts/seed-analytics.ts",
     "db:studio": "drizzle-kit studio",
     "test:seed": "tsx tests/db/seed-content.test.ts",
     "test:migrations": "tsx tests/db/migrations.test.ts",
@@ -28,7 +29,10 @@
     "test:booking": "tsx tests/booking/run.ts",
     "test:booking-ui": "tsx tests/booking-ui/run.ts",
     "test:notifications": "tsx tests/notifications/run.ts",
-    "test": "pnpm test:seed && pnpm test:consultation-window && pnpm test:migrations && pnpm test:schema && pnpm test:seo && pnpm test:forms && pnpm test:booking && pnpm test:learn && pnpm test:notifications"
+    "test:analytics": "tsx tests/analytics/run.ts",
+    "test:admin": "tsx tests/admin/run.ts",
+    "test:admin-manage": "tsx tests/admin-manage/run.ts",
+    "test": "pnpm test:seed && pnpm test:consultation-window && pnpm test:migrations && pnpm test:schema && pnpm test:seo && pnpm test:forms && pnpm test:booking && pnpm test:learn && pnpm test:notifications && pnpm test:analytics"
   },
   "dependencies": {
     "@date-fns/tz": "^1.5.0",
