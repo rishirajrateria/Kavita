@@ -183,6 +183,32 @@ export function run() {
     "Page title from the page · Astrologer Kavita",
     "the geo template fills the OG title",
   );
+  const templatedImage = mergePageSeo(BASE, null, {
+    siteUrl: SITE,
+    route: "/services/kundli-analysis",
+    templates: { service: { image: `${SITE}/og-library/default.png` } },
+  });
+  equal(
+    (((templatedImage.openGraph as Og).images as { url: string }[]) ?? [])[0]?.url,
+    `${SITE}/og-library/default.png`,
+    "a template image fills in when the page has none",
+  );
+  const pageHasImage: Metadata = {
+    ...BASE,
+    openGraph: { ...BASE.openGraph, images: [{ url: `${SITE}/own.png` }] },
+  };
+  equal(
+    (((
+      mergePageSeo(pageHasImage, null, {
+        siteUrl: SITE,
+        route: "/services/kundli-analysis",
+        templates: { service: { image: `${SITE}/og-library/default.png` } },
+      }).openGraph as Og
+    ).images as { url: string }[]) ?? [])[0]?.url,
+    `${SITE}/own.png`,
+    "the page's own card image beats the template default",
+  );
+
   const templatedOverridden = mergePageSeo(BASE, row({ ogTitle: "Row wins" }), {
     siteUrl: SITE,
     route: "/astrologer/india",

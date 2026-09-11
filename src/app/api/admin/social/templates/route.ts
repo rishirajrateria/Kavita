@@ -14,8 +14,13 @@ export const POST = adminRoute(
     for (const type of OG_TEMPLATE_TYPES) {
       const title = data[`${type}_title`];
       const description = data[`${type}_description`];
-      if (title || description) {
-        config[type] = { ...(title ? { title } : {}), ...(description ? { description } : {}) };
+      const image = data[`${type}_image`];
+      if (title || description || image) {
+        config[type] = {
+          ...(title ? { title } : {}),
+          ...(description ? { description } : {}),
+          ...(image ? { image } : {}),
+        };
       }
     }
     const { before, after } = await saveSiteDocument(

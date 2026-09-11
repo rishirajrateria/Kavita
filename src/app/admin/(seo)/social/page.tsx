@@ -139,6 +139,20 @@ export default async function SocialPage({ searchParams }: PageProps<"/admin/soc
                         placeholder="{{description}}"
                       />
                     </Field>
+                    <Field
+                      label="Default card image"
+                      htmlFor={`${type}_image`}
+                      hint="Used only when the page has no image of its own. Paste a library URL."
+                      className="md:col-span-2"
+                    >
+                      <Input
+                        id={`${type}_image`}
+                        name={`${type}_image`}
+                        defaultValue={templates?.[type]?.image ?? ""}
+                        spellCheck={false}
+                        placeholder="https://…/og-library/…png"
+                      />
+                    </Field>
                   </div>
                 ))}
               </div>

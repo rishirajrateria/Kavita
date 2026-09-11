@@ -156,7 +156,13 @@ phase ends with a working, deployable site. Read `CLAUDE.md` first in every phas
   canonical agreement, word floors (700 geo / 300 else), citability, sitemap membership, orphans
   and redirect chains/loops. Runs inside a 45–50 s budget and stores a resumable cursor, so the
   on-demand run and the Monday 03:30 UTC cron share one engine. Every finding row links to the
-  admin editor that fixes it.
+  admin editor that fixes it. First live run against the dev server: 182 pages in three segments,
+  0 errors, 293 warnings (85 low citability, 10 duplicate titles, 4 duplicate descriptions, 8
+  title lengths, 3 thin pages, 1 description length; the 182 canonical warnings are the local
+  port differing from `NEXT_PUBLIC_SITE_URL` and disappear in production). Its first pass caught a
+  real defect: the unfilled `{{GOOGLE_BUSINESS_PROFILE_URL}}` footer placeholder was a relative
+  href, so every page carried a broken same-origin link — now an absolute `https://g.page/…`
+  placeholder (`NEEDS-REAL-DATA.md` §7 updated).
 - **Audit log with revert.** `/admin/audit` shows every admin change with a field-by-field
   before/after diff; owner-only one-click revert re-applies the `before` snapshot through a
   registry of revertable entity types (create → delete, delete → insert, update → restore).

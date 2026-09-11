@@ -47,11 +47,11 @@ change credentials and undo history.
 
 The sidebar has three groups.
 
-| Group            | Screens                                                                                        | What it is for                             |
-| ---------------- | ---------------------------------------------------------------------------------------------- | ------------------------------------------ |
-| **Analytics**    | Overview, Realtime, Traffic, Geography, Pages, Behaviour, Acquisition, Technology, Conversions | Who is visiting and what they do           |
-| **Manage**       | Bookings, Content, Settings, Site                                                              | The business: appointments and content     |
-| **SEO & growth** | SEO, Integrations, Redirects, Indexing, Health, Audit log                                      | Being found, and a record of every change  |
+| Group            | Screens                                                                                        | What it is for                            |
+| ---------------- | ---------------------------------------------------------------------------------------------- | ----------------------------------------- |
+| **Analytics**    | Overview, Realtime, Traffic, Geography, Pages, Behaviour, Acquisition, Technology, Conversions | Who is visiting and what they do          |
+| **Manage**       | Bookings, Content, Settings, Site                                                              | The business: appointments and content    |
+| **SEO & growth** | SEO, Integrations, Redirects, Indexing, Health, Audit log                                      | Being found, and a record of every change |
 
 Some screens sit one level in, as tabs: the **SEO** screen carries **Pages · FAQs · AEO · Social**,
 and the **Redirects** screen carries **Redirects · 404 log · Sitemaps · Indexing**.
@@ -402,8 +402,9 @@ time budget is stored as `paused` with its cursor and resumes on the next firing
 
 ## G. Tests
 
-`pnpm test` runs, in order: content seed, consultation windows, migrations (PGlite, every
-migration + RLS assertions), schema, SEO plumbing, forms, booking, booking UI, learn,
-notifications, analytics, admin, admin management, redirects, SEO control, integrations, and SEO
-health. They are plain `tsx` scripts — no test framework — and each suite has a `run.ts` entry
-point. Add new suites there and to the `test` chain in `package.json`.
+`pnpm test` runs, in order: content seed, consultation windows, migrations (PGlite — every
+migration applied to Postgres-in-WASM with RLS, policy and trigger assertions), schema, SEO
+plumbing, forms, booking, learn, notifications, analytics, admin management, admin, SEO health,
+redirects, integrations and SEO control. `pnpm test:booking-ui` is run separately. They are plain
+`tsx` scripts — no test framework — and each suite has a `run.ts` entry point. Add new suites
+there and to the `test` chain in `package.json`.

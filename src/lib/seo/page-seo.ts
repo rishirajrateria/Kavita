@@ -135,21 +135,25 @@ export function mergePageSeo(base: Metadata, row: PageSeoRow | null, ctx: MergeC
 
   // 1. Social templates per content type (only fields the template sets).
   const template: OgTemplate | undefined = ctx.templates?.[contentTypeForRoute(ctx.route)];
-  if (template && (template.title || template.description)) {
+  if (template && (template.title || template.description || template.image)) {
     const vars = { title: baseTitle, description: baseDescription, brand: "Astrologer Kavita" };
     const og = asObject(base.openGraph);
     const tw = asObject(base.twitter);
     const title = template.title ? fillTemplate(template.title, vars) : undefined;
     const description = template.description ? fillTemplate(template.description, vars) : undefined;
+    // The template image is a fallback only: a page that ships its own card image keeps it.
+    const image = template.image && !og.images ? template.image : undefined;
     out.openGraph = {
       ...og,
       ...(title ? { title } : {}),
       ...(description ? { description } : {}),
+      ...(image ? { images: [{ url: image, width: 1200, height: 630 }] } : {}),
     } as Metadata["openGraph"];
     out.twitter = {
       ...tw,
       ...(title ? { title } : {}),
       ...(description ? { description } : {}),
+      ...(image && !tw.images ? { images: [image] } : {}),
     } as Metadata["twitter"];
   }
   if (!row) return out;

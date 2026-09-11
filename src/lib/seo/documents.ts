@@ -37,6 +37,8 @@ export interface OgTemplate {
   /** `{{title}}`, `{{description}}`, `{{brand}}` tokens. Empty = leave the page's own value. */
   title?: string;
   description?: string;
+  /** Absolute URL of the default card image for this content type (library or generated). */
+  image?: string;
 }
 
 export type OgTemplates = Partial<

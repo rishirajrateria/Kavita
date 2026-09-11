@@ -196,9 +196,10 @@ const templateFields = Object.fromEntries(
   OG_TEMPLATE_TYPES.flatMap((t) => [
     [`${t}_title`, optionalText(200)],
     [`${t}_description`, optionalText(400)],
+    [`${t}_image`, optionalText(1000)],
   ]),
 ) as Record<
-  `${(typeof OG_TEMPLATE_TYPES)[number]}_${"title" | "description"}`,
+  `${(typeof OG_TEMPLATE_TYPES)[number]}_${"title" | "description" | "image"}`,
   ReturnType<typeof optionalText>
 >;
 
