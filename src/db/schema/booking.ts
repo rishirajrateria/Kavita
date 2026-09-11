@@ -231,3 +231,76 @@ export const payments = pgTable(
     index("payments_provider_ref_idx").on(t.provider, t.providerRef),
   ],
 );
+
+// ---------------------------------------------------------------------------------------------
+// notification_log — one row per (booking, kind, channel) send attempt; `dedupe_key` makes
+// `notify()` idempotent so a retried cron never emails twice.
+// ---------------------------------------------------------------------------------------------
+
+export const NOTIFICATION_KINDS = [
+  "confirmation_client",
+  "confirmation_practitioner",
+  "reminder_24h",
+  "reminder_1h",
+  "reschedule",
+  "cancellation",
+] as const;
+export type NotificationKind = (typeof NOTIFICATION_KINDS)[number];
+export const notificationKindEnum = pgEnum("notification_kind", NOTIFICATION_KINDS);
+
+export const NOTIFICATION_CHANNELS = ["email", "whatsapp"] as const;
+export type NotificationChannel = (typeof NOTIFICATION_CHANNELS)[number];
+export const notificationChannelEnum = pgEnum("notification_channel", NOTIFICATION_CHANNELS);
+
+export const notificationLog = pgTable(
+  "notification_log",
+  {
+    id: id(),
+    bookingId: uuid("booking_id")
+      .notNull()
+      .references(() => bookings.id, { onDelete: "cascade" }),
+    kind: notificationKindEnum("kind").notNull(),
+    channel: notificationChannelEnum("channel").notNull(),
+    /** `${bookingId}:${kind}:${channel}` — the idempotency key. */
+    dedupeKey: text("dedupe_key").notNull(),
+    sentAt: timestamp("sent_at", { withTimezone: true, mode: "date" }),
+    /** Provider message id (Resend id, WhatsApp message id). Never the message body. */
+    providerRef: text("provider_ref"),
+    /** Error class/summary only — never recipient addresses or content. */
+    error: text("error"),
+    ...timestamps,
+  },
+  (t) => [
+    /** Admin-only; the notification layer writes with the service role. */
+    adminAll("notification_log"),
+    uniqueIndex("notification_log_dedupe_key_uidx").on(t.dedupeKey),
+    index("notification_log_booking_idx").on(t.bookingId, t.kind),
+  ],
+);
+
+// ---------------------------------------------------------------------------------------------
+// floor_plans — private Supabase Storage objects (bucket `floor-plans`) uploaded during booking.
+// `booking_id` is null between upload and booking creation and is linked by `createBooking`.
+// ---------------------------------------------------------------------------------------------
+
+export const floorPlans = pgTable(
+  "floor_plans",
+  {
+    id: id(),
+    bookingId: uuid("booking_id").references(() => bookings.id, { onDelete: "set null" }),
+    /** Object path inside the private `floor-plans` bucket; served only via signed URLs in admin. */
+    storagePath: text("storage_path").notNull(),
+    contentType: text("content_type").notNull(),
+    bytes: integer("bytes").notNull(),
+    uploadedAt: timestamp("uploaded_at", { withTimezone: true, mode: "date" })
+      .notNull()
+      .defaultNow(),
+    ...timestamps,
+  },
+  (t) => [
+    /** Personal data (a client's home layout): admin-only. */
+    adminAll("floor_plans"),
+    uniqueIndex("floor_plans_storage_path_uidx").on(t.storagePath),
+    index("floor_plans_booking_idx").on(t.bookingId),
+  ],
+);

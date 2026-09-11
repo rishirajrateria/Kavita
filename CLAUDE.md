@@ -366,13 +366,78 @@ No payment gateway in v1. Adding one must be a matter of implementing one interf
 - `/api/webhooks/payments/[provider]` route stubbed with signature-verification scaffolding.
 - Currencies taken: INR, USD, GBP, AED.
 
-### How to add a real gateway (to be expanded in Phase 4)
+### How to add a real gateway (Phase 4 — exact steps)
 
-Razorpay (India) and Stripe (international): implement `PaymentProvider` once per gateway,
-register it by provider key, fill in `verifyWebhook` with the gateway's signature scheme in
-`/api/webhooks/payments/[provider]`, map gateway statuses onto the `payments.status` column,
-add the gateway's server-side keys to `.env.example` (never `NEXT_PUBLIC_`), then flip
-`PAYMENTS_ENABLED`. Phase 4 writes the exact, tested steps here.
+The seam is in place: `src/lib/payments/types.ts` (`PaymentProvider`, `PaymentIntent`,
+`WebhookVerification`), `src/lib/payments/noop.ts`, `src/lib/payments/index.ts` (registry,
+`getPaymentProvider()`, `isPaymentsEnabled()`, `initialBookingStatus()`), the `payments` table,
+and `POST /api/webhooks/payments/[provider]`, which reads the raw body as text, calls the
+provider's `verifyWebhook({ rawBody, headers })`, answers 501 for an unregistered key and 401 for a
+bad signature. `createBooking` already calls `createIntent` for every priced service and writes
+the `payments` row (`idempotency_key = booking:<id>`).
+
+**Initial booking status (decided):** service with no price ("on request") → `pending`; priced
+service with `PAYMENTS_ENABLED=false` → `payment_pending_offline` via the noop provider (fee
+collected by bank transfer/UPI, marked paid in admin); priced service with payments on → whatever
+`createIntent` returns in `bookingStatus` (`awaiting_payment`, then `paid` from the webhook).
+
+1. **Create the provider** — `src/lib/payments/razorpay.ts` and/or `src/lib/payments/stripe.ts`,
+   a class `implements PaymentProvider` with `readonly key = "razorpay" | "stripe"`. Use plain
+   `fetch` against the REST APIs (no SDK needed): Razorpay `POST https://api.razorpay.com/v1/orders`
+   with HTTP Basic `RAZORPAY_KEY_ID:RAZORPAY_KEY_SECRET` and body `{ amount, currency, receipt:
+idempotencyKey, notes: { bookingId } }` → `providerRef = order.id`, `clientSecret = order.id`,
+   `status: "pending"`, `bookingStatus: "awaiting_payment"`; Stripe `POST
+https://api.stripe.com/v1/payment_intents` with `Authorization: Bearer STRIPE_SECRET_KEY`,
+   header `Idempotency-Key: idempotencyKey`, form body `amount, currency (lower-case),
+metadata[bookingId], receipt_email` → `providerRef = pi.id`, `clientSecret = pi.client_secret`.
+   `capture`/`refund`: Razorpay `POST /v1/payments/{id}/capture` and `/v1/payments/{id}/refund`;
+   Stripe `POST /v1/payment_intents/{id}/capture` and `POST /v1/refunds` with `payment_intent`.
+2. **Register it** — in `src/lib/payments/index.ts` add `razorpay: () => new RazorpayPaymentProvider()`
+   (and/or `stripe`) to `PROVIDERS`. Nothing else in the app changes.
+3. **Implement `verifyWebhook`** (must run over the raw body string, never a re-serialised JSON):
+   - Razorpay: header `X-Razorpay-Signature` = hex HMAC-SHA256 of the raw body with
+     `RAZORPAY_WEBHOOK_SECRET`. Compute `createHmac("sha256", secret).update(rawBody).digest("hex")`
+     and compare with `timingSafeEqual` (same length check first). Missing header →
+     `{ ok:false, reason:"missing_signature" }`, mismatch → `"bad_signature"`. Then parse JSON:
+     `eventType = body.event` (e.g. `payment.captured`, `payment.failed`, `refund.processed`),
+     `providerRef = body.payload.payment.entity.order_id` (or `payment.entity.id` for refunds).
+   - Stripe: header `Stripe-Signature` = `t=<unix seconds>,v1=<hex>[,v1=<hex>…]`. Signed payload is
+     `${t}.${rawBody}`; expected = hex HMAC-SHA256 with `STRIPE_WEBHOOK_SECRET` (`whsec_…`).
+     Accept if ANY `v1` matches (`timingSafeEqual`) AND `|now − t| ≤ 300 s` (replay tolerance);
+     otherwise `bad_signature`. Then `eventType = body.type` (e.g. `payment_intent.succeeded`,
+     `payment_intent.payment_failed`, `charge.refunded`), `providerRef = body.data.object.id`
+     (for `charge.*` use `body.data.object.payment_intent`).
+   - Map the event onto `payments.status` and return it in `status`:
+
+     | Gateway event                                                                     | `payments.status`        | booking status                        |
+     | --------------------------------------------------------------------------------- | ------------------------ | ------------------------------------- |
+     | Razorpay `payment.authorized` / Stripe `payment_intent.amount_capturable_updated` | `authorized`             | `awaiting_payment`                    |
+     | Razorpay `payment.captured` / Stripe `payment_intent.succeeded`                   | `captured`               | `paid`                                |
+     | Razorpay `payment.failed` / Stripe `payment_intent.payment_failed`                | `failed`                 | `awaiting_payment` (client may retry) |
+     | Razorpay `refund.processed` / Stripe `charge.refunded`                            | `refunded`               | unchanged (admin decides)             |
+     | Razorpay `order.paid` / Stripe `payment_intent.canceled`                          | `captured` / `cancelled` | `paid` / `awaiting_payment`           |
+
+4. **Apply the verified event** — in `src/app/api/webhooks/payments/[provider]/route.ts`, after
+   `verification.ok`, look up `payments` by `(provider, provider_ref)`, update `status` and
+   `provider_payload`, and when `status` becomes `captured` update the booking to `paid` with a
+   `booking_status_history` row (`changed_by: "system"`). Make it idempotent: skip when the row is
+   already in that status (gateways retry). Return 200 even for unknown refs so the gateway stops
+   retrying, but log the event type (never amounts with customer identifiers).
+5. **Environment** — the keys are already in `.env.example` (`RAZORPAY_KEY_ID`,
+   `RAZORPAY_KEY_SECRET`, `RAZORPAY_WEBHOOK_SECRET`, `STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET`,
+   `PAYMENT_PROVIDER`). Never `NEXT_PUBLIC_`. Register the webhook URL
+   `https://<site>/api/webhooks/payments/razorpay` (or `/stripe`) in the gateway dashboard.
+6. **Checkout UI** — the booking confirmation page reads `clientSecret`/`checkoutUrl` from the
+   `payments` row and mounts Razorpay Checkout or Stripe Elements in a small client island;
+   nothing else in `/book` changes. Prices come from `services.price_minor` + `currency`
+   (`INR`, `USD`, `GBP`, `AED`); pick the provider by currency if both are enabled
+   (Razorpay for INR, Stripe otherwise) inside `getPaymentProvider()`.
+7. **Flip the flag** — set `PAYMENTS_ENABLED=true` and `PAYMENT_PROVIDER=razorpay|stripe` in
+   Vercel; `isPaymentsEnabled()` gates both the checkout UI and `initialBookingStatus()`. With the
+   flag off, the real provider is never instantiated and bookings stay `payment_pending_offline`.
+8. **Test** — add `tests/booking/payments-<gateway>.test.ts`: sign a fixture body with a test
+   secret and assert `verifyWebhook` accepts it, rejects a tampered body, a wrong secret and (Stripe)
+   a stale timestamp; assert the status mapping table above. Add the file to `tests/booking/run.ts`.
 
 ## 12. Honesty rules for all generated content — ABSOLUTE
 
@@ -514,6 +579,11 @@ touching the app.
   empty. Those entries are therefore informed generalisations grounded in each place's verifiable
   context (housing market, diaspora pattern, work culture, time zone), never claims about Kavita's
   actual clients or numbers, and every one is listed in NEEDS-REAL-DATA.md for her to edit.
+- `.env.example` became permission-blocked for the build tooling mid-project; two Phase 4 variables
+  must be added there by hand: `DATA_ENCRYPTION_KEY_ID=k1` and `DATA_ENCRYPTION_KEYS=` (comma list
+  `k1:<base64>,k2:<base64>` for key rotation; `DATA_ENCRYPTION_KEY` remains the current key). All other
+  Phase 4 variables (BOOKING_TOKEN_SECRET, PAYMENT_PROVIDER, RAZORPAY__, STRIPE__, EMAIL_*, CRON_SECRET,
+  WHATSAPP_NOTIFICATIONS_ENABLED) were already listed in Phase 0.
 - Folder layout: `src/app` (routes), `src/components/{ui,layout,seo,motifs}`, `src/lib`,
   `src/hooks`, `src/db` (Drizzle schema + client), `src/content/{locations,articles}`,
   `src/styles`, `src/types`, `supabase/{migrations,seed}`, `scripts`, `tests`.

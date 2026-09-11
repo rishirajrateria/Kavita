@@ -42,4 +42,10 @@ export const siteSettingsSeed: SeedRow<SiteSettings> = {
   },
   inPersonAvailable: false,
   responseTimeHours: 24,
+  // Booking engine defaults (CLAUDE.md Phase 4 contract): 24h lead time, 60-day horizon, 24h
+  // reschedule notice, 30-minute slot steps. Admin-editable; {{BOOKING_RULES}} to confirm.
+  leadTimeHours: 24,
+  horizonDays: 60,
+  rescheduleNoticeHours: 24,
+  slotStepMinutes: 30,
 };

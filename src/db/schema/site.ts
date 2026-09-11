@@ -51,6 +51,15 @@ export const siteSettings = pgTable(
     inPersonAvailable: boolean("in_person_available").notNull().default(false),
     /** Typical time to reply to an enquiry, shown in key-facts blocks. */
     responseTimeHours: integer("response_time_hours").notNull().default(24),
+    // --- Booking engine settings (Phase 4). Read by src/lib/booking/*; admin-editable. ---
+    /** Earliest bookable slot is this many hours from now. */
+    leadTimeHours: integer("lead_time_hours").notNull().default(24),
+    /** Latest bookable slot is this many days from now. */
+    horizonDays: integer("horizon_days").notNull().default(60),
+    /** A client may reschedule only while the session is at least this many hours away. */
+    rescheduleNoticeHours: integer("reschedule_notice_hours").notNull().default(24),
+    /** Slot start times are offered every N minutes inside an availability window. */
+    slotStepMinutes: integer("slot_step_minutes").notNull().default(30),
     ...timestamps,
   },
   () => [

@@ -3,6 +3,7 @@
  * the fallback when no database is configured.
  */
 export * from "./_shared";
+export * from "./availability";
 export * from "./faqs";
 export * from "./integrations";
 export * from "./locations";

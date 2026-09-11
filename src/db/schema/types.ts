@@ -15,6 +15,8 @@ import type {
   bookingStatusHistory,
   bookings,
   clients,
+  floorPlans,
+  notificationLog,
   payments,
 } from "./booking";
 import type { articleCategories, articles, faqs, glossaryTerms, testimonials } from "./content";
@@ -70,6 +72,10 @@ export type BookingStatusHistoryEntry = typeof bookingStatusHistory.$inferSelect
 export type NewBookingStatusHistoryEntry = typeof bookingStatusHistory.$inferInsert;
 export type Payment = typeof payments.$inferSelect;
 export type NewPayment = typeof payments.$inferInsert;
+export type NotificationLogEntry = typeof notificationLog.$inferSelect;
+export type NewNotificationLogEntry = typeof notificationLog.$inferInsert;
+export type FloorPlan = typeof floorPlans.$inferSelect;
+export type NewFloorPlan = typeof floorPlans.$inferInsert;
 
 export type AnalyticsSession = typeof analyticsSessions.$inferSelect;
 export type NewAnalyticsSession = typeof analyticsSessions.$inferInsert;

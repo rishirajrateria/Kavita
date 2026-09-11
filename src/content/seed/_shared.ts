@@ -18,6 +18,7 @@ export const SEED_NS = {
   services: "services",
   locations: "locations",
   faqs: "faqs",
+  availabilityRules: "availability_rules",
 } as const;
 
 /** Marker every unfilled client value carries. Tracked in NEEDS-REAL-DATA.md. */

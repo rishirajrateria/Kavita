@@ -230,3 +230,12 @@ credentials below are real; `/about` lists each pending placeholder visibly.
 - [ ] `/about` methodology, "what a session involves", "what she can and cannot tell you" and "what she does not claim to do" are drafted from the brief's method description and CLAUDE.md §12; the practitioner must confirm every sentence reflects how she actually works (in particular the six method steps and the written-summary promise).
 - [ ] `/astrology` and `/vastu` hub copy describes the traditions (Vimshottari periods, sidereal vs tropical, the directional scheme, non-structural corrections) as textbook Jyotish / classical vastu, hedged where schools differ; the practitioner should confirm the chart style(s) she draws, the ayanamsa she uses, the sleeping-direction and entrance preferences she teaches, and the compass-reading instructions match her own practice.
 - [ ] `ABOUT_DATES`, `ASTROLOGY_DATES`, `VASTU_DATES` (`src/content/pages/*.ts`) and `src/content/route-dates.ts` carry the visible `datePublished` / `dateModified`; bump `modified` in the same change that edits the copy.
+
+## Booking engine (Phase 4)
+
+- `{{WORKING_HOURS}}` — `src/content/seed/availability.ts` derives the bookable rules from the
+  assumed business hours (Mon–Fri 10:00–18:00, Sat 10:00–14:00, `Asia/Kolkata`). The
+  availability API flags `placeholderRules: true` until real rules exist in `availability_rules`.
+- `{{BOOKING_RULES}}` — `site_settings.lead_time_hours` (24), `horizon_days` (60),
+  `reschedule_notice_hours` (24) and `slot_step_minutes` (30) are contract defaults to confirm.
+- Service `buffer_after_minutes` (15) and every service duration remain the Phase 3 assumptions.
