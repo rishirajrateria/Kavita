@@ -164,8 +164,14 @@ Answer engines quote pages that are easy to quote. This screen is about that.
   "It" or "This" (a model cannot quote those — it does not know what "it" is) or that never name
   the subject. Aim for _"A vastu consultation for a Dubai apartment with Astrologer Kavita…"_, not
   _"It usually costs…"_.
+  An answer saved here replaces the one written into that page the next time the page is
+  requested — nothing to redeploy. It is matched on the exact route plus the id of the section
+  holding the question (`opening`, `tradition`, `faq`, `book`, and so on; the ids are in the page
+  source and are the anchors the contents list links to). Remove the override and the page goes
+  back to its own words.
 - **Key facts.** The compact fact list near the top of each location and service page. Assistants
-  lift these nearly word for word, so keep them accurate.
+  lift these nearly word for word, so keep them accurate. A fact saved here whose label matches
+  one already on the page replaces that value; a new label is added to the end of the list.
 - **`llms.txt` / `/for-ai`.** Plain, factual, machine-readable summaries of the practice. Edit
   the preamble and choose which pages are included.
 - **AI crawler toggles.** One switch per bot. Read the note beside each: some of them

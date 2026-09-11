@@ -118,9 +118,9 @@ export default async function AeoPage({ searchParams }: PageProps<"/admin/aeo">)
                 <Field
                   label="Heading id"
                   htmlFor="h2Id"
-                  hint={`The H2's id attribute, or "${KEY_FACTS_ID}" for the key-facts block.`}
+                  hint={`The id on the section holding that question — "opening", "tradition", "faq", "book" — or "${KEY_FACTS_ID}" for the key-facts block.`}
                 >
-                  <Input id="h2Id" name="h2Id" required placeholder="how-much-does-it-cost" />
+                  <Input id="h2Id" name="h2Id" required placeholder="opening" />
                 </Field>
               </div>
               <Field
@@ -437,8 +437,10 @@ export default async function AeoPage({ searchParams }: PageProps<"/admin/aeo">)
               <li>Never promise an outcome — the linter refuses guarantees and cure claims.</li>
             </ul>
             <p className="mt-3 text-xs text-muted-foreground">
-              Heading ids are visible in the page source, or in the &ldquo;Rendered head&rdquo;
-              panel of each page&rsquo;s{" "}
+              A saved answer replaces the written one the next time that page is requested. The id
+              to use is the <code>id</code> on the section around the question — visible in the page
+              source, and the same anchor the page&rsquo;s contents list links to. See also each
+              page&rsquo;s{" "}
               <Link href="/admin/seo" className="no-underline hover:underline">
                 SEO editor
               </Link>

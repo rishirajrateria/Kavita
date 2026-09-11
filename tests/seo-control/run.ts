@@ -4,6 +4,7 @@
  */
 import { finish } from "../seo-plumbing/_assert";
 import { run as aeo } from "./aeo.test";
+import { run as answerOverrides } from "./answer-overrides.test";
 import { run as integration } from "./integration.test";
 import { run as metadata } from "./metadata.test";
 import { run as patterns } from "./patterns.test";
@@ -13,6 +14,7 @@ async function main() {
   metadata();
   aeo();
   await integration();
+  await answerOverrides();
   finish("seo-control");
 }
 
