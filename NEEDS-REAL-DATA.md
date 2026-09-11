@@ -212,3 +212,21 @@ practitioner confirms or replaces it.
 - [ ] `{{GOVERNING_LAW_JURISDICTION}}` — governing law and courts (e.g. "India, courts of {{CITY}}"). Used in: `/terms` governing-law section.
 - [ ] Practitioner to read and approve all three pages; they state what the code does (encryption of birth details, private storage with signed links, cookieless analytics with 90-day raw retention, no payment data in v1, 18+ to book) and must be revised in the same change as any behaviour change. The `/privacy#analytics` section describes the Phase 5 tracker in advance so the policy and the code match when it ships.
 - [ ] The `/privacy` marketing-pixels section is generated from enabled `integrations` rows at build time; when the owner enables a tag from the admin, rebuild (or revalidate) the page so the list updates.
+
+## 10. Practitioner profile, `/about`, `/astrology` and `/vastu` (Phase 3)
+
+Introduced by `src/content/practitioner.ts` and the three content pages. Author bylines on every
+content page show the plain job title ("Vedic astrologer and vastu consultant") until the
+credentials below are real; `/about` lists each pending placeholder visibly.
+
+- [ ] `{{CREDENTIAL_ASTROLOGY}}` — formal Jyotish qualification (e.g. Jyotish Visharad), awarding body and year. Used in: `/about` credentials list, `credentialLine()` bylines on every content page, Person schema.
+- [ ] `{{CREDENTIAL_VASTU}}` — formal vastu shastra training, institution and year. Used in: `/about` credentials list, bylines, Person schema.
+- [ ] `{{LINEAGE}}` — guru or parampara under whom she studied, if any (leave empty if none; the row is then removed). Used in: `/about` credentials list.
+- [ ] `{{INSTITUTIONS}}` — colleges, academies or boards attended. Used in: `/about` credentials list; also fills `PRACTITIONER.alumniOf` → Person schema `alumniOf` (emitted only when real).
+- [ ] `PRACTITIONER.awards` — verifiable awards or recognitions, if any (empty array until real; never a placeholder in JSON-LD). Used in: Person schema `award`, `/about`.
+- [ ] `{{YEARS}}`, `{{YEAR}}`, `{{N}}`, `{{X}}` — reused from §1/§4 in the `/about` "How long has Astrologer Kavita been practising?" section as citable sentences (§9.8). Only real numbers may replace them; if a figure is unknown the sentence is removed, not estimated.
+- [ ] `{{LANGUAGES OF CONSULTATION}}` — reused from §8 in `/about` (languages section and answer), the `/astrology` and `/vastu` key-facts bands, and Person schema `knowsLanguage` (emitted only when real).
+- [ ] `{{CONFIRM IN-PERSON AVAILABILITY}}` — reused from §8 in the `/about` first paragraph and "Where does she consult?" answer, and in the hub key-facts "Consultation modes" rows; the copy switches to "and in person in {city}" automatically once `site_settings.in_person_available` is true.
+- [ ] `/about` methodology, "what a session involves", "what she can and cannot tell you" and "what she does not claim to do" are drafted from the brief's method description and CLAUDE.md §12; the practitioner must confirm every sentence reflects how she actually works (in particular the six method steps and the written-summary promise).
+- [ ] `/astrology` and `/vastu` hub copy describes the traditions (Vimshottari periods, sidereal vs tropical, the directional scheme, non-structural corrections) as textbook Jyotish / classical vastu, hedged where schools differ; the practitioner should confirm the chart style(s) she draws, the ayanamsa she uses, the sleeping-direction and entrance preferences she teaches, and the compass-reading instructions match her own practice.
+- [ ] `ABOUT_DATES`, `ASTROLOGY_DATES`, `VASTU_DATES` (`src/content/pages/*.ts`) and `src/content/route-dates.ts` carry the visible `datePublished` / `dateModified`; bump `modified` in the same change that edits the copy.
