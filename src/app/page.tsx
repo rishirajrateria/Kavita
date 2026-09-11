@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { applyPageSeo } from "@/lib/seo/page-seo";
 import {
   Comparison,
   FaqSection,
@@ -23,7 +24,7 @@ import {
 } from "@/lib/data";
 import { faqPageSchema, withSpeakable } from "@/lib/seo/schema";
 
-export const metadata: Metadata = {
+const BASE_METADATA: Metadata = {
   title: { absolute: HOME_META.title },
   description: HOME_META.description,
   alternates: { canonical: "/" },
@@ -35,6 +36,11 @@ export const metadata: Metadata = {
     siteName: "Astrologer Kavita",
   },
 };
+
+/** Static metadata plus any admin override from `page_seo` (Phase 6). */
+export function generateMetadata(): Promise<Metadata> {
+  return applyPageSeo(BASE_METADATA, "/");
+}
 
 /**
  * Home: the combined astrology-and-vastu story (CLAUDE.md §1). A Server Component; every word

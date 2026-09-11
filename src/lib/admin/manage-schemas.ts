@@ -101,6 +101,13 @@ const prices = z
 
 export const serviceUpdateSchema = z.object({
   name: text(120).min(2).optional(),
+  /** Phase 6: a slug change is allowed because the redirect engine creates the mandatory 301. */
+  slug: z
+    .string()
+    .trim()
+    .regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, "lowercase letters, digits and single hyphens only")
+    .max(80)
+    .optional(),
   lead: z.enum(SERVICE_LEADS).optional(),
   durationMinutes: formInt(15, 480).optional(),
   bufferBeforeMinutes: formInt(0, 120).optional(),

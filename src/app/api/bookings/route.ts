@@ -19,6 +19,8 @@ import {
 } from "@/lib/booking/api";
 import { createBooking } from "@/lib/booking/create";
 import { calendarLinks, icsUrlFor, manageUrlFor } from "@/lib/booking/ics";
+import { sendConversion } from "@/lib/integrations/capi-events";
+import { bookingEventId } from "@/lib/integrations/event-ids";
 
 export const dynamic = "force-dynamic";
 
@@ -45,8 +47,28 @@ export async function POST(request: NextRequest) {
     }
     return respond(request, "/book", result, statusFor(result.reason));
   }
-  const { booking, service, settings } = result.relations;
+  const { booking, client, service, settings } = result.relations;
   const manageUrl = manageUrlFor(booking);
+  // Meta Conversions API (CLAUDE.md §13C): the id is derived from the booking id, and the
+  // browser pixel derives the same one from the receipt, so Meta counts one conversion.
+  sendConversion(
+    {
+      internalEvent: "booking_completed",
+      eventId: bookingEventId(booking.id),
+      payload: {
+        serviceSlug: service.slug,
+        currency: service.currency ?? undefined,
+        amountMinor: service.priceMinor ?? undefined,
+      },
+    },
+    {
+      email: client.email,
+      phone: client.phone,
+      firstName: client.fullName.split(" ")[0] ?? null,
+      country: request.headers.get("x-vercel-ip-country"),
+    },
+    { request, sourceUrl: request.headers.get("referer") },
+  );
   return respond(
     request,
     "/book",

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { applyPageSeo } from "@/lib/seo/page-seo";
 import { Byline, CtaBand, FaqBlock, PageHero, QuestionSection } from "@/components/content";
 import { ContactForm } from "@/components/forms/contact-form";
 import { contactPointSchema } from "@/components/forms/contact-schema";
@@ -21,7 +22,7 @@ import { getCountries, getSiteSettings } from "@/lib/data";
 import { postalAddressFromSettings } from "@/lib/seo/schema";
 import { getSiteUrl, mailtoHref, realValue, telHref, whatsappHref } from "@/lib/site";
 
-export const metadata: Metadata = {
+const BASE_METADATA: Metadata = {
   title: { absolute: CONTACT_META.title },
   description: CONTACT_META.description,
   alternates: { canonical: "/contact" },
@@ -32,6 +33,11 @@ export const metadata: Metadata = {
     description: CONTACT_META.description,
   },
 };
+
+/** Static metadata plus any admin override from `page_seo` (Phase 6). */
+export function generateMetadata(): Promise<Metadata> {
+  return applyPageSeo(BASE_METADATA, "/contact");
+}
 
 /** Contact: channels from `site_settings`, NAP with microdata, form, map only with a real address. */
 export default async function ContactPage({ searchParams }: PageProps<"/contact">) {
@@ -130,6 +136,7 @@ export default async function ContactPage({ searchParams }: PageProps<"/contact"
       </QuestionSection>
 
       <FaqBlock
+        route="/contact"
         heading={CONTACT_FAQ.heading}
         answer={CONTACT_FAQ.answer}
         eyebrow={CONTACT_FAQ.eyebrow}

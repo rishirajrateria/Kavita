@@ -1,22 +1,26 @@
 import type { Metadata } from "next";
+import { applyPageSeo } from "@/lib/seo/page-seo";
 import { LegalPage, getLegalDocument } from "@/components/legal";
 
 const SLUG = "disclaimer" as const;
 
 export async function generateMetadata(): Promise<Metadata> {
   const doc = await getLegalDocument(SLUG);
-  return {
-    title: { absolute: doc.metaTitle },
-    description: doc.metaDescription,
-    alternates: { canonical: `/${SLUG}`, types: { "text/markdown": `/${SLUG}.md` } },
-    openGraph: {
-      type: "website",
-      url: `/${SLUG}`,
-      title: doc.metaTitle,
+  return applyPageSeo(
+    {
+      title: { absolute: doc.metaTitle },
       description: doc.metaDescription,
-      siteName: "Astrologer Kavita",
+      alternates: { canonical: `/${SLUG}`, types: { "text/markdown": `/${SLUG}.md` } },
+      openGraph: {
+        type: "website",
+        url: `/${SLUG}`,
+        title: doc.metaTitle,
+        description: doc.metaDescription,
+        siteName: "Astrologer Kavita",
+      },
     },
-  };
+    `/${SLUG}`,
+  );
 }
 
 /** `/disclaimer` — server-rendered; copy comes from `src/content/legal/disclaimer.ts`. */

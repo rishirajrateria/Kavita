@@ -1,9 +1,9 @@
-import { learnSitemapEntries, renderUrlset, xmlResponse } from "@/lib/sitemaps";
+import { renderUrlset, sitemapSectionEntries, xmlResponse } from "@/lib/sitemaps";
 
 /** Cached for an hour; regenerated in the background (CLAUDE.md §8). */
 export const revalidate = 3600;
 
 export async function GET() {
-  const xml = renderUrlset(learnSitemapEntries());
+  const xml = renderUrlset(await sitemapSectionEntries("learn"));
   return xmlResponse(xml);
 }

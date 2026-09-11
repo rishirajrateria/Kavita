@@ -32,7 +32,11 @@
     "test:analytics": "tsx tests/analytics/run.ts",
     "test:admin": "tsx tests/admin/run.ts",
     "test:admin-manage": "tsx tests/admin-manage/run.ts",
-    "test": "pnpm test:seed && pnpm test:consultation-window && pnpm test:migrations && pnpm test:schema && pnpm test:seo && pnpm test:forms && pnpm test:booking && pnpm test:learn && pnpm test:notifications && pnpm test:analytics && pnpm test:admin-manage && pnpm test:admin"
+    "test:seo-health": "tsx tests/seo-health/run.ts",
+    "test:redirects": "tsx tests/redirects/run.ts",
+    "test:integrations": "tsx tests/integrations/run.ts",
+    "test:seo-control": "tsx tests/seo-control/run.ts",
+    "test": "pnpm test:seed && pnpm test:consultation-window && pnpm test:migrations && pnpm test:schema && pnpm test:seo && pnpm test:forms && pnpm test:booking && pnpm test:learn && pnpm test:notifications && pnpm test:analytics && pnpm test:admin-manage && pnpm test:admin && pnpm test:seo-health && pnpm test:redirects && pnpm test:integrations && pnpm test:seo-control"
   },
   "dependencies": {
     "@date-fns/tz": "^1.5.0",

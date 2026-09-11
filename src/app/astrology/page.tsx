@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { applyPageSeo } from "@/lib/seo/page-seo";
 import Link from "next/link";
 import {
   Byline,
@@ -51,7 +52,7 @@ import { PRACTITIONER } from "@/content/practitioner";
 import { getPublishableLocations, getServices, getSiteSettings } from "@/lib/data";
 import { realValue } from "@/lib/site";
 
-export const metadata: Metadata = {
+const BASE_METADATA: Metadata = {
   title: { absolute: ASTROLOGY_META.title },
   description: ASTROLOGY_META.description,
   alternates: { canonical: "/astrology", types: { "text/markdown": "/astrology.md" } },
@@ -63,6 +64,11 @@ export const metadata: Metadata = {
     siteName: "Astrologer Kavita",
   },
 };
+
+/** Static metadata plus any admin override from `page_seo` (Phase 6). */
+export function generateMetadata(): Promise<Metadata> {
+  return applyPageSeo(BASE_METADATA, "/astrology");
+}
 
 /**
  * `/astrology` hub — Vedic astrology intent (CLAUDE.md §5, §8, §9). Server component: every
@@ -272,6 +278,7 @@ export default async function AstrologyPage() {
       </QuestionSection>
 
       <FaqBlock
+        route="/astrology"
         id="faq"
         eyebrow={ASTROLOGY_FAQ.eyebrow}
         heading={ASTROLOGY_FAQ.heading}

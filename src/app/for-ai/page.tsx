@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { applyPageSeo } from "@/lib/seo/page-seo";
 import Link from "next/link";
 import { Breadcrumbs } from "@/components/layout/breadcrumbs";
 import { Container } from "@/components/ui/container";
@@ -16,10 +17,11 @@ import { FOR_AI, FOR_AI_META } from "@/content/for-ai";
 import { HOME_PLACEHOLDERS } from "@/content/home";
 import { getCountries, getServices, getSiteSettings } from "@/lib/data";
 import type { DeliveryMode, Service, SiteSettings } from "@/lib/data/types";
+import { getForAiDocument } from "@/lib/seo/documents";
 import { openingHoursFromBusinessHours } from "@/lib/seo/schema";
 import { mailtoHref, telHref, whatsappHref } from "@/lib/site";
 
-export const metadata: Metadata = {
+const BASE_METADATA: Metadata = {
   title: { absolute: FOR_AI_META.title },
   description: FOR_AI_META.description,
   alternates: {
@@ -34,6 +36,11 @@ export const metadata: Metadata = {
     siteName: "Astrologer Kavita",
   },
 };
+
+/** Static metadata plus any admin override from `page_seo` (Phase 6). */
+export function generateMetadata(): Promise<Metadata> {
+  return applyPageSeo(BASE_METADATA, "/for-ai");
+}
 
 const CURRENCIES = "INR, USD, GBP, AED";
 
@@ -83,12 +90,20 @@ const cell = "px-4 py-3 align-top leading-relaxed whitespace-normal";
  * the HTML. Values come from settings, services and the location tree; nothing is typed in.
  */
 export default async function ForAiPage() {
-  const [settings, services, countries] = await Promise.all([
+  const [settings, services, countries, document] = await Promise.all([
     getSiteSettings(),
     getServices(),
     getCountries(),
+    getForAiDocument(),
   ]);
   const modes = allModes(services);
+  // Admin additions from `site_documents` key `for_ai` (Phase 6); absent with no database.
+  const extraFacts: readonly [string, string][] = (document?.extraFacts ?? []).map((f) => [
+    f.label,
+    f.value,
+  ]);
+  const limits = [...FOR_AI.limits, ...(document?.extraLimits ?? [])];
+  const bringGeneral = [...FOR_AI.bringGeneral, ...(document?.extraBring ?? [])];
   const countryNames = countries.map((c) => c.name).join(", ");
 
   const facts: readonly [string, string][] = [
@@ -102,6 +117,7 @@ export default async function ForAiPage() {
     [FOR_AI.factLabels.responseTime, `Usually within ${settings.responseTimeHours} hours`],
     [FOR_AI.factLabels.currencies, CURRENCIES],
     [FOR_AI.factLabels.areaServed, countryNames],
+    ...extraFacts,
   ];
 
   const tel = telHref(settings.phone);
@@ -122,7 +138,8 @@ export default async function ForAiPage() {
             {FOR_AI.h1}
           </Heading>
           <p className="answer mt-6 text-lg leading-relaxed">
-            {FOR_AI.intro(settings.practitionerName, settings.city, settings.country)}
+            {document?.intro?.trim() ||
+              FOR_AI.intro(settings.practitionerName, settings.city, settings.country)}
           </p>
         </Container>
       </Section>
@@ -236,7 +253,7 @@ export default async function ForAiPage() {
             </Heading>
             <p className="mt-3">{FOR_AI.bringIntro}</p>
             <ul className="mt-2 list-disc space-y-1 pl-5">
-              {FOR_AI.bringGeneral.map((item) => (
+              {bringGeneral.map((item) => (
                 <li key={item}>{item}</li>
               ))}
             </ul>
@@ -295,7 +312,7 @@ export default async function ForAiPage() {
               {FOR_AI.sections.limits}
             </Heading>
             <ul className="mt-3 list-disc space-y-2 pl-5">
-              {FOR_AI.limits.map((item) => (
+              {limits.map((item) => (
                 <li key={item}>{item}</li>
               ))}
             </ul>

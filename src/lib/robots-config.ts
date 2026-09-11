@@ -3,8 +3,10 @@
  *
  * Every AI crawler gets its own named group with `Allow: /`, annotated `retrieval` or
  * `training` so the site owner can see which bots govern training use and toggle them
- * deliberately (Phase 6 moves `enabled` into the admin). Nothing here is read from `new Date()`.
+ * deliberately from the admin (`robots_bots` rows, applied by `getRobotsConfig()`; Phase 6).
+ * Nothing here is read from `new Date()`.
  */
+import { getDb } from "@/db";
 
 export type BotPurpose = "retrieval" | "training" | "search" | "retrieval+training";
 
@@ -53,6 +55,33 @@ export const ROBOTS_CONFIG: RobotsConfig = {
   bots: AI_BOT_GROUPS,
   sitemaps: ROBOTS_SITEMAPS,
 };
+
+/**
+ * The config with admin toggles applied: a `robots_bots` row per user-agent overrides
+ * `enabled` (and adds a `note`). No database, or a failing one, yields the static config.
+ */
+export async function getRobotsConfig(): Promise<RobotsConfig> {
+  const db = getDb();
+  if (!db) return ROBOTS_CONFIG;
+  try {
+    const rows = await db.query.robotsBots.findMany();
+    if (rows.length === 0) return ROBOTS_CONFIG;
+    const byAgent = new Map(rows.map((r) => [r.agent.toLowerCase(), r]));
+    return {
+      ...ROBOTS_CONFIG,
+      bots: AI_BOT_GROUPS.map((bot) => {
+        const row = byAgent.get(bot.userAgent.toLowerCase());
+        return row ? { ...bot, enabled: row.allow } : bot;
+      }),
+    };
+  } catch (error) {
+    console.error(
+      "[robots] robots_bots lookup failed:",
+      error instanceof Error ? error.name : error,
+    );
+    return ROBOTS_CONFIG;
+  }
+}
 
 /**
  * Render robots.txt. Pure: `siteUrl` is the absolute origin; the caller passes the config so

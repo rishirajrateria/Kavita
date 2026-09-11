@@ -12,6 +12,7 @@ import { BOOK_ERRORS, BOOK_MODE_STEP, BOOK_NAV } from "@/content/pages/book";
 import { dualZoneParts, formatInZone } from "@/lib/booking/format";
 import { bookingRequestSchema } from "@/lib/booking/schemas";
 import { track } from "@/lib/events";
+import { bookingEventId } from "@/lib/integrations/event-ids";
 import { buildPayload, fallbackSummary, needsBirth, needsProperty, postBooking } from "./api";
 import { Confirmation } from "./confirmation";
 import { FallbackScreen } from "./fallback-screen";
@@ -177,7 +178,12 @@ export function BookingFlow(props: BookingFlowProps & { maxMonth: string; brandN
     dispatch({ type: "submit:start" });
     const result = await postBooking(payload);
     if (result.ok) {
-      track("booking_completed", { serviceSlug: service.slug });
+      // Same id the server sends to the Meta Conversions API, so the pair de-duplicates (§13C).
+      track(
+        "booking_completed",
+        { serviceSlug: service.slug },
+        result.receipt.bookingId ? { eventId: bookingEventId(result.receipt.bookingId) } : {},
+      );
       dispatch({
         type: "submit:ok",
         receipt: { ...result.receipt, endsAt: result.receipt.endsAt || state.slot.endsAt },

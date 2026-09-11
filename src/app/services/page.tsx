@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { applyPageSeo } from "@/lib/seo/page-seo";
 import Link from "next/link";
 import { Byline, CtaBand, FaqBlock, PageHero, QuestionSection } from "@/components/content";
 import { ServicesComparisonTable } from "@/components/services/comparison-table";
@@ -18,7 +19,7 @@ import {
 } from "@/content/pages/services";
 import { getServices, type ServiceLead } from "@/lib/data";
 
-export const metadata: Metadata = {
+const BASE_METADATA: Metadata = {
   title: { absolute: SERVICES_META.title },
   description: SERVICES_META.description,
   alternates: { canonical: "/services" },
@@ -29,6 +30,11 @@ export const metadata: Metadata = {
     description: SERVICES_META.description,
   },
 };
+
+/** Static metadata plus any admin override from `page_seo` (Phase 6). */
+export function generateMetadata(): Promise<Metadata> {
+  return applyPageSeo(BASE_METADATA, "/services");
+}
 
 const LEADS: ServiceLead[] = ["integrated", "astrology", "vastu"];
 
@@ -109,6 +115,7 @@ export default async function ServicesPage() {
       </QuestionSection>
 
       <FaqBlock
+        route="/services"
         heading={SERVICES_FAQ.heading}
         answer={SERVICES_FAQ.answer}
         eyebrow={SERVICES_FAQ.eyebrow}

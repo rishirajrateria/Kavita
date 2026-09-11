@@ -71,8 +71,15 @@ function newEventId(): string {
 export function track<E extends ConversionEvent>(
   name: E,
   payload: EventPayloads[E],
+  options: { eventId?: string } = {},
 ): TrackedEvent<E> {
-  const event: TrackedEvent<E> = { name, payload, eventId: newEventId(), timestamp: Date.now() };
+  const event: TrackedEvent<E> = {
+    name,
+    payload,
+    // A caller may pin the id so the browser pixel and the server CAPI send agree (Phase 6).
+    eventId: options.eventId || newEventId(),
+    timestamp: Date.now(),
+  };
   for (const subscriber of subscribers) {
     try {
       void Promise.resolve(subscriber(event)).catch(() => undefined);

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { applyPageSeo } from "@/lib/seo/page-seo";
 import Link from "next/link";
 import { CtaBand, PageHero, QuestionSection } from "@/components/content";
 import { ArticleGrid, CategoryCard, GlossaryList, learnMetadata } from "@/components/learn";
@@ -10,12 +11,17 @@ const TITLE = "Learn Vedic astrology and vastu";
 const DESCRIPTION =
   "Plain-English guides to Vedic astrology and vastu shastra from Astrologer Kavita: how a kundli is read, how vastu applies to flats, and how the two work together.";
 
-export const metadata: Metadata = learnMetadata({
+const BASE_METADATA: Metadata = learnMetadata({
   title: TITLE,
   description: DESCRIPTION,
   path: "/learn",
   siteUrl: getSiteUrl(),
 });
+
+/** Static metadata plus any admin override from `page_seo` (Phase 6). */
+export function generateMetadata(): Promise<Metadata> {
+  return applyPageSeo(BASE_METADATA, "/learn");
+}
 
 const FEATURED_TERMS = ["kundli", "dasha", "lagna", "brahmasthan", "ishaan", "muhurat"];
 

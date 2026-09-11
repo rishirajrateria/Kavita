@@ -588,6 +588,55 @@ touching the app.
   `src/hooks`, `src/db` (Drizzle schema + client), `src/content/{locations,articles}`,
   `src/styles`, `src/types`, `supabase/{migrations,seed}`, `scripts`, `tests`.
 
+### What exists (Phases 0–6)
+
+All six phases are built. `HANDOVER.md` is the owner's manual (plus a technical appendix: deploy,
+env vars, crons, buckets, connecting Supabase/Vercel/Resend/GSC/Bing/Meta); `ROADMAP.md` carries the
+per-phase reports and the launch checklist. This map is the orientation for a new session — the
+sections above remain the brief and still win on any question of intent.
+
+**Module map (`src/lib`)**
+
+| Area               | Modules                                                                                                                                                                                                                                  |
+| ------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Routing / SEO core | `routes.ts` (route registry — sitemaps, robots, SEO editor and the health crawler all read it), `sitemaps.ts`, `robots-config.ts`, `indexnow.ts`, `site.ts`, `env.ts`                                                                    |
+| SEO control (P6)   | `seo/{page-seo,page-seo-admin,route-pattern,sanitize-head,head-preview,keyword-check,faq-attach,aeo,aeo-data,citability,documents,og-library,schema,admin-schemas}.ts`                                                                   |
+| SEO health (P6)    | `seo-health/{types,parse,checks,crawl,runner,store,fix-links,citability}.ts`                                                                                                                                                             |
+| Redirects (P6)     | `redirects/{cache,matchers,graph,store,csv,hits,refresh,on-slug-change,not-found-log,sitemap-config,indexnow-log}.ts`                                                                                                                    |
+| Integrations (P6)  | `integrations/{store,providers,validators,snippets,what-loads,mappings,pixel-dispatch,event-ids,meta-capi,capi-events,sanitize,verification,verification-paths,test-connection,google-jwt}.ts`, `consent/{regions,cookie,config,log}.ts` |
+| Search performance | `search-console/{google,bing,jwt,cache,types,index}.ts` (service-account JWT via `node:crypto`; no google-auth-library)                                                                                                                  |
+| Admin              | `admin/{auth,audit,mutations,revert,manage-schemas}.ts` — `requireAdmin`, `audit`, `adminRoute(handler,{role})`, the revertable-entity registry                                                                                          |
+| Content / data     | `data/*`, `geo/*`, `markdown/*` (page → markdown mirror, `llms.txt`), `mdx/*`, `articles.ts`                                                                                                                                             |
+| Booking            | `booking/*`, `notifications/*`, `payments/*` (seam only), `storage/*`, `crypto/*`, `rate-limit.ts`, `validation/*`                                                                                                                       |
+| Analytics          | `analytics/*`, `events.ts`, `events-browser.ts`                                                                                                                                                                                          |
+
+**Admin route map** (`src/app/admin`, route groups `(analytics)`, `(manage)`, `(seo)`)
+
+| Group     | Routes                                                                                                                                                                                                                       |
+| --------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Analytics | `/admin` (overview), `/realtime`, `/traffic`, `/geography`, `/pages`, `/behaviour`, `/acquisition`, `/technology`, `/conversions`                                                                                            |
+| Manage    | `/bookings`(+`/[id]`, `/calendar`, `/preview`), `/content/{testimonials,services,faqs,locations,glossary}`(+ detail routes), `/settings/{availability,notifications,users,flags}`, `/site/{identity,social-links}`, `/audit` |
+| SEO       | `/seo`(+`/[...route]`), `/faqs`, `/aeo`, `/social`, `/integrations`, `/redirects`(+`/[id]`), `/not-found-log`, `/sitemaps`, `/indexing`, `/health`                                                                           |
+| Auth      | `/admin/login`; `ADMIN_DEV_BYPASS=true` (never in production) gives a synthetic owner session                                                                                                                                |
+
+API routes mirror the same shape under `src/app/api/admin/*`; every one goes through
+`adminRoute(handler, { role })` so it is authorised, validated and audited.
+
+**Crons (`vercel.json`, all `Authorization: Bearer $CRON_SECRET`)**
+
+| Path                         | Schedule (UTC) | Purpose                                                         |
+| ---------------------------- | -------------- | --------------------------------------------------------------- |
+| `/api/cron/reminders`        | `*/15 * * * *` | Booking reminder emails                                         |
+| `/api/cron/analytics-rollup` | `15 * * * *`   | Hourly rollups, 90-day raw retention                            |
+| `/api/cron/seo-health`       | `30 3 * * 1`   | One budgeted SEO-health crawl segment (resumes a paused cursor) |
+
+**Supabase Storage buckets:** `floor-plans` (private, client uploads, service-role access only)
+and `og-library` (public, share images; magic-byte sniffed, ≤ 4 MB).
+
+**Offline behaviour:** with no `SUPABASE_DB_URL` the public site renders from the typed content
+layer, every admin screen shows an honest "connect Supabase" state, and the SEO health crawl keeps
+its results in process memory for the session. Never paper over a missing database with fake data.
+
 ---
 
 # Ruflo Harness Configuration

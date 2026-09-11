@@ -102,7 +102,7 @@ fails if any token below disappears from this file while still present in the se
 - [ ] `https://youtube.com/@{{YOUTUBE_HANDLE}}` — YouTube channel URL.
 - [ ] `https://facebook.com/{{FACEBOOK_PAGE}}` — Facebook page URL.
 - [ ] `https://linkedin.com/in/{{LINKEDIN_HANDLE}}` — LinkedIn profile URL.
-- [ ] `{{GOOGLE_BUSINESS_PROFILE_URL}}` — Google Business Profile share URL (`include_in_sameas`).
+- [ ] `{{GOOGLE_BUSINESS_PROFILE_SLUG}}` — the Google Business Profile short-link slug, i.e. the part after `https://g.page/` (`include_in_sameas`). Replace the whole URL in `src/content/seed/social-links.ts` if her profile uses a different Google URL shape.
 - [ ] `https://wa.me/{{WHATSAPP_NUMBER_DIGITS}}` — WhatsApp number, digits only with country code.
 
 ### `src/content/seed/services.ts` (`services`)

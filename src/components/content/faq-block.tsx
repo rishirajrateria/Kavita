@@ -3,6 +3,8 @@ import { JsonLd } from "@/components/seo/json-ld";
 import { Container } from "@/components/ui/container";
 import { Heading } from "@/components/ui/heading";
 import { Section } from "@/components/ui/section";
+import { PageSeoExtras } from "@/components/seo/page-seo-extras";
+import { getAttachedFaqs } from "@/lib/seo/faq-attach";
 import { faqPageSchema, withSpeakable, type FaqItem } from "@/lib/seo/schema";
 import { cn } from "@/lib/utils";
 
@@ -18,23 +20,36 @@ export interface FaqBlockProps {
   /** Emit FAQPage JSON-LD (speakable on `.answer`). Default true; set false if the page emits its own. */
   withSchema?: boolean;
   className?: string;
+  /**
+   * The page's route (e.g. `/services/kundli-analysis`). When given, FAQs attached to the
+   * route from the admin (`faq_attachments`, exact or glob) are appended after `items`, and
+   * the page's custom-head extras (JSON-LD, links) from `page_seo` are rendered here too.
+   */
+  route?: string;
 }
 
 /**
  * FAQ as native `<details>` (every answer always in the HTML, no accordion JS), styled as on
  * the home and geo pages, plus the matching FAQPage JSON-LD from the same rows.
  */
-export function FaqBlock({
+export async function FaqBlock({
   heading,
   answer,
   eyebrow = "Questions",
-  items,
+  items: ownItems,
   id = "faq",
   tone = "default",
   withSchema = true,
   className,
+  route,
 }: FaqBlockProps) {
-  if (items.length === 0) return null;
+  const attached = route ? await getAttachedFaqs(route) : [];
+  const seen = new Set(ownItems.map((f) => f.question.trim().toLowerCase()));
+  const items = [
+    ...ownItems,
+    ...attached.filter((f) => !seen.has(f.question.trim().toLowerCase())),
+  ];
+  if (items.length === 0) return route ? <PageSeoExtras route={route} /> : null;
 
   return (
     <Section
@@ -45,6 +60,7 @@ export function FaqBlock({
       className={cn("scroll-mt-20", className)}
     >
       {withSchema ? <JsonLd data={withSpeakable(faqPageSchema(items), [".answer"])} /> : null}
+      {route ? <PageSeoExtras route={route} /> : null}
       <Container size="wide" className="space-y-10">
         {answer ? (
           <QuestionHeading block={{ eyebrow, question: heading, answer }} layout="split" />

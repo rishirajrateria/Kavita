@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { applyPageSeo } from "@/lib/seo/page-seo";
 import { notFound } from "next/navigation";
 import {
   Byline,
@@ -53,17 +54,20 @@ export async function generateMetadata({
   const { slug } = await params;
   const detail = getServiceDetail(slug);
   if (!detail) return {};
-  return {
-    title: { absolute: `${detail.metaTitle} — Astrologer Kavita` },
-    description: detail.metaDescription,
-    alternates: { canonical: `/services/${slug}` },
-    openGraph: {
-      type: "website",
-      url: `/services/${slug}`,
-      title: detail.metaTitle,
+  return applyPageSeo(
+    {
+      title: { absolute: `${detail.metaTitle} — Astrologer Kavita` },
       description: detail.metaDescription,
+      alternates: { canonical: `/services/${slug}` },
+      openGraph: {
+        type: "website",
+        url: `/services/${slug}`,
+        title: detail.metaTitle,
+        description: detail.metaDescription,
+      },
     },
-  };
+    `/services/${slug}`,
+  );
 }
 
 const SERVICE_TYPE = {
@@ -269,6 +273,7 @@ export default async function ServicePage({ params }: PageProps<"/services/[slug
       ))}
 
       <FaqBlock
+        route={`/services/${slug}`}
         heading={SERVICE_PAGE.faq.heading(service.name)}
         eyebrow={SERVICE_PAGE.faq.eyebrow}
         items={[...detail.faqs]}

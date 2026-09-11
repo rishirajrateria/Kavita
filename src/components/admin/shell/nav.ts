@@ -17,9 +17,11 @@ import {
   MonitorSmartphoneIcon,
   MousePointerClickIcon,
   PlugIcon,
+  RadarIcon,
   RadioIcon,
   SearchIcon,
   SettingsIcon,
+  SignpostIcon,
   TargetIcon,
 } from "lucide-react";
 
@@ -63,12 +65,14 @@ export const ADMIN_NAV: AdminNavGroup[] = [
     ],
   },
   {
-    label: "Phase 6",
+    label: "SEO & growth",
     items: [
-      { label: "SEO", href: "/admin/seo", icon: SearchIcon, phase: 6 },
-      { label: "Integrations", href: "/admin/integrations", icon: PlugIcon, phase: 6 },
-      { label: "Health", href: "/admin/health", icon: HeartPulseIcon, phase: 6 },
-      { label: "Audit log", href: "/admin/audit", icon: ClipboardListIcon, phase: 6 },
+      { label: "SEO", href: "/admin/seo", icon: SearchIcon },
+      { label: "Integrations", href: "/admin/integrations", icon: PlugIcon },
+      { label: "Redirects", href: "/admin/redirects", icon: SignpostIcon },
+      { label: "Indexing", href: "/admin/indexing", icon: RadarIcon },
+      { label: "Health", href: "/admin/health", icon: HeartPulseIcon },
+      { label: "Audit log", href: "/admin/audit", icon: ClipboardListIcon },
     ],
   },
 ];

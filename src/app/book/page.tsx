@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { applyPageSeo } from "@/lib/seo/page-seo";
 import Link from "next/link";
 import { BookingFlow } from "@/components/booking/booking-flow";
 import type { BookableService, BookingChannels } from "@/components/booking/types";
@@ -12,13 +13,18 @@ import { dateKeyInZone, monthKeyOf } from "@/lib/booking/format";
 import { getLocationByPath, getServiceBySlug, getServices, getSiteSettings } from "@/lib/data";
 import { mailtoHref, realValue, telHref, whatsappHref } from "@/lib/site";
 
-export const metadata: Metadata = {
+const BASE_METADATA: Metadata = {
   title: { absolute: BOOK_META.title },
   description: BOOK_META.description,
   /** Transactional page with query variants: reachable, followed, never indexed. */
   robots: { index: false, follow: true },
   alternates: { canonical: "/book" },
 };
+
+/** Static metadata plus any admin override from `page_seo` (Phase 6). */
+export function generateMetadata(): Promise<Metadata> {
+  return applyPageSeo(BASE_METADATA, "/book");
+}
 
 const one = (v: string | string[] | undefined) => (typeof v === "string" ? v : undefined);
 const slugify = (s: string) =>
@@ -161,6 +167,7 @@ export default async function BookPage({ searchParams }: PageProps<"/book">) {
       </QuestionSection>
 
       <FaqBlock
+        route="/book"
         heading={BOOK_FAQ.heading}
         answer={BOOK_FAQ.answer}
         eyebrow={BOOK_FAQ.eyebrow}

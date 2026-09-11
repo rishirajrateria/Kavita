@@ -11,4 +11,8 @@ export const integrationsSeed: SeedRow<Integration>[] = INTEGRATION_PROVIDERS.ma
   isEnabled: false,
   loadsInRegions: [],
   updatedBy: null,
+  lastVerifiedAt: null,
+  lastTestStatus: null,
+  lastTestMessage: null,
+  notes: null,
 }));

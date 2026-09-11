@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { applyPageSeo } from "@/lib/seo/page-seo";
 import { Byline, PageHero, QuestionSection } from "@/components/content";
 import { statusFromSearchParams } from "@/components/forms/form-status";
 import { TestimonialForm } from "@/components/forms/testimonial-form";
@@ -15,12 +16,17 @@ import {
 import { getServices, getSiteSettings } from "@/lib/data";
 import { mailtoHref, realValue, telHref, whatsappHref } from "@/lib/site";
 
-export const metadata: Metadata = {
+const BASE_METADATA: Metadata = {
   title: { absolute: SHARE_META.title },
   description: SHARE_META.description,
   alternates: { canonical: "/share-your-experience" },
   robots: { index: false, follow: true },
 };
+
+/** Static metadata plus any admin override from `page_seo` (Phase 6). */
+export function generateMetadata(): Promise<Metadata> {
+  return applyPageSeo(BASE_METADATA, "/share-your-experience");
+}
 
 /** Client-experience intake. Copy is server-rendered; only the form itself is a client component. */
 export default async function ShareYourExperiencePage({

@@ -8,6 +8,7 @@ import type { Metadata } from "next";
 import { HREFLANGS, type Hreflang, type LocationRecord } from "@/content/locations/schema";
 import { getPublishableLocations, locationHref } from "@/lib/data/locations";
 import type { GeoService } from "@/lib/data/types";
+import { applyPageSeo } from "@/lib/seo/page-seo";
 import { GEO_SERVICE_META, geoH1 } from "./service";
 
 export const TITLE_MAX = 60;
@@ -158,22 +159,25 @@ export async function buildGeoMetadata(
   const languages = loc.type === "country" ? await hreflangCluster(service, siteUrl) : undefined;
   const indexable = loc.researchStatus === "complete";
 
-  return {
-    title: { absolute: title },
-    description,
-    alternates: { canonical, ...(languages ? { languages } : {}) },
-    robots: indexable
-      ? { index: true, follow: true }
-      : { index: false, follow: true, googleBot: { index: false, follow: true } },
-    openGraph: {
-      type: "website",
-      url: canonical,
-      siteName: BRAND,
-      locale: hreflang.replace("-", "_"),
-      title,
+  return applyPageSeo(
+    {
+      title: { absolute: title },
       description,
-      images: [{ url: image, width: 1200, height: 630, alt: ogAlt }],
+      alternates: { canonical, ...(languages ? { languages } : {}) },
+      robots: indexable
+        ? { index: true, follow: true }
+        : { index: false, follow: true, googleBot: { index: false, follow: true } },
+      openGraph: {
+        type: "website",
+        url: canonical,
+        siteName: BRAND,
+        locale: hreflang.replace("-", "_"),
+        title,
+        description,
+        images: [{ url: image, width: 1200, height: 630, alt: ogAlt }],
+      },
+      twitter: { card: "summary_large_image", title, description, images: [image] },
     },
-    twitter: { card: "summary_large_image", title, description, images: [image] },
-  };
+    locationHref(loc, service),
+  );
 }

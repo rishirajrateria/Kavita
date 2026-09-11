@@ -2,6 +2,12 @@
  * `PATCH /api/admin/locations/<country>/<state>/<city>` — save research / featured / content
  * date for a database-backed location (editor+). Status is re-derived server-side; the audit
  * row stores the derived status and word counts, not the full prose twice.
+ *
+ * Location `path`/`slug` are immutable here by design: the base records and research files in
+ * `src/content/locations` are keyed by path, so a rename is a code change. When one happens,
+ * add the two 301s (`/astrologer/<old>` and `/vastu-consultant/<old>`) in `/admin/redirects`
+ * in the same commit — `recordSlugChange()` in `src/lib/redirects/on-slug-change.ts` is the
+ * helper for a future slug editor.
  */
 import { getDb } from "@/db";
 import { updateLocation } from "@/lib/admin/content";

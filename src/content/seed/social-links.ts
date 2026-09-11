@@ -52,7 +52,9 @@ export const socialLinksSeed: SeedRow<SocialLink>[] = [
   },
   {
     platform: "google_business",
-    url: "{{GOOGLE_BUSINESS_PROFILE_URL}}",
+    // Absolute so the unfilled placeholder is an external link, not a same-origin 404 on
+    // every page of the site (`g.page` is Google's own Business Profile short domain).
+    url: "https://g.page/{{GOOGLE_BUSINESS_PROFILE_SLUG}}",
     label: "Astrologer Kavita on Google",
     icon: "google",
     sortOrder: 50,

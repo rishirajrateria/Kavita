@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { applyPageSeo } from "@/lib/seo/page-seo";
 import { Byline, CtaBand, PageHero, QuestionSection, Toc } from "@/components/content";
 import { FaqGroup, type FaqSubgroup } from "@/components/faq/faq-group";
 import { FaqSearch } from "@/components/faq/faq-search";
@@ -17,7 +18,7 @@ import {
 } from "@/lib/data";
 import { faqPageSchema, withSpeakable, type FaqItem } from "@/lib/seo/schema";
 
-export const metadata: Metadata = {
+const BASE_METADATA: Metadata = {
   title: { absolute: FAQ_META.title },
   description: FAQ_META.description,
   alternates: { canonical: "/faq" },
@@ -28,6 +29,11 @@ export const metadata: Metadata = {
     description: FAQ_META.description,
   },
 };
+
+/** Static metadata plus any admin override from `page_seo` (Phase 6). */
+export function generateMetadata(): Promise<Metadata> {
+  return applyPageSeo(BASE_METADATA, "/faq");
+}
 
 /**
  * Master FAQ (CLAUDE.md §5): home, service, astrology, vastu and location questions in one

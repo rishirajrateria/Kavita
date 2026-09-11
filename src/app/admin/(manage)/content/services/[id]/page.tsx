@@ -36,7 +36,7 @@ export default async function ServiceEditPage({
           </Link>
         }
         title={s.name}
-        description={`/services/${s.slug} · the slug is immutable once published (CLAUDE.md §5).`}
+        description={`/services/${s.slug} · changing the slug creates the mandatory 301 automatically (CLAUDE.md §5).`}
       />
       {!db ? <OfflineNote /> : null}
       <ActionForm
@@ -51,6 +51,19 @@ export default async function ServiceEditPage({
             <div className="flex flex-col gap-4">
               <Field label="Name" htmlFor="name">
                 <Input id="name" name="name" defaultValue={s.name} required />
+              </Field>
+              <Field
+                label="URL slug"
+                htmlFor="slug"
+                hint="Lowercase, hyphenated. On change, /services/<old> redirects (301) to the new address and both URLs are sent to IndexNow."
+              >
+                <Input
+                  id="slug"
+                  name="slug"
+                  defaultValue={s.slug}
+                  pattern="[a-z0-9]+(-[a-z0-9]+)*"
+                  required
+                />
               </Field>
               <Field
                 label="Lead"

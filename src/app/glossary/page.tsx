@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { applyPageSeo } from "@/lib/seo/page-seo";
 import Link from "next/link";
 import { CtaBand, PageHero, QuestionSection } from "@/components/content";
 import { GlossaryList, definedTermSetSchema, learnMetadata } from "@/components/learn";
@@ -11,12 +12,17 @@ const TITLE = "Glossary of astrology and vastu terms";
 const DESCRIPTION =
   "Twenty-five Vedic astrology and vastu terms — kundli, dasha, lagna, nakshatra, brahmasthan, ishaan and more — each defined plainly by Astrologer Kavita.";
 
-export const metadata: Metadata = learnMetadata({
+const BASE_METADATA: Metadata = learnMetadata({
   title: TITLE,
   description: DESCRIPTION,
   path: "/glossary",
   siteUrl: getSiteUrl(),
 });
+
+/** Static metadata plus any admin override from `page_seo` (Phase 6). */
+export function generateMetadata(): Promise<Metadata> {
+  return applyPageSeo(BASE_METADATA, "/glossary");
+}
 
 /** `/glossary` — every term grouped by science, with the short definitions in the HTML. */
 export default function GlossaryPage() {

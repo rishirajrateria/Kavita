@@ -2,11 +2,16 @@ import { readFile } from "node:fs/promises";
 import { join } from "node:path";
 import { ImageResponse } from "next/og";
 import type { NextRequest } from "next/server";
+import { getDb } from "@/db";
+import { getOgImage } from "@/lib/seo/og-library";
 
 /**
  * On-brand Open Graph image, 1200×630: ivory ground, double gold hairline frame, gold eyebrow,
  * indigo Fraunces title, the "Astrologer Kavita" wordmark and a line-art motif — vastu compass
- * or North Indian chart — drawn as SVG. `?title=&subtitle=&kind=astrologer|vastu`.
+ * or North Indian chart — drawn as SVG. `?title=&subtitle=&kind=astrologer|vastu`, plus the
+ * Phase 6 additions: `eyebrow=` and `tagline=` replace the two small lines of text, and
+ * `library=<og_images.id>` streams an uploaded image from the OG library instead of rendering
+ * (falls back to the generated image when the id is unknown or the fetch fails).
  *
  * Satori accepts only ttf/otf/woff, so the variable woff2 files shipped by @fontsource are
  * instanced once (Fraunces 500, Inter 400/600, latin subset) into `./fonts/*.ttf` — ~170KB in
@@ -115,15 +120,46 @@ function Chart() {
   );
 }
 
+const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+
+/** Stream a library image (public bucket) with long cache headers; `null` when unavailable. */
+async function libraryImage(id: string): Promise<Response | null> {
+  const db = getDb();
+  if (!db || !UUID.test(id)) return null;
+  try {
+    const row = await getOgImage(db, id);
+    if (!row) return null;
+    const upstream = await fetch(row.publicUrl, { signal: AbortSignal.timeout(8000) });
+    if (!upstream.ok || !upstream.body) return null;
+    return new Response(upstream.body, {
+      headers: {
+        "Content-Type": row.contentType,
+        "Cache-Control": "public, max-age=86400, s-maxage=31536000, stale-while-revalidate=604800",
+      },
+    });
+  } catch {
+    return null;
+  }
+}
+
 export async function GET(request: NextRequest) {
   const sp = request.nextUrl.searchParams;
+  const library = sp.get("library");
+  if (library) {
+    const passthrough = await libraryImage(library);
+    if (passthrough) return passthrough;
+  }
   const title = clean(sp.get("title"), 90, "Astrologer Kavita");
   const subtitle = clean(sp.get("subtitle"), 120, "Vedic astrology and vastu, read together");
   const kind = sp.get("kind") === "vastu" ? "vastu" : "astrologer";
-  const eyebrow =
+  const eyebrow = clean(
+    sp.get("eyebrow"),
+    48,
     kind === "vastu"
       ? "Vastu consultant · Vedic astrologer"
-      : "Vedic astrologer · Vastu consultant";
+      : "Vedic astrologer · Vastu consultant",
+  );
+  const tagline = clean(sp.get("tagline"), 48, "One method, two instruments");
   const titleSize = title.length > 48 ? 54 : title.length > 30 ? 64 : 76;
 
   try {
@@ -238,7 +274,7 @@ export async function GET(request: NextRequest) {
                 display: "flex",
               }}
             >
-              One method, two instruments
+              {tagline}
             </div>
           </div>
         </div>

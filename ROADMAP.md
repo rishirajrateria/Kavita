@@ -11,7 +11,7 @@ phase ends with a working, deployable site. Read `CLAUDE.md` first in every phas
 - [x] **Phase 3 — Content pages: about, astrology, vastu, services, learn, testimonials, contact.** `/about` E-E-A-T anchor, `/astrology` and `/vastu` intent hubs, `/services/[slug]`, `/learn` MDX pipeline with 8 seed articles, `/glossary/[term]` with 25 terms, `/testimonials` + `/share-your-experience` intake, `/contact`, `/faq`, `/privacy`, `/terms`, `/disclaimer`.
 - [x] **Phase 4 — Booking and calendar system.** Availability rules/exceptions in Kavita's IANA timezone, server-side UTC slot generation with DST and IST half-hour tests, 7-step booking flow with dual-timezone display, race-safe slot insert, Resend/React Email notifications and cron reminders, token-based client self-service, payment seam (§11) with `NoopPaymentProvider`, private floor-plan uploads, rate limiting and audit trail.
 - [x] **Phase 5 — Admin panel and first-party analytics.** `/admin` behind Supabase Auth + RLS with `admin_audit_log`; cookieless first-party tracker (`public/t.js` < 4KB) with the §13.D event fan-out registry, edge-geo ingest, daily rollups; dashboard (realtime, traffic, geography, pages incl. geo-page performance, behaviour, acquisition incl. AI-referral panel, technology, conversions); bookings, content, settings and site-identity management.
-- [ ] **Phase 6 — SEO control backend and redirect engine.** `page_seo` per-route control with SERP preview and keyword checker, FAQ manager, AEO control panel (answer-block linter, llms.txt editor, per-bot crawler toggles, citability check), social/OG control, `redirects` engine in `middleware.ts` with loop/chain detection, 404 log and automatic 301 on slug change, sitemap/IndexNow/GSC/Bing control, `/admin/integrations` implementing §13 in full (pixels, CAPI, event mapping, geo-aware consent, "what's loading" preview), SEO health crawl, audit log with revert; update `CLAUDE.md`/`ROADMAP.md` and write `HANDOVER.md`.
+- [x] **Phase 6 — SEO control backend and redirect engine.** `page_seo` per-route control with SERP preview and keyword checker, FAQ manager, AEO control panel (answer-block linter, llms.txt editor, per-bot crawler toggles, citability check), social/OG control, `redirects` engine in `middleware.ts` with loop/chain detection, 404 log and automatic 301 on slug change, sitemap/IndexNow/GSC/Bing control, `/admin/integrations` implementing §13 in full (pixels, CAPI, event mapping, geo-aware consent, "what's loading" preview), SEO health crawl, audit log with revert; update `CLAUDE.md`/`ROADMAP.md` and write `HANDOVER.md`.
 
 ## Phase 1 report (2026-09-10)
 
@@ -113,6 +113,90 @@ phase ends with a working, deployable site. Read `CLAUDE.md` first in every phas
   `ADMIN_DEV_BYPASS=true` (non-production only) renders the shell for review.
 - Follow-up noted: split the root layout into (site)/(admin) groups instead of hiding the site
   header/footer on /admin with scoped CSS.
+
+## Phase 6 report (2026-09-11)
+
+- **Data-driven SEO resolution.** `page_seo` extended to route patterns (exact > longest literal
+  prefix > shortest wildcard) carrying title/description/H1/canonical overrides, granular robots
+  directives, OG and Twitter fields, hreflang, keyword focus and sanitised custom head HTML
+  (`<meta>`, `<link>`, JSON-LD only). `resolvePageSeo()`/`applyPageSeo()` are consulted by every
+  metadata builder; with no database connected there are simply no overrides. Admin: page list,
+  per-route editor, pixel-measured SERP preview, exact rendered `<head>` preview, keyword checker.
+- **FAQ + AEO control.** FAQ manager with bulk attach by route pattern, ordering, publishing and a
+  live FAQPage JSON-LD preview; `page_answers` overrides with the self-containment linter (leading
+  pronouns, missing subject, 40–60 word window) and a live word counter; key-facts editor;
+  `llms.txt` / `llms-full.txt` / `/for-ai` editors backed by `site_documents`; per-bot AI-crawler
+  toggles (`robots_bots`) with the plain-language retrieval-vs-training note; citability scoring
+  (`src/lib/seo/citability.ts`) surfaced per page with concrete fixes.
+- **Social control.** Default OG/Twitter templates per content type, per-page overrides, an image
+  library in the public `og-library` Storage bucket (magic-byte sniffing, ≤ 4 MB), and hand-built
+  WhatsApp / X / LinkedIn / Facebook card mockups — no external calls.
+- **Redirect engine.** `redirects` moved to its own schema module with match types (exact,
+  wildcard, regex), 301/302/307/308/410, hit counters, notes and source. An in-memory cache
+  (exact map + ordered pattern list, 60 s TTL, refresh endpoint) is consulted first in `proxy.ts`;
+  410s render a noindex `/gone` page. Loop refusal and chain collapse at save time, CSV import and
+  export, a 404 log fed from `not-found.tsx` with one-click "create redirect", and automatic 301s
+  on every slug change.
+- **Sitemaps, IndexNow, search performance.** `sitemap_config` drives section and per-page
+  inclusion with priority/changefreq overrides and a live XML preview; IndexNow submits manually or
+  automatically on publish and logs every call; Google Search Console (service-account JWT signed
+  with `node:crypto`, no new dependency) and Bing Webmaster performance shown beside first-party
+  pageviews, cached an hour, with honest "not connected" states.
+- **Integrations, consent and CAPI (§13 in full).** Encrypted credential storage with a provider
+  registry, test-connection per provider and a public-safe projection; one `<Integrations />`
+  component decides what loads from `whatLoads({ region, consent, integrations })`; geo-aware
+  consent banner (UK/EU/EEA/CH) with equal-weight Accept and Reject, a re-openable footer link and
+  `consent_log`; verification tags served as meta or file; sanitised custom scripts; the event
+  mapping table fanning `booking_*`, `contact_submitted`, `whatsapp_clicked` out to each enabled
+  pixel; Meta Conversions API sending the same `event_id` from the server with hashed user data and
+  a redacted `capi_log`. No pixel enabled → no banner shown at all.
+- **SEO health crawl.** A polite same-origin crawler (concurrency 4, ceiling 2,000 pages, seeded
+  from `/`, the route registry and the sitemaps) checking status, titles, descriptions, H1 counts,
+  broken links, image alt text, JSON-LD presence and validity, FAQPage on geo/service pages,
+  canonical agreement, word floors (700 geo / 300 else), citability, sitemap membership, orphans
+  and redirect chains/loops. Runs inside a 45–50 s budget and stores a resumable cursor, so the
+  on-demand run and the Monday 03:30 UTC cron share one engine. Every finding row links to the
+  admin editor that fixes it.
+- **Audit log with revert.** `/admin/audit` shows every admin change with a field-by-field
+  before/after diff; owner-only one-click revert re-applies the `before` snapshot through a
+  registry of revertable entity types (create → delete, delete → insert, update → restore).
+  Redacted values are never written back, integration secrets are preserved, bulk changes and
+  non-revertable entities say so, and the revert is itself audited with `_revertOf`.
+- **Documentation.** `HANDOVER.md` written for a non-technical owner (every admin screen, the
+  consent and crawler-training implications, what not to change) with a technical appendix
+  (deploy, env vars, crons, buckets, connecting each service). `CLAUDE.md` gained a "What exists
+  (Phases 0–6)" map.
+- **Held back deliberately:** no payment gateway (the seam is ready — `CLAUDE.md` §11); no
+  Supabase/Vercel project connected, so every admin screen was reviewed in its offline state as
+  well; Tier 2/3 locations are more rows, not more code.
+
+## Launch checklist
+
+Work top to bottom. Nothing here needs a developer except the first three.
+
+1. **Create the Supabase project**, run `pnpm db:migrate` then `pnpm db:seed`, and set
+   `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `SUPABASE_DB_URL`,
+   `SUPABASE_SERVICE_ROLE_KEY`. Create the Storage buckets `floor-plans` (private) and
+   `og-library` (public).
+2. **Deploy to Vercel** with `NEXT_PUBLIC_SITE_URL`, `CRON_SECRET`, `IP_HASH_SALT`,
+   `DATA_ENCRYPTION_KEY(+_ID/_KEYS)`, `BOOKING_TOKEN_SECRET`, `INDEXNOW_KEY`,
+   `INDEXNOW_SUBMIT_SECRET`, `REDIRECT_REFRESH_SECRET`. Confirm the three crons in `vercel.json`
+   appear under Project → Cron Jobs.
+3. **Connect Resend**: verify the sending domain, set `RESEND_API_KEY`, `EMAIL_FROM`,
+   `EMAIL_NOTIFY_TO`, and send one test booking end to end.
+4. **Fill `NEEDS-REAL-DATA.md`** — every `{{PLACEHOLDER}}`: name, years, credentials, languages,
+   city, phone, email, WhatsApp, social profiles, prices. The build fails on placeholder
+   testimonials, so supply real ones or leave the section empty.
+5. **Review every location's `clientConcerns`** in `/admin/content/locations` and rewrite them in
+   your own words.
+6. **Set availability** (`/admin/settings/availability`) and check a booking slot appears in the
+   right local time for a test visitor abroad.
+7. **Verify the site** in Google Search Console and Bing Webmaster from `/admin/integrations`,
+   then submit `/sitemap.xml` in both.
+8. **Run the first SEO health crawl** (`/admin/health`) and clear every error.
+9. **Switch on advertising tags only when you need them** — each one is off until its ID is
+   entered, and the first one enables the consent banner for European visitors.
+10. **Read `HANDOVER.md`** once, end to end. It is the manual for everything above.
 
 ## Definition of done for every phase
 

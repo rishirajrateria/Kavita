@@ -1,8 +1,13 @@
-/** `PATCH /api/admin/services/[id]` — edit a service (editor+). Slug is immutable. */
+/**
+ * `PATCH /api/admin/services/[id]` — edit a service (editor+). A slug change is accepted and
+ * non-optionally creates the 301 `/services/<old>` → `/services/<new>` (CLAUDE.md §5; Phase 6
+ * `recordSlugChange`), which also submits both URLs to IndexNow.
+ */
 import { getDb } from "@/db";
 import { updateService } from "@/lib/admin/content";
 import { serviceUpdateSchema } from "@/lib/admin/manage-schemas";
 import { AdminRouteError, adminRoute, readAdminBody } from "@/lib/admin/mutations";
+import { recordSlugChange } from "@/lib/redirects/on-slug-change";
 
 export const dynamic = "force-dynamic";
 
@@ -22,7 +27,7 @@ function liftPrices(body: Record<string, unknown>): Record<string, unknown> {
 }
 
 export const PATCH = adminRoute(
-  async ({ request, params, audit }) => {
+  async ({ request, params, audit, session }) => {
     const db = getDb();
     if (!db) throw new AdminRouteError("not_connected");
     const raw = await readAdminBody(request);
@@ -36,7 +41,18 @@ export const PATCH = adminRoute(
     const { before, after } = await updateService(db, id, parsed.data);
     if (!before || !after) throw new AdminRouteError("not_found");
     await audit({ action: "services.update", entityType: "services", entityId: id, before, after });
-    return { service: after };
+    let redirect: { from: string; to: string } | null = null;
+    if (after.slug !== before.slug) {
+      await recordSlugChange({
+        entity: "services",
+        oldPath: `/services/${before.slug}`,
+        newPath: `/services/${after.slug}`,
+        adminUserId: session.adminUser.id,
+        db,
+      });
+      redirect = { from: `/services/${before.slug}`, to: `/services/${after.slug}` };
+    }
+    return { service: after, redirect };
   },
   { role: "editor" },
 );

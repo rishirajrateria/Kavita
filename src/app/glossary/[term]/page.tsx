@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { applyPageSeo } from "@/lib/seo/page-seo";
 import { notFound } from "next/navigation";
 import { Byline, CtaBand, PageHero, Prose, QuestionSection } from "@/components/content";
 import { ArticleGrid, TermChips, definedTermSchema, learnMetadata } from "@/components/learn";
@@ -22,13 +23,16 @@ export async function generateMetadata({
   const term = getGlossaryTerm(slug);
   if (!term) return {};
   const science = SCIENCE[term.category];
-  return learnMetadata({
-    title: `${term.term} — meaning in ${science}`,
-    description: `${term.term} in ${science}, defined by Astrologer Kavita: ${term.short}`,
-    path: `/glossary/${term.slug}`,
-    siteUrl: getSiteUrl(),
-    ogKind: term.category === "vastu" ? "vastu" : "astrologer",
-  });
+  return applyPageSeo(
+    learnMetadata({
+      title: `${term.term} — meaning in ${science}`,
+      description: `${term.term} in ${science}, defined by Astrologer Kavita: ${term.short}`,
+      path: `/glossary/${term.slug}`,
+      siteUrl: getSiteUrl(),
+      ogKind: term.category === "vastu" ? "vastu" : "astrologer",
+    }),
+    `/glossary/${term.slug}`,
+  );
 }
 
 /**

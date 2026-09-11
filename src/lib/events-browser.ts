@@ -5,7 +5,10 @@
  * before the tracker loads (it is `defer`red), so nothing is lost; when the visitor has opted
  * out the tracker replaces `push` with a no-op and the events go nowhere.
  *
- * Phase 6 pixels register further subscribers on the same bus; they never touch this file.
+ * Phase 6 pixels: `registerPixelDispatcher()` adds a destination that receives every bus event
+ * AND anything sent through `dispatchToPixels()` directly (clicks `t.js` already counts, so
+ * they must not re-enter the first-party queue). The dispatchers themselves live in
+ * `src/lib/integrations/pixel-dispatch.ts`, loaded only when a tag is enabled.
  */
 import { subscribe, type EventSubscriber, type TrackedEvent } from "./events";
 
@@ -54,5 +57,36 @@ export function registerBrowserSubscriber(): () => void {
   return () => {
     unsubscribe?.();
     unsubscribe = null;
+  };
+}
+
+/** A pixel destination: receives internal events already gated by region and consent. */
+export type PixelDispatcher = (event: TrackedEvent) => void;
+
+const pixelDispatchers = new Set<PixelDispatcher>();
+let pixelForwarder: (() => void) | null = null;
+
+/** Fan one event out to the loaded pixels only — never to the first-party queue. */
+export function dispatchToPixels(event: TrackedEvent): void {
+  for (const dispatcher of pixelDispatchers) {
+    try {
+      dispatcher(event);
+    } catch {
+      // A broken platform global must never break the page.
+    }
+  }
+}
+
+/** Register a pixel destination; the bus is forwarded to the set once. */
+export function registerPixelDispatcher(dispatcher: PixelDispatcher): () => void {
+  if (typeof window === "undefined") return () => undefined;
+  pixelDispatchers.add(dispatcher);
+  if (!pixelForwarder) pixelForwarder = subscribe(dispatchToPixels);
+  return () => {
+    pixelDispatchers.delete(dispatcher);
+    if (pixelDispatchers.size === 0) {
+      pixelForwarder?.();
+      pixelForwarder = null;
+    }
   };
 }

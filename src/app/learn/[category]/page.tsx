@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { applyPageSeo } from "@/lib/seo/page-seo";
 import { notFound } from "next/navigation";
 import { CtaBand, FaqBlock, PageHero, QuestionSection } from "@/components/content";
 import { ArticleGrid, learnMetadata } from "@/components/learn";
@@ -18,13 +19,16 @@ export async function generateMetadata({
   const { category } = await params;
   const cat = getArticleCategory(category);
   if (!cat) return {};
-  return learnMetadata({
-    title: `${cat.name} — guides`,
-    description: `${cat.name} from Astrologer Kavita: ${cat.description}`,
-    path: `/learn/${cat.slug}`,
-    siteUrl: getSiteUrl(),
-    ogKind: cat.motif === "compass" ? "vastu" : "astrologer",
-  });
+  return applyPageSeo(
+    learnMetadata({
+      title: `${cat.name} — guides`,
+      description: `${cat.name} from Astrologer Kavita: ${cat.description}`,
+      path: `/learn/${cat.slug}`,
+      siteUrl: getSiteUrl(),
+      ogKind: cat.motif === "compass" ? "vastu" : "astrologer",
+    }),
+    `/learn/${cat.slug}`,
+  );
 }
 
 /** `/learn/[category]` — one section of the library: its articles and their FAQs. */
@@ -54,6 +58,7 @@ export default async function CategoryPage({ params }: PageProps<"/learn/[catego
       </QuestionSection>
 
       <FaqBlock
+        route={`/learn/${cat.slug}`}
         heading={`What do readers ask about ${cat.name.toLowerCase()}?`}
         answer={`These are the questions readers most often bring to the ${cat.name.toLowerCase()} guides, each answered in a few sentences by Astrologer Kavita. Every answer is drawn from the articles in this section, so the fuller explanation — with its tables, definitions and examples — is one click away in the guide it comes from.`}
         items={faqs}

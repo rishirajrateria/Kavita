@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { applyPageSeo } from "@/lib/seo/page-seo";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import {
@@ -32,16 +33,19 @@ export async function generateMetadata({
   const { category, slug } = await params;
   const article = getArticle(category, slug);
   if (!article) return {};
-  return learnMetadata({
-    title: article.title,
-    description: article.description,
-    path: article.href,
-    siteUrl: getSiteUrl(),
-    ogKind: article.categoryInfo.motif === "compass" ? "vastu" : "astrologer",
-    type: "article",
-    publishedTime: article.datePublished,
-    modifiedTime: article.dateModified,
-  });
+  return applyPageSeo(
+    learnMetadata({
+      title: article.title,
+      description: article.description,
+      path: article.href,
+      siteUrl: getSiteUrl(),
+      ogKind: article.categoryInfo.motif === "compass" ? "vastu" : "astrologer",
+      type: "article",
+      publishedTime: article.datePublished,
+      modifiedTime: article.dateModified,
+    }),
+    article.href,
+  );
 }
 
 /**
@@ -122,6 +126,7 @@ export default async function ArticlePage({ params }: PageProps<"/learn/[categor
       </Section>
 
       <FaqBlock
+        route={article.href}
         heading={`What do people ask about ${shortTopic(article.title)}?`}
         answer={`The questions below are the ones readers most often ask after this guide, each answered briefly by Astrologer Kavita. They cover the practical edge cases the main text does not dwell on, and every answer stands on its own so it can be read without the article — though the article explains the reasoning behind it.`}
         items={article.faq}

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { applyPageSeo } from "@/lib/seo/page-seo";
 import Image from "next/image";
 import Link from "next/link";
 import { Byline, CtaBand, FaqBlock, PageHero, QuestionSection, Toc } from "@/components/content";
@@ -31,7 +32,7 @@ import { getPublishableLocations, getSameAsUrls, getSiteSettings, locationHref }
 import { personSchema } from "@/lib/seo/schema";
 import { getSiteUrl, isPlaceholder, realValue } from "@/lib/site";
 
-export const metadata: Metadata = {
+const BASE_METADATA: Metadata = {
   title: { absolute: ABOUT_META.title },
   description: ABOUT_META.description,
   alternates: { canonical: "/about", types: { "text/markdown": "/about.md" } },
@@ -43,6 +44,11 @@ export const metadata: Metadata = {
     siteName: "Astrologer Kavita",
   },
 };
+
+/** Static metadata plus any admin override from `page_seo` (Phase 6). */
+export function generateMetadata(): Promise<Metadata> {
+  return applyPageSeo(BASE_METADATA, "/about");
+}
 
 const TOC = Object.entries(ABOUT_TOC_LABELS).map(([id, text]) => ({ id, text }));
 
@@ -247,6 +253,7 @@ export default async function AboutPage() {
       </QuestionSection>
 
       <FaqBlock
+        route="/about"
         id="faq"
         eyebrow={ABOUT_FAQ.eyebrow}
         heading={ABOUT_FAQ.heading}
