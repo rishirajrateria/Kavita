@@ -213,7 +213,11 @@ export default async function ServicePage({ params }: PageProps<"/services/[slug
         <Byline datePublished={detail.datePublished} dateModified={detail.dateModified} />
       </Container>
 
-      <KeyFacts heading={SERVICE_PAGE.keyFactsHeading(service.name)} items={facts} />
+      <KeyFacts
+        route={`/services/${slug}`}
+        heading={SERVICE_PAGE.keyFactsHeading(service.name)}
+        items={facts}
+      />
       {price.placeholder ? (
         <Container size="wide">
           <p className="py-3 text-sm text-muted-foreground" data-placeholder="price">
@@ -236,6 +240,7 @@ export default async function ServicePage({ params }: PageProps<"/services/[slug
         <QuestionSection
           key={id}
           id={id}
+          route={`/services/${slug}`}
           question={section.question}
           answer={section.answer}
           tone={i % 2 === 1 ? "muted" : "default"}

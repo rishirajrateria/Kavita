@@ -53,7 +53,13 @@ export default async function CategoryPage({ params }: PageProps<"/learn/[catego
         ]}
       />
 
-      <QuestionSection id="articles" eyebrow={count} question={cat.question} answer={cat.answer}>
+      <QuestionSection
+        id="articles"
+        route={`/learn/${cat.slug}`}
+        eyebrow={count}
+        question={cat.question}
+        answer={cat.answer}
+      >
         <ArticleGrid articles={articles} showCategory={false} />
       </QuestionSection>
 

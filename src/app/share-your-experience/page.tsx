@@ -59,6 +59,7 @@ export default async function ShareYourExperiencePage({
       </Container>
 
       <QuestionSection
+        route="/share-your-experience"
         id={SHARE_INTRO.id}
         eyebrow={SHARE_INTRO.eyebrow}
         question={SHARE_INTRO.question}

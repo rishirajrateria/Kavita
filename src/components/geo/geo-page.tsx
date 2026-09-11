@@ -92,6 +92,8 @@ export async function GeoPage({ service, loc, level }: GeoPageProps) {
       level === "country" ? getPublishableLocations() : Promise.resolve([]),
     ]);
 
+  /** The page's canonical route — the same string `applyPageSeo` and `/admin/aeo` are keyed by. */
+  const route = locationHref(loc, service);
   const window = computeConsultationWindow(loc, settings);
   const astro = service === "astrologer";
   const meta = GEO_SERVICE_META[service];
@@ -133,7 +135,7 @@ export async function GeoPage({ service, loc, level }: GeoPageProps) {
     : undefined;
 
   // --- structured data -------------------------------------------------------------------------
-  const pageUrl = `${siteUrl}${locationHref(loc, service)}`;
+  const pageUrl = `${siteUrl}${route}`;
   const place = placeChain([...ancestors, loc].map((l) => ({ type: l.type, name: l.name })));
   const integrated = services.find((s) => s.slug === INTEGRATED_SERVICE_SLUG);
   const jsonLd: WithContext<Thing>[] = [
@@ -153,9 +155,10 @@ export async function GeoPage({ service, loc, level }: GeoPageProps) {
 
   const wa = whatsappHref(settings.whatsapp);
   const tradition = astro ? (
-    <GeoTradition loc={loc} question={traditionQuestion(ctx)} />
+    <GeoTradition route={route} loc={loc} question={traditionQuestion(ctx)} />
   ) : (
     <GeoArchitecture
+      route={route}
       loc={loc}
       question={architectureQuestion(ctx)}
       showRemoteProcess={level === "city"}
@@ -170,6 +173,7 @@ export async function GeoPage({ service, loc, level }: GeoPageProps) {
       {level === "country" ? (
         <>
           <GeoKeyFacts
+            route={route}
             loc={loc}
             service={service}
             settings={settings}
@@ -177,31 +181,47 @@ export async function GeoPage({ service, loc, level }: GeoPageProps) {
             window={window}
             countryName={countryName}
           />
-          <GeoOpening loc={loc} service={service} question={openingQuestion(ctx)} />
-          <GeoChildrenGrid tone="inverse" question={childrenQuestion(ctx)} href={graph.href}>
+          <GeoOpening route={route} loc={loc} service={service} question={openingQuestion(ctx)} />
+          <GeoChildrenGrid
+            route={route}
+            tone="inverse"
+            question={childrenQuestion(ctx)}
+            href={graph.href}
+          >
             {graph.children}
           </GeoChildrenGrid>
           {tradition}
           <GeoConsultingFrom
+            route={route}
             loc={loc}
             question={consultingQuestion(ctx)}
             window={window}
             practitionerTimezone={settings.timezone}
           />
           {table ? (
-            <GeoLocationTable table={table} question={tableQuestion(ctx, tableKind)} />
+            <GeoLocationTable
+              route={route}
+              table={table}
+              question={tableQuestion(ctx, tableKind)}
+            />
           ) : null}
-          <GeoFaq faqs={research.faqs} question={faqQuestion(ctx)} tone="muted" />
+          <GeoFaq route={route} faqs={research.faqs} question={faqQuestion(ctx)} tone="muted" />
         </>
       ) : null}
 
       {level === "state" ? (
         <>
-          <GeoOpening loc={loc} service={service} question={openingQuestion(ctx)} />
-          <GeoChildrenGrid tone="muted" question={childrenQuestion(ctx)} href={graph.href}>
+          <GeoOpening route={route} loc={loc} service={service} question={openingQuestion(ctx)} />
+          <GeoChildrenGrid
+            route={route}
+            tone="muted"
+            question={childrenQuestion(ctx)}
+            href={graph.href}
+          >
             {graph.children}
           </GeoChildrenGrid>
           <GeoCombinedMethod
+            route={route}
             loc={loc}
             service={service}
             question={combinedQuestion(ctx)}
@@ -209,10 +229,16 @@ export async function GeoPage({ service, loc, level }: GeoPageProps) {
           />
           {tradition}
           {table ? (
-            <GeoLocationTable table={table} question={tableQuestion(ctx, tableKind)} tone="muted" />
+            <GeoLocationTable
+              route={route}
+              table={table}
+              question={tableQuestion(ctx, tableKind)}
+              tone="muted"
+            />
           ) : null}
-          <GeoFaq faqs={research.faqs} question={faqQuestion(ctx)} />
+          <GeoFaq route={route} faqs={research.faqs} question={faqQuestion(ctx)} />
           <GeoLinks
+            route={route}
             loc={loc}
             service={service}
             graph={graph}
@@ -225,6 +251,7 @@ export async function GeoPage({ service, loc, level }: GeoPageProps) {
       {level === "city" ? (
         <>
           <GeoKeyFacts
+            route={route}
             loc={loc}
             service={service}
             settings={settings}
@@ -232,8 +259,9 @@ export async function GeoPage({ service, loc, level }: GeoPageProps) {
             window={window}
             countryName={countryName}
           />
-          <GeoOpening loc={loc} service={service} question={openingQuestion(ctx)} />
+          <GeoOpening route={route} loc={loc} service={service} question={openingQuestion(ctx)} />
           <GeoCombinedMethod
+            route={route}
             loc={loc}
             service={service}
             question={combinedQuestion(ctx)}
@@ -241,19 +269,29 @@ export async function GeoPage({ service, loc, level }: GeoPageProps) {
           />
           {tradition}
           <GeoConsultingFrom
+            route={route}
             loc={loc}
             question={consultingQuestion(ctx)}
             window={window}
             practitionerTimezone={settings.timezone}
           />
           {table ? (
-            <GeoLocationTable table={table} question={tableQuestion(ctx, tableKind)} />
+            <GeoLocationTable
+              route={route}
+              table={table}
+              question={tableQuestion(ctx, tableKind)}
+            />
           ) : null}
-          <GeoFaq faqs={research.faqs} question={faqQuestion(ctx)} />
+          <GeoFaq route={route} faqs={research.faqs} question={faqQuestion(ctx)} />
           {testimonial ? (
-            <GeoTestimonial testimonial={testimonial} question={testimonialQuestion(ctx)} />
+            <GeoTestimonial
+              route={route}
+              testimonial={testimonial}
+              question={testimonialQuestion(ctx)}
+            />
           ) : null}
           <GeoLinks
+            route={route}
             loc={loc}
             service={service}
             graph={graph}
@@ -263,7 +301,13 @@ export async function GeoPage({ service, loc, level }: GeoPageProps) {
         </>
       ) : null}
 
-      <GeoCta loc={loc} service={service} question={ctaQuestion(ctx)} whatsappHref={wa} />
+      <GeoCta
+        route={route}
+        loc={loc}
+        service={service}
+        question={ctaQuestion(ctx)}
+        whatsappHref={wa}
+      />
     </>
   );
 }

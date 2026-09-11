@@ -16,7 +16,7 @@ export function Serving({ countries, cities }: { countries: Location[]; cities: 
   return (
     <Section id={SERVING.id} spacing="lg" tone="inverse" className="grain overflow-hidden">
       <Container size="wide" className="relative space-y-12">
-        <QuestionHeading block={SERVING} layout="split" />
+        <QuestionHeading block={SERVING} route="/" id={SERVING.id} layout="split" />
 
         {countries.length > 0 ? (
           <div>

@@ -130,7 +130,7 @@ export default async function AstrologyPage() {
         <Byline datePublished={ASTROLOGY_DATES.published} dateModified={ASTROLOGY_DATES.modified} />
       </Container>
 
-      <KeyFacts heading={K.heading} items={facts} columns={3} />
+      <KeyFacts route="/astrology" heading={K.heading} items={facts} columns={3} />
 
       {/* 1. Vedic vs Western */}
       <QuestionSection {...props(ASTROLOGY_WHAT)} tone="default">
@@ -300,7 +300,13 @@ export default async function AstrologyPage() {
 }
 
 function props(s: HubSection) {
-  return { id: s.id, eyebrow: s.eyebrow, question: s.question, answer: s.answer };
+  return {
+    id: s.id,
+    route: "/astrology",
+    eyebrow: s.eyebrow,
+    question: s.question,
+    answer: s.answer,
+  };
 }
 
 function Paragraphs({ section }: { section: HubSection }) {

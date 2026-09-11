@@ -102,6 +102,7 @@ export default async function ContactPage({ searchParams }: PageProps<"/contact"
       </Container>
 
       <QuestionSection
+        route="/contact"
         id={CONTACT_CHANNELS.id}
         eyebrow={CONTACT_CHANNELS.eyebrow}
         question={CONTACT_CHANNELS.question}
@@ -124,6 +125,7 @@ export default async function ContactPage({ searchParams }: PageProps<"/contact"
       </QuestionSection>
 
       <QuestionSection
+        route="/contact"
         id="message"
         eyebrow={CONTACT_FORM.eyebrow}
         question={CONTACT_FORM.question}

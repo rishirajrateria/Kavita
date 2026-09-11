@@ -19,7 +19,7 @@ export function Comparison() {
   return (
     <Section id={COMPARISON.id} spacing="lg">
       <Container size="wide" className="space-y-10">
-        <QuestionHeading block={COMPARISON} layout="split" />
+        <QuestionHeading block={COMPARISON} route="/" id={COMPARISON.id} layout="split" />
 
         <Table
           containerClassName="rounded-xl border border-t-2 border-t-accent-border shadow-sm"

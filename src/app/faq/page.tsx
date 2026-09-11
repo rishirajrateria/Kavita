@@ -101,6 +101,7 @@ export default async function FaqPage() {
       </Container>
 
       <QuestionSection
+        route="/faq"
         id={FAQ_INTRO.id}
         eyebrow={FAQ_INTRO.eyebrow}
         question={FAQ_INTRO.question}
@@ -113,6 +114,7 @@ export default async function FaqPage() {
       <Toc items={toc} />
 
       <FaqGroup
+        route="/faq"
         id={G.general.id}
         eyebrow={G.general.eyebrow}
         heading={G.general.heading}
@@ -120,6 +122,7 @@ export default async function FaqPage() {
         subgroups={general}
       />
       <FaqGroup
+        route="/faq"
         id={G.services.id}
         eyebrow={G.services.eyebrow}
         heading={G.services.heading}
@@ -128,6 +131,7 @@ export default async function FaqPage() {
         tone="muted"
       />
       <FaqGroup
+        route="/faq"
         id={G.astrology.id}
         eyebrow={G.astrology.eyebrow}
         heading={ASTROLOGY_FAQ.heading}
@@ -135,6 +139,7 @@ export default async function FaqPage() {
         subgroups={astrology}
       />
       <FaqGroup
+        route="/faq"
         id={G.vastu.id}
         eyebrow={G.vastu.eyebrow}
         heading={VASTU_FAQ.heading}
@@ -143,6 +148,7 @@ export default async function FaqPage() {
         tone="muted"
       />
       <FaqGroup
+        route="/faq"
         id={G.locations.id}
         eyebrow={G.locations.eyebrow}
         heading={G.locations.heading}

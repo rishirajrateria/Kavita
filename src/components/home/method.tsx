@@ -22,7 +22,13 @@ export function Method() {
 
       <Container size="wide" className="relative space-y-12 lg:space-y-16">
         <div className="grid gap-8 lg:grid-cols-[1.1fr_1fr] lg:items-end lg:gap-12">
-          <QuestionHeading block={METHOD} answerClassName="text-xl" layout="stack" />
+          <QuestionHeading
+            block={METHOD}
+            route="/"
+            id={METHOD.id}
+            answerClassName="text-xl"
+            layout="stack"
+          />
           <p className="font-serif text-3xl leading-tight text-accent-strong italic lg:text-right lg:text-4xl">
             {METHOD.tagline}
           </p>

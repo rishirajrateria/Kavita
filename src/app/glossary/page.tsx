@@ -61,6 +61,7 @@ export default function GlossaryPage() {
       />
 
       <QuestionSection
+        route="/glossary"
         id="astrology"
         eyebrow={`${astrology.length} terms`}
         question="What do the Vedic astrology terms in a reading mean?"
@@ -70,6 +71,7 @@ export default function GlossaryPage() {
       </QuestionSection>
 
       <QuestionSection
+        route="/glossary"
         id="vastu"
         eyebrow={`${vastu.length} terms`}
         question="What do the vastu shastra terms in a reading mean?"

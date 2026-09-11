@@ -3,13 +3,14 @@ import { Heading } from "@/components/ui/heading";
 import { Section } from "@/components/ui/section";
 import { HOME_PLACEHOLDERS, KEY_FACTS } from "@/content/home";
 import type { Location, Service, SiteSettings } from "@/lib/data";
+import { getKeyFactsOverride, mergeKeyFacts } from "@/lib/seo/aeo-data";
 
 /**
  * Compact definition list of the facts an answer engine lifts verbatim (CLAUDE.md §9.3), set
  * as a parchment band ruled with gold hairlines. Every value comes from settings, services or
  * the location tree — nothing is typed in here.
  */
-export function KeyFacts({
+export async function KeyFacts({
   settings,
   services,
   countries,
@@ -26,16 +27,26 @@ export function KeyFacts({
     ? KEY_FACTS.modesInPerson(settings.city)
     : `${KEY_FACTS.modesInPerson(settings.city)} (${HOME_PLACEHOLDERS.inPerson})`;
 
-  const facts: readonly [string, string][] = [
-    [KEY_FACTS.labels.practitioner, `${settings.practitionerName} (Astrologer Kavita)`],
-    [KEY_FACTS.labels.practice, KEY_FACTS.practice],
-    [KEY_FACTS.labels.modes, `${KEY_FACTS.modesOnline}; ${inPerson}`],
-    [KEY_FACTS.labels.languages, HOME_PLACEHOLDERS.languages],
-    [KEY_FACTS.labels.sessionLength, KEY_FACTS.sessionLength(minDuration, maxDuration)],
-    [KEY_FACTS.labels.timezone, `${settings.timezone}; ${KEY_FACTS.timezoneNote}`],
-    [KEY_FACTS.labels.responseTime, KEY_FACTS.responseTime(settings.responseTimeHours)],
-    [KEY_FACTS.labels.areaServed, countries.map((c) => c.name).join(", ")],
+  const ownFacts = [
+    {
+      label: KEY_FACTS.labels.practitioner,
+      value: `${settings.practitionerName} (Astrologer Kavita)`,
+    },
+    { label: KEY_FACTS.labels.practice, value: KEY_FACTS.practice },
+    { label: KEY_FACTS.labels.modes, value: `${KEY_FACTS.modesOnline}; ${inPerson}` },
+    { label: KEY_FACTS.labels.languages, value: HOME_PLACEHOLDERS.languages },
+    {
+      label: KEY_FACTS.labels.sessionLength,
+      value: KEY_FACTS.sessionLength(minDuration, maxDuration),
+    },
+    { label: KEY_FACTS.labels.timezone, value: `${settings.timezone}; ${KEY_FACTS.timezoneNote}` },
+    {
+      label: KEY_FACTS.labels.responseTime,
+      value: KEY_FACTS.responseTime(settings.responseTimeHours),
+    },
+    { label: KEY_FACTS.labels.areaServed, value: countries.map((c) => c.name).join(", ") },
   ];
+  const facts = mergeKeyFacts(ownFacts, await getKeyFactsOverride("/"));
 
   return (
     <Section
@@ -55,7 +66,7 @@ export function KeyFacts({
         </Heading>
         {/* 1px gaps over a gold-tinted ground draw the hairline grid between items. */}
         <dl className="grid grid-cols-2 gap-px overflow-hidden rounded-lg border border-accent-border/30 bg-accent-border/30 lg:grid-cols-4">
-          {facts.map(([label, value]) => (
+          {facts.map(({ label, value }) => (
             <div key={label} className="bg-surface-muted px-4 py-4 sm:px-5 sm:py-5">
               <dt className="text-[0.65rem] font-semibold tracking-[0.1em] text-accent-strong uppercase sm:text-[0.68rem] sm:tracking-[0.12em]">
                 {label}

@@ -13,7 +13,7 @@ export function HowItWorks() {
   return (
     <Section id={HOW_IT_WORKS.id} spacing="lg">
       <Container size="wide" className="space-y-12">
-        <QuestionHeading block={HOW_IT_WORKS} layout="split" />
+        <QuestionHeading block={HOW_IT_WORKS} route="/" id={HOW_IT_WORKS.id} layout="split" />
 
         <ol className="relative grid gap-10 before:absolute before:top-2 before:bottom-2 before:left-6 before:w-px before:bg-accent-border/50 before:content-[''] lg:grid-cols-4 lg:gap-8 lg:before:inset-x-0 lg:before:top-8 lg:before:bottom-auto lg:before:h-px lg:before:w-auto">
           {HOW_IT_WORKS.steps.map((step, index) => (

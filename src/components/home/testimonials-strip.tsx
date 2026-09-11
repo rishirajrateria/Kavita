@@ -22,7 +22,12 @@ export function TestimonialsStrip({ testimonials }: { testimonials: Testimonial[
   return (
     <Section id={TESTIMONIALS_STRIP.id} spacing="lg" tone="muted" bordered>
       <Container size="wide" className="space-y-10">
-        <QuestionHeading block={TESTIMONIALS_STRIP} layout="split" />
+        <QuestionHeading
+          block={TESTIMONIALS_STRIP}
+          route="/"
+          id={TESTIMONIALS_STRIP.id}
+          layout="split"
+        />
 
         {hasPlaceholders ? (
           <Callout variant="warn" title={TESTIMONIALS_STRIP.placeholderTitle}>

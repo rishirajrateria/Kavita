@@ -57,6 +57,7 @@ export default function LearnPage() {
       />
 
       <QuestionSection
+        route="/learn"
         id="categories"
         eyebrow="Four sections"
         question="What will you find in the Learn library?"
@@ -70,6 +71,7 @@ export default function LearnPage() {
       </QuestionSection>
 
       <QuestionSection
+        route="/learn"
         id="latest"
         eyebrow="Latest"
         question="Which guides are newest?"
@@ -80,6 +82,7 @@ export default function LearnPage() {
       </QuestionSection>
 
       <QuestionSection
+        route="/learn"
         id="glossary"
         eyebrow="Glossary"
         question="What do the terms in a reading actually mean?"

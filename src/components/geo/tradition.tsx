@@ -43,7 +43,13 @@ export function GeoTradition({
   facts.push(["Birth records", t.birthRecordsNote]);
 
   return (
-    <Section id="tradition" spacing="lg" tone={tone} bordered={tone === "muted"} className="overflow-hidden">
+    <Section
+      id="tradition"
+      spacing="lg"
+      tone={tone}
+      bordered={tone === "muted"}
+      className="overflow-hidden"
+    >
       <div
         aria-hidden="true"
         className="pointer-events-none absolute -bottom-24 -left-24 w-72 text-gold-500/15 sm:w-96 dark:text-gold-300/10"

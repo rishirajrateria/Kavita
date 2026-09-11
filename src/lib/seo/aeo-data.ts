@@ -40,8 +40,8 @@ export async function readPageAnswers(
  * database configured it returns `{}` before any connection is attempted, so static
  * generation never waits on Supabase.
  */
-export const getPageAnswers = cache(
-  async (route: string): Promise<Record<string, PageAnswer>> => readPageAnswers(getDb(), route),
+export const getPageAnswers = cache(async (route: string): Promise<Record<string, PageAnswer>> =>
+  readPageAnswers(getDb(), route),
 );
 
 /** The route's answer overrides as `h2Id → answer`, blank rows dropped. Memoised per request. */

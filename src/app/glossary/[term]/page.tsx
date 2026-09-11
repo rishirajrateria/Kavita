@@ -83,6 +83,7 @@ export default async function GlossaryTermPage({ params }: PageProps<"/glossary/
 
       <QuestionSection
         id="definition"
+        route={`/glossary/${term.slug}`}
         eyebrow="Definition"
         question={`What does ${heading.toLowerCase()} mean in ${science}?`}
         answer={`${term.short} Astrologer Kavita uses the term in this sense when reading a client's birth chart and home together, and defines it fully below.`}
@@ -97,6 +98,7 @@ export default async function GlossaryTermPage({ params }: PageProps<"/glossary/
       {articles.length > 0 ? (
         <QuestionSection
           id="articles"
+          route={`/glossary/${term.slug}`}
           eyebrow="In use"
           question={`Which guides use the term ${heading.toLowerCase()}?`}
           answer={`The guides below from Astrologer Kavita use ${heading.toLowerCase()} in context — in a worked explanation rather than a definition — so the meaning above can be seen doing its work. Each opens with a self-contained answer, defines every term on first use, and links back to this glossary entry where the term appears.`}

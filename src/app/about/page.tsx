@@ -276,7 +276,13 @@ export default async function AboutPage() {
 }
 
 function sectionProps(s: AboutSection) {
-  return { id: s.id, eyebrow: s.eyebrow, question: s.question, answer: s.answer };
+  return {
+    id: s.id,
+    route: "/about",
+    eyebrow: s.eyebrow,
+    question: s.question,
+    answer: s.answer,
+  };
 }
 
 function Paragraphs({ section }: { section: AboutSection }) {

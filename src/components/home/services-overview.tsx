@@ -26,7 +26,12 @@ export function ServicesOverview({ services }: { services: Service[] }) {
   return (
     <Section id={SERVICES_OVERVIEW.id} spacing="lg" tone="muted" bordered>
       <Container size="wide" className="space-y-10">
-        <QuestionHeading block={SERVICES_OVERVIEW} layout="split" />
+        <QuestionHeading
+          block={SERVICES_OVERVIEW}
+          route="/"
+          id={SERVICES_OVERVIEW.id}
+          layout="split"
+        />
 
         <ul className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {services.map((service) => (

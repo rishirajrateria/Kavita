@@ -13,6 +13,8 @@ export interface FaqSubgroup {
 
 export interface FaqGroupProps {
   id: string;
+  /** Canonical route of the page, for `/admin/aeo` answer overrides keyed by `(route, id)`. */
+  route?: string;
   eyebrow: string;
   heading: string;
   /** Present on groups whose H2 has its own 40–60 word answer. */
@@ -28,6 +30,7 @@ export interface FaqGroupProps {
  */
 export function FaqGroup({
   id,
+  route,
   eyebrow,
   heading,
   answer,
@@ -48,7 +51,12 @@ export function FaqGroup({
     >
       <Container size="wide" className="space-y-10">
         {answer ? (
-          <QuestionHeading block={{ eyebrow, question: heading, answer }} layout="split" />
+          <QuestionHeading
+            block={{ eyebrow, question: heading, answer }}
+            route={route}
+            id={id}
+            layout="split"
+          />
         ) : (
           <Heading as="h2" level={2} eyebrow={eyebrow} className="max-w-[26ch]">
             {heading}

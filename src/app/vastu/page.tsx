@@ -138,7 +138,7 @@ export default async function VastuPage() {
         <Byline datePublished={VASTU_DATES.published} dateModified={VASTU_DATES.modified} />
       </Container>
 
-      <KeyFacts heading={K.heading} items={facts} columns={3} />
+      <KeyFacts route="/vastu" heading={K.heading} items={facts} columns={3} />
 
       {/* 1. What vastu is */}
       <QuestionSection {...props(VASTU_WHAT)} tone="default">
@@ -270,7 +270,13 @@ export default async function VastuPage() {
 }
 
 function props(s: HubSection) {
-  return { id: s.id, eyebrow: s.eyebrow, question: s.question, answer: s.answer };
+  return {
+    id: s.id,
+    route: "/vastu",
+    eyebrow: s.eyebrow,
+    question: s.question,
+    answer: s.answer,
+  };
 }
 
 function Paragraphs({ section }: { section: HubSection }) {

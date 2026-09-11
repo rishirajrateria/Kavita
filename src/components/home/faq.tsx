@@ -5,6 +5,7 @@ import { Heading } from "@/components/ui/heading";
 import { Section } from "@/components/ui/section";
 import { FAQ_SECTION } from "@/content/home";
 import type { Faq } from "@/lib/data";
+import { getAnswerOverridesForRoute, pickAnswer } from "@/lib/seo/aeo-data";
 
 /**
  * Home FAQ as plain server-rendered HTML — every question an H3 under one question-phrased H2.
@@ -12,8 +13,10 @@ import type { Faq } from "@/lib/data";
  * gold "+" turns into "×" with CSS alone, and the matching FAQPage JSON-LD is emitted by the
  * page from the same rows.
  */
-export function FaqSection({ faqs }: { faqs: Faq[] }) {
+export async function FaqSection({ faqs }: { faqs: Faq[] }) {
   if (faqs.length === 0) return null;
+  const overrides = await getAnswerOverridesForRoute("/");
+  const answer = pickAnswer(overrides, FAQ_SECTION.id, FAQ_SECTION.answer);
 
   return (
     <Section id={FAQ_SECTION.id} spacing="lg">
@@ -22,7 +25,7 @@ export function FaqSection({ faqs }: { faqs: Faq[] }) {
           <Heading as="h2" level={2} eyebrow={FAQ_SECTION.eyebrow} className="max-w-[26ch]">
             {FAQ_SECTION.heading}
           </Heading>
-          <p className="answer">{FAQ_SECTION.answer}</p>
+          <p className="answer">{answer}</p>
         </div>
 
         <div className="divide-y divide-accent-border/40 border-y border-accent-border/40">

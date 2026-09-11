@@ -56,6 +56,7 @@ export default async function ServicesPage() {
       </Container>
 
       <QuestionSection
+        route="/services"
         id={SERVICES_INTRO.id}
         eyebrow={SERVICES_INTRO.eyebrow}
         question={SERVICES_INTRO.question}
@@ -83,6 +84,7 @@ export default async function ServicesPage() {
       </QuestionSection>
 
       <QuestionSection
+        route="/services"
         id={SERVICES_COMPARISON.id}
         eyebrow={SERVICES_COMPARISON.eyebrow}
         question={SERVICES_COMPARISON.question}
@@ -93,6 +95,7 @@ export default async function ServicesPage() {
       </QuestionSection>
 
       <QuestionSection
+        route="/services"
         id={SERVICES_LIST.id}
         eyebrow={SERVICES_LIST.eyebrow}
         question={SERVICES_LIST.question}

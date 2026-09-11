@@ -103,6 +103,7 @@ export default async function TestimonialsPage({ searchParams }: PageProps<"/tes
       </Container>
 
       <QuestionSection
+        route="/testimonials"
         id={TESTIMONIALS_INTRO.id}
         eyebrow={TESTIMONIALS_INTRO.eyebrow}
         question={TESTIMONIALS_INTRO.question}
@@ -117,6 +118,7 @@ export default async function TestimonialsPage({ searchParams }: PageProps<"/tes
       </QuestionSection>
 
       <QuestionSection
+        route="/testimonials"
         id={TESTIMONIALS_LIST.id}
         eyebrow={TESTIMONIALS_LIST.eyebrow}
         question={TESTIMONIALS_LIST.question}

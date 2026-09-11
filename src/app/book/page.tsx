@@ -146,6 +146,7 @@ export default async function BookPage({ searchParams }: PageProps<"/book">) {
       </Section>
 
       <QuestionSection
+        route="/book"
         id={BOOK_HOW.id}
         eyebrow={BOOK_HOW.eyebrow}
         question={BOOK_HOW.question}

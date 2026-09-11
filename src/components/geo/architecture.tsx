@@ -49,7 +49,13 @@ export function GeoArchitecture({
   if (!ca) return null;
 
   return (
-    <Section id="architecture" spacing="lg" tone={tone} bordered={tone === "muted"} className="overflow-hidden">
+    <Section
+      id="architecture"
+      spacing="lg"
+      tone={tone}
+      bordered={tone === "muted"}
+      className="overflow-hidden"
+    >
       <div
         aria-hidden="true"
         className="pointer-events-none absolute -right-28 -bottom-28 w-80 text-gold-500/15 sm:w-[28rem] dark:text-gold-300/10"

@@ -136,6 +136,7 @@ export default async function ArticlePage({ params }: PageProps<"/learn/[categor
       {related.length > 0 ? (
         <QuestionSection
           id="related"
+          route={article.href}
           eyebrow="Keep reading"
           question="What should you read next?"
           answer={`After this guide, Astrologer Kavita suggests the related articles below: they take up the questions this one raises — the companion topics in ${cat.name.toLowerCase()} and the neighbouring sections — and each opens, as this one does, with a self-contained answer and defines every term on first use.`}
