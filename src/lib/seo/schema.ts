@@ -59,7 +59,7 @@ export interface ProfessionalService extends Thing {
   telephone?: string;
   email?: string;
   address?: PostalAddress;
-  areaServed?: Thing[];
+  areaServed?: Place[];
   openingHoursSpecification?: OpeningHoursSpecification[];
   priceRange?: string;
   sameAs?: string[];
@@ -67,6 +67,33 @@ export interface ProfessionalService extends Thing {
   employee?: Thing;
   description?: string;
   image?: string;
+}
+
+/** A served place, nested through `containedInPlace` (City → State → Country). */
+export interface Place extends Thing {
+  "@type": "City" | "State" | "Country" | "Place";
+  name: string;
+  containedInPlace?: Place;
+}
+
+export interface Offer extends Thing {
+  "@type": "Offer";
+  price: string;
+  priceCurrency: string;
+  availability?: string;
+  url?: string;
+}
+
+export interface Service extends Thing {
+  "@type": "Service";
+  name: string;
+  serviceType: string;
+  provider: Thing;
+  areaServed?: Place[];
+  offers?: Offer[];
+  description?: string;
+  url?: string;
+  availableChannel?: Thing[];
 }
 
 export interface WebSite extends Thing {
@@ -105,17 +132,29 @@ export function schemaId(siteUrl: string, key: keyof typeof SCHEMA_IDS): string 
 
 /** Wrap a Thing with `@context`. */
 export function withContext<T extends Thing>(thing: T): WithContext<T> {
-  return { "@context": CONTEXT, ...thing };
+  return compact({ "@context": CONTEXT, ...thing });
 }
 
-/** Remove `undefined` values so the emitted JSON is clean (JSON.stringify would drop them anyway,
- *  but this keeps snapshots and equality checks predictable). */
-function compact<T extends Thing>(thing: T): T {
-  const out: Record<string, SchemaValue> = {};
-  for (const [key, value] of Object.entries(thing)) {
-    if (value !== undefined) out[key] = value;
+/**
+ * Remove `undefined` values — recursively, through nested Things and arrays — so the emitted
+ * JSON is clean and equality checks are predictable. Every generator passes through here.
+ */
+export function compact<T extends Thing>(thing: T): T {
+  return compactValue(thing) as T;
+}
+
+function compactValue(value: SchemaValue): SchemaValue {
+  if (Array.isArray(value)) {
+    return value.filter((v) => v !== undefined).map(compactValue);
   }
-  return out as T;
+  if (value !== null && typeof value === "object") {
+    const out: Record<string, SchemaValue> = {};
+    for (const [key, v] of Object.entries(value)) {
+      if (v !== undefined) out[key] = compactValue(v);
+    }
+    return out as Thing;
+  }
+  return value;
 }
 
 const DAY_OF_WEEK: Record<Weekday, string> = {
@@ -312,13 +351,109 @@ export function breadcrumbSchema(
   });
 }
 
+// ---------------------------------------------------------------------------------------------
+// Geo pages (Phase 2): the practice bound to one served place, and the Service offered there.
+// ---------------------------------------------------------------------------------------------
+
+/** Country/state/city chain, root first, → nested `Place` with `containedInPlace`. */
+export function placeChain(
+  chain: readonly { type: "country" | "state" | "city"; name: string }[],
+): Place {
+  const TYPE: Record<"country" | "state" | "city", Place["@type"]> = {
+    country: "Country",
+    state: "State",
+    city: "City",
+  };
+  let place: Place | undefined;
+  for (const node of chain) {
+    place = compact<Place>({ "@type": TYPE[node.type], name: node.name, containedInPlace: place });
+  }
+  return place ?? { "@type": "Place", name: "" };
+}
+
+export interface LocalBusinessSchemaInput extends ProfessionalServiceSchemaInput {
+  /** The page's served place (from `placeChain`). Overrides the country list. */
+  place: Place;
+  /** Absolute URL of the geo page; the node is still identified as the one organisation. */
+  pageUrl?: string;
+}
+
+/**
+ * `ProfessionalService` + `LocalBusiness` for a geo page: the same organisation node as the
+ * site-wide one (same `@id`, so consumers merge them) with `areaServed` bound to this page's
+ * place. Uses only the real NAP from `site_settings` — placeholders are omitted.
+ */
+export function localBusinessSchema(
+  input: LocalBusinessSchemaInput,
+): WithContext<ProfessionalService> {
+  const base = professionalServiceSchema(input);
+  return compact<WithContext<ProfessionalService>>({
+    ...base,
+    areaServed: [input.place],
+    url: input.pageUrl ?? base.url,
+  });
+}
+
+export interface ServiceSchemaInput {
+  /** Name shown to people, e.g. "Vedic astrology consultation in Mumbai". */
+  name: string;
+  serviceType: string;
+  description?: string;
+  /** Absolute URL of the page describing the service. */
+  url?: string;
+  siteUrl: string;
+  /** Served place(s) for this page. */
+  areaServed: Place[];
+  /** Only when a real price exists: `{ amountMinor: 500000, currency: "INR" }`. */
+  offers?: { amountMinor: number; currency: string }[];
+  /** Delivery channels (`online_video`, `in_person`…), mapped to `ServiceChannel` names. */
+  channels?: string[];
+}
+
+const CHANNEL_LABEL: Record<string, string> = {
+  online_video: "Online video call",
+  online_phone: "Phone call",
+  in_person: "In person",
+  floor_plan: "Floor-plan review",
+};
+
+/** `Service` node for a geo or service page. `offers` appears only when a real price is given. */
+export function serviceSchema(input: ServiceSchemaInput): WithContext<Service> {
+  const offers = input.offers?.filter((o) => Number.isFinite(o.amountMinor) && o.amountMinor > 0);
+  return withContext(
+    compact<Service>({
+      "@type": "Service",
+      name: input.name,
+      serviceType: input.serviceType,
+      description: realValue(input.description),
+      url: input.url,
+      provider: { "@id": schemaId(input.siteUrl, "organization"), "@type": "ProfessionalService" },
+      areaServed: input.areaServed.length ? input.areaServed : undefined,
+      offers: offers?.length
+        ? offers.map((o) => ({
+            "@type": "Offer" as const,
+            price: (o.amountMinor / 100).toFixed(2),
+            priceCurrency: o.currency,
+            url: input.url,
+          }))
+        : undefined,
+      availableChannel: input.channels?.length
+        ? input.channels.map((c) => ({
+            "@type": "ServiceChannel",
+            name: CHANNEL_LABEL[c] ?? c,
+          }))
+        : undefined,
+    }),
+  );
+}
+
 /** Add a `speakable` specification (voice assistants, Siri) pointing at answer blocks. */
 export function withSpeakable<T extends Thing>(
   schema: T,
   cssSelectors: string[],
 ): T & { speakable: Thing } {
-  return {
+  return compact({
     ...schema,
     speakable: { "@type": "SpeakableSpecification", cssSelector: cssSelectors },
-  };
+  });
 }
