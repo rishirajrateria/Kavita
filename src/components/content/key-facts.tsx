@@ -1,6 +1,7 @@
 import { Container } from "@/components/ui/container";
 import { Heading } from "@/components/ui/heading";
 import { Section } from "@/components/ui/section";
+import { getKeyFactsOverride, mergeKeyFacts } from "@/lib/seo/aeo-data";
 import { cn } from "@/lib/utils";
 
 export interface KeyFactItem {
@@ -17,6 +18,12 @@ export interface KeyFactsProps {
   /** Footnote under the list. */
   note?: string;
   id?: string;
+  /**
+   * Canonical route of the page. With it, key facts saved for this route in `/admin/aeo`
+   * (`h2_id` = `key-facts`) are merged in: a matching label replaces the page's value, any
+   * further fact is appended. One memoised read per route; `{}` with no database.
+   */
+  route?: string;
   className?: string;
 }
 
@@ -28,16 +35,19 @@ const COLS: Record<NonNullable<KeyFactsProps["columns"]>, string> = {
 
 /**
  * Ruled key-facts band (CLAUDE.md §9.3): a compact `<dl>` on parchment with gold hairlines
- * between items, identical to the home and geo bands. Every value is passed in by the page.
+ * between items, identical to the home and geo bands. Every value is passed in by the page,
+ * or overridden per route from `/admin/aeo`.
  */
-export function KeyFacts({
+export async function KeyFacts({
   heading = "At a glance",
-  items,
+  items: ownItems,
   columns = 4,
   note,
   id = "key-facts",
+  route,
   className,
 }: KeyFactsProps) {
+  const items = mergeKeyFacts(ownItems, route ? await getKeyFactsOverride(route) : []);
   if (items.length === 0) return null;
   const odd = items.length % 2 === 1;
 

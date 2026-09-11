@@ -12,10 +12,13 @@ import type { Question } from "./answers";
 export function GeoFaq({
   faqs,
   question,
+  route,
   tone = "default",
 }: {
   faqs: LocationFaq[];
   question: Question;
+  /** Canonical route of the page, for `/admin/aeo` answer overrides. */
+  route?: string;
   tone?: "default" | "muted";
 }) {
   if (faqs.length === 0) return null;
@@ -23,7 +26,7 @@ export function GeoFaq({
   return (
     <Section id="faq" spacing="lg" tone={tone} bordered={tone === "muted"}>
       <Container size="wide" className="space-y-10">
-        <QuestionHeading block={question} layout="split" />
+        <QuestionHeading block={question} route={route} id="faq" layout="split" />
 
         <div className="divide-y divide-accent-border/40 border-y border-accent-border/40">
           {faqs.map((faq) => (

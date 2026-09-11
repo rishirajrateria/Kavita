@@ -20,16 +20,19 @@ import type { Question } from "./answers";
 export function GeoLocationTable({
   table,
   question,
+  route,
   tone = "default",
 }: {
   table: GeoTable;
   question: Question;
+  /** Canonical route of the page, for `/admin/aeo` answer overrides. */
+  route?: string;
   tone?: "default" | "muted";
 }) {
   return (
     <Section id={table.id} spacing="lg" tone={tone} bordered={tone === "muted"}>
       <Container size="wide" className="space-y-10">
-        <QuestionHeading block={question} layout="split" />
+        <QuestionHeading block={question} route={route} id={table.id} layout="split" />
 
         <Table
           containerClassName="rounded-xl border border-t-2 border-t-accent-border bg-background shadow-sm"

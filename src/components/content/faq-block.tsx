@@ -23,7 +23,8 @@ export interface FaqBlockProps {
   /**
    * The page's route (e.g. `/services/kundli-analysis`). When given, FAQs attached to the
    * route from the admin (`faq_attachments`, exact or glob) are appended after `items`, and
-   * the page's custom-head extras (JSON-LD, links) from `page_seo` are rendered here too.
+   * the page's custom-head extras (JSON-LD, links) from `page_seo` are rendered here too. It
+   * also lets an answer saved for `(route, id)` in `/admin/aeo` replace `answer`.
    */
   route?: string;
 }
@@ -63,7 +64,12 @@ export async function FaqBlock({
       {route ? <PageSeoExtras route={route} /> : null}
       <Container size="wide" className="space-y-10">
         {answer ? (
-          <QuestionHeading block={{ eyebrow, question: heading, answer }} layout="split" />
+          <QuestionHeading
+            block={{ eyebrow, question: heading, answer }}
+            route={route}
+            id={id}
+            layout="split"
+          />
         ) : (
           <Heading as="h2" level={2} eyebrow={eyebrow} className="max-w-[26ch]">
             {heading}

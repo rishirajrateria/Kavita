@@ -17,11 +17,14 @@ export function GeoCombinedMethod({
   loc,
   service,
   question,
+  route,
   tone,
 }: {
   loc: LocationRecord;
   service: GeoService;
   question: Question;
+  /** Canonical route of the page, for `/admin/aeo` answer overrides. */
+  route?: string;
   tone: "inverse" | "muted";
 }) {
   const r = loc.research;
@@ -53,13 +56,14 @@ export function GeoCombinedMethod({
 
   return (
     <Section
+      id="combined-method"
       spacing="lg"
       tone={tone}
       bordered={tone === "muted"}
       className={tone === "inverse" ? "grain overflow-hidden" : undefined}
     >
       <Container size="wide" className="relative space-y-12">
-        <QuestionHeading block={question} layout="split" />
+        <QuestionHeading block={question} route={route} id="combined-method" layout="split" />
 
         <div className="grid gap-6 lg:grid-cols-2 lg:gap-8">
           {order.map((key) => {

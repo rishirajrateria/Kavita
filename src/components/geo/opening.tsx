@@ -24,11 +24,14 @@ export function GeoOpening({
   loc,
   service,
   question,
+  route,
   tone = "default",
 }: {
   loc: LocationRecord;
   service: GeoService;
   question: Question;
+  /** Canonical route of the page, for `/admin/aeo` answer overrides. */
+  route?: string;
   tone?: "default" | "muted";
 }) {
   const r = loc.research;
@@ -37,9 +40,9 @@ export function GeoOpening({
   const concerns = r.clientConcerns;
 
   return (
-    <Section spacing="lg" tone={tone} bordered={tone === "muted"}>
+    <Section id="opening" spacing="lg" tone={tone} bordered={tone === "muted"}>
       <Container size="wide" className="space-y-10">
-        <QuestionHeading block={question} layout="split" />
+        <QuestionHeading block={question} route={route} id="opening" layout="split" />
 
         <div className="grid gap-10 lg:grid-cols-[1.4fr_1fr] lg:gap-16">
           <div className="space-y-5 text-lg leading-relaxed">

@@ -22,10 +22,13 @@ const MONTH_LABEL = {
 export function GeoTradition({
   loc,
   question,
+  route,
   tone = "default",
 }: {
   loc: LocationRecord;
   question: Question;
+  /** Canonical route of the page, for `/admin/aeo` answer overrides. */
+  route?: string;
   tone?: "default" | "muted";
 }) {
   const t = loc.research?.tradition;
@@ -40,7 +43,7 @@ export function GeoTradition({
   facts.push(["Birth records", t.birthRecordsNote]);
 
   return (
-    <Section spacing="lg" tone={tone} bordered={tone === "muted"} className="overflow-hidden">
+    <Section id="tradition" spacing="lg" tone={tone} bordered={tone === "muted"} className="overflow-hidden">
       <div
         aria-hidden="true"
         className="pointer-events-none absolute -bottom-24 -left-24 w-72 text-gold-500/15 sm:w-96 dark:text-gold-300/10"
@@ -48,7 +51,7 @@ export function GeoTradition({
         <Motif decorative strokeWidth={0.6} />
       </div>
       <Container size="wide" className="relative space-y-10">
-        <QuestionHeading block={question} layout="split" />
+        <QuestionHeading block={question} route={route} id="tradition" layout="split" />
 
         <div className="grid gap-10 lg:grid-cols-[1fr_1.4fr] lg:gap-16">
           <dl className="divide-y divide-accent-border/40 self-start border-y border-accent-border/40">

@@ -14,12 +14,15 @@ import type { WindowInfo } from "./types";
 export function GeoConsultingFrom({
   loc,
   question,
+  route,
   window,
   practitionerTimezone,
   tone = "muted",
 }: {
   loc: LocationRecord;
   question: Question;
+  /** Canonical route of the page, for `/admin/aeo` answer overrides. */
+  route?: string;
   window: WindowInfo;
   practitionerTimezone: string;
   tone?: "default" | "muted";
@@ -28,9 +31,9 @@ export function GeoConsultingFrom({
   if (!text) return null;
 
   return (
-    <Section spacing="lg" tone={tone} bordered={tone === "muted"}>
+    <Section id="consulting-from" spacing="lg" tone={tone} bordered={tone === "muted"}>
       <Container size="wide" className="space-y-10">
-        <QuestionHeading block={question} layout="split" />
+        <QuestionHeading block={question} route={route} id="consulting-from" layout="split" />
 
         <div className="grid gap-10 lg:grid-cols-[1fr_1.4fr] lg:gap-16">
           <dl className="grid gap-px self-start overflow-hidden rounded-lg border border-accent-border/30 bg-accent-border/30 sm:grid-cols-2 lg:grid-cols-1">

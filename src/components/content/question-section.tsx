@@ -5,8 +5,13 @@ import { Section } from "@/components/ui/section";
 import { cn } from "@/lib/utils";
 
 export interface QuestionSectionProps {
-  /** Anchor id — also the Toc target. */
+  /** Anchor id — the Toc target, and the `h2_id` an admin answer override is keyed by. */
   id: string;
+  /**
+   * Canonical route of the page (the same string passed to `applyPageSeo`). With it, an
+   * answer saved for `(route, id)` in `/admin/aeo` replaces `answer` at render time.
+   */
+  route?: string;
   /** A real question a person would type or say (CLAUDE.md §9.2). Rendered as the H2. */
   question: string;
   /** 40–60 word self-contained answer naming "Astrologer Kavita"; rendered in `<p class="answer">`. */
@@ -30,6 +35,7 @@ export interface QuestionSectionProps {
  */
 export function QuestionSection({
   id,
+  route,
   question,
   answer,
   eyebrow,
@@ -51,7 +57,12 @@ export function QuestionSection({
       className={cn(inverse && "grain overflow-hidden", "scroll-mt-20", className)}
     >
       <Container size={size} className="relative space-y-10">
-        <QuestionHeading block={{ eyebrow: eyebrow ?? "", question, answer }} layout={layout} />
+        <QuestionHeading
+          block={{ eyebrow: eyebrow ?? "", question, answer }}
+          route={route}
+          id={id}
+          layout={layout}
+        />
         {children ? <div className={cn("space-y-6", bodyClassName)}>{children}</div> : null}
       </Container>
     </Section>

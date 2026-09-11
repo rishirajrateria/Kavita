@@ -34,11 +34,14 @@ const REMOTE_STEPS = [
 export function GeoArchitecture({
   loc,
   question,
+  route,
   showRemoteProcess = false,
   tone = "default",
 }: {
   loc: LocationRecord;
   question: Question;
+  /** Canonical route of the page, for `/admin/aeo` answer overrides. */
+  route?: string;
   showRemoteProcess?: boolean;
   tone?: "default" | "muted";
 }) {
@@ -46,7 +49,7 @@ export function GeoArchitecture({
   if (!ca) return null;
 
   return (
-    <Section spacing="lg" tone={tone} bordered={tone === "muted"} className="overflow-hidden">
+    <Section id="architecture" spacing="lg" tone={tone} bordered={tone === "muted"} className="overflow-hidden">
       <div
         aria-hidden="true"
         className="pointer-events-none absolute -right-28 -bottom-28 w-80 text-gold-500/15 sm:w-[28rem] dark:text-gold-300/10"
@@ -54,7 +57,7 @@ export function GeoArchitecture({
         <VastuCompass decorative hideLabels description="" strokeWidth={0.6} />
       </div>
       <Container size="wide" className="relative space-y-10">
-        <QuestionHeading block={question} layout="split" />
+        <QuestionHeading block={question} route={route} id="architecture" layout="split" />
 
         <div className="grid gap-10 lg:grid-cols-[1.4fr_1fr] lg:gap-16">
           <div className="space-y-5 text-lg leading-relaxed">

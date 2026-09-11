@@ -18,21 +18,24 @@ export function GeoLinks({
   service,
   graph,
   question,
+  route,
   tone = "default",
 }: {
   loc: LocationRecord;
   service: GeoService;
   graph: LinkGraph;
   question: Question;
+  /** Canonical route of the page, for `/admin/aeo` answer overrides. */
+  route?: string;
   tone?: "default" | "muted";
 }) {
   const siblingLabel = loc.type === "state" ? "Other regions" : "Nearby cities";
   const meta = GEO_SERVICE_META[service];
 
   return (
-    <Section spacing="lg" tone={tone} bordered={tone === "muted"}>
+    <Section id="nearby" spacing="lg" tone={tone} bordered={tone === "muted"}>
       <Container size="wide" className="space-y-10">
-        <QuestionHeading block={question} layout="split" />
+        <QuestionHeading block={question} route={route} id="nearby" layout="split" />
 
         <div className="grid gap-8 border-t border-accent-border/40 pt-8 sm:grid-cols-2 lg:grid-cols-3">
           {graph.siblings.length > 0 ? (

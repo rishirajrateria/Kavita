@@ -14,15 +14,18 @@ import type { Question } from "./answers";
 export function GeoTestimonial({
   testimonial,
   question,
+  route,
 }: {
   testimonial: Testimonial;
   question: Question;
+  /** Canonical route of the page, for `/admin/aeo` answer overrides. */
+  route?: string;
 }) {
   const t = testimonial;
   return (
-    <Section spacing="lg" tone="muted" bordered>
+    <Section id="client-experience" spacing="lg" tone="muted" bordered>
       <Container size="wide" className="space-y-10">
-        <QuestionHeading block={question} layout="split" />
+        <QuestionHeading block={question} route={route} id="client-experience" layout="split" />
         <figure className="relative mx-auto max-w-[52rem] overflow-hidden rounded-xl border bg-background p-8 pt-16 shadow-xs sm:p-10 sm:pt-20">
           <span
             aria-hidden="true"

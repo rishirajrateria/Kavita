@@ -15,11 +15,14 @@ export function GeoChildrenGrid({
   children,
   href,
   question,
+  route,
   tone,
 }: {
   children: LocationRecord[];
   href: (loc: LocationRecord) => string;
   question: Question;
+  /** Canonical route of the page, for `/admin/aeo` answer overrides. */
+  route?: string;
   tone: "inverse" | "muted";
 }) {
   if (children.length === 0) return null;
@@ -28,13 +31,14 @@ export function GeoChildrenGrid({
 
   return (
     <Section
+      id="children"
       spacing="lg"
       tone={tone}
       bordered={tone === "muted"}
       className={tone === "inverse" ? "grain overflow-hidden" : undefined}
     >
       <Container size="wide" className="relative space-y-10">
-        <QuestionHeading block={question} layout="split" />
+        <QuestionHeading block={question} route={route} id="children" layout="split" />
 
         <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           {cards.map((child) => (

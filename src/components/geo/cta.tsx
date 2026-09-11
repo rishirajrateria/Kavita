@@ -7,24 +7,30 @@ import { Section } from "@/components/ui/section";
 import type { LocationRecord } from "@/content/locations/schema";
 import type { GeoService } from "@/lib/data/types";
 import { GEO_SERVICE_META, geoBookHref } from "@/lib/geo/service";
+import { getAnswerOverridesForRoute, pickAnswer } from "@/lib/seo/aeo-data";
 import type { Question } from "./answers";
 
 /**
  * Closing call to action on deep indigo: book the integrated reading pre-filled with the place;
  * WhatsApp as the secondary action when the number is real, otherwise the contact page.
  */
-export function GeoCta({
+export async function GeoCta({
   loc,
   service,
   question,
+  route,
   whatsappHref,
 }: {
   loc: LocationRecord;
   service: GeoService;
   question: Question;
+  /** Canonical route of the page, for `/admin/aeo` answer overrides (`h2_id` = `book`). */
+  route?: string;
   whatsappHref: string | null;
 }) {
   const Motif = GEO_SERVICE_META[service].motif === "compass" ? VastuCompass : SouthIndianChart;
+  const overrides = route ? await getAnswerOverridesForRoute(route) : {};
+  const answer = pickAnswer(overrides, "book", question.answer);
 
   return (
     <Section
@@ -51,7 +57,7 @@ export function GeoCta({
           {question.question}
         </Heading>
         <p className="answer border-inline-start-0 mx-auto pl-0 text-left text-lg sm:text-center">
-          {question.answer}
+          {answer}
         </p>
         <div className="flex flex-wrap justify-center gap-3">
           <Button asChild variant="gold" size="xl">
