@@ -579,11 +579,15 @@ touching the app.
   empty. Those entries are therefore informed generalisations grounded in each place's verifiable
   context (housing market, diaspora pattern, work culture, time zone), never claims about Kavita's
   actual clients or numbers, and every one is listed in NEEDS-REAL-DATA.md for her to edit.
-- `.env.example` became permission-blocked for the build tooling mid-project; two Phase 4 variables
-  must be added there by hand: `DATA_ENCRYPTION_KEY_ID=k1` and `DATA_ENCRYPTION_KEYS=` (comma list
-  `k1:<base64>,k2:<base64>` for key rotation; `DATA_ENCRYPTION_KEY` remains the current key). All other
-  Phase 4 variables (BOOKING_TOKEN_SECRET, PAYMENT_PROVIDER, RAZORPAY__, STRIPE__, EMAIL_*, CRON_SECRET,
-  WHATSAPP_NOTIFICATIONS_ENABLED) were already listed in Phase 0.
+- `.env.example` became permission-blocked for the build tooling mid-project. **Five variables must
+  be added there by hand** (they are also documented in `HANDOVER.md` §C): `DATA_ENCRYPTION_KEY_ID=k1`
+  and `DATA_ENCRYPTION_KEYS=` (comma list `k1:<base64>,k2:<base64>` for key rotation;
+  `DATA_ENCRYPTION_KEY` remains the current key), `REDIRECT_REFRESH_SECRET=` (bearer token for
+  `POST /api/redirects/refresh`, which invalidates the redirect cache), `ANALYTICS_DISABLED=false`,
+  and `ADMIN_DEV_BYPASS=false` — the last is non-production only and must never be set in production,
+  since it grants an owner session with no login. All other Phase 4 variables (BOOKING_TOKEN_SECRET,
+  PAYMENT_PROVIDER, RAZORPAY__, STRIPE__, EMAIL_*, CRON_SECRET, WHATSAPP_NOTIFICATIONS_ENABLED) were
+  already listed in Phase 0.
 - Folder layout: `src/app` (routes), `src/components/{ui,layout,seo,motifs}`, `src/lib`,
   `src/hooks`, `src/db` (Drizzle schema + client), `src/content/{locations,articles}`,
   `src/styles`, `src/types`, `supabase/{migrations,seed}`, `scripts`, `tests`.

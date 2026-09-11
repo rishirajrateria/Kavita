@@ -19,6 +19,7 @@ import {
 } from "@/components/admin/manage/panel";
 import { AnswerLinter } from "@/components/admin/seo/answer-linter";
 import { CitabilityBadge } from "@/components/admin/seo/citability-badge";
+import { CitabilityChecklist } from "@/components/admin/seo/citability-checks";
 import { SeoNav } from "@/components/admin/seo/seo-nav";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -354,29 +355,7 @@ export default async function AeoPage({ searchParams }: PageProps<"/admin/aeo">)
               </p>
             ) : citability ? (
               <>
-                <ul className="space-y-1.5 text-sm">
-                  {Object.entries(citability.checks).map(([key, ok]) => (
-                    <li key={key} className="flex items-start gap-2">
-                      <span aria-hidden="true" className={ok ? "text-success" : "text-error"}>
-                        {ok ? "✓" : "✗"}
-                      </span>
-                      <span className={ok ? "" : "text-muted-foreground"}>{key}</span>
-                    </li>
-                  ))}
-                </ul>
-                {citability.fixes.length > 0 ? (
-                  <ul className="mt-4 space-y-2 text-xs text-muted-foreground">
-                    {citability.fixes.map((fix) => (
-                      <li key={fix} className="rounded-md border border-border/70 px-3 py-2">
-                        {fix}
-                      </li>
-                    ))}
-                  </ul>
-                ) : (
-                  <p className="mt-4 text-xs text-success">
-                    Everything an assistant looks for is on this page.
-                  </p>
-                )}
+                <CitabilityChecklist result={citability} />
                 <p className="mt-3 text-xs">
                   <Link
                     href={`/admin/seo${checkRoute === "/" ? "/index" : checkRoute}`}

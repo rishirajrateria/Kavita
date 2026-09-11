@@ -337,6 +337,17 @@ browser; nothing else may ever be given that prefix.
 | `WHATSAPP_NOTIFICATIONS_ENABLED`, `ANALYTICS_DISABLED`, `SHOW_DESIGN_SYSTEM` | Feature switches                                                                                                    |
 | `ADMIN_DEV_BYPASS`                                                           | **Non-production only.** Synthetic owner session for local review                                                   |
 
+**Add these to `.env.example` by hand.** The file became permission-blocked for the build tooling
+part-way through the project, so five variables are documented here instead of being listed there:
+
+```dotenv
+REDIRECT_REFRESH_SECRET=          # bearer token for POST /api/redirects/refresh (redirect cache)
+DATA_ENCRYPTION_KEY_ID=k1         # id of the current encryption key
+DATA_ENCRYPTION_KEYS=             # rotation list: k1:<base64>,k2:<base64>; DATA_ENCRYPTION_KEY stays the current key
+ANALYTICS_DISABLED=false          # set true to stop first-party analytics collection
+ADMIN_DEV_BYPASS=false            # LOCAL ONLY — never set this in production; it grants an owner session with no login
+```
+
 ## D. Connecting the outside world
 
 - **Supabase** — create the project, run `pnpm db:migrate`, then `pnpm db:seed`. Set the four

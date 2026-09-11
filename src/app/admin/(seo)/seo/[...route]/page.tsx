@@ -13,6 +13,7 @@ import { ActionForm } from "@/components/admin/manage/action-form";
 import { PageHeader } from "@/components/admin/manage/page-header";
 import { Fact, OfflineNote, Panel } from "@/components/admin/manage/panel";
 import { CitabilityBadge } from "@/components/admin/seo/citability-badge";
+import { CitabilityChecklist } from "@/components/admin/seo/citability-checks";
 import { PageSeoFields } from "@/components/admin/seo/page-seo-fields";
 import { SeoNav } from "@/components/admin/seo/seo-nav";
 import { SerpPreview } from "@/components/admin/seo/serp-preview";
@@ -197,41 +198,8 @@ export default async function PageSeoEditor({ params }: PageProps<"/admin/seo/[.
                 description="What an assistant needs to quote this page (CLAUDE.md §9)."
                 actions={<CitabilityBadge score={citability?.score ?? null} />}
               >
-                <ul className="space-y-1.5 text-sm">
-                  {citability
-                    ? (
-                        [
-                          ["Key facts block", citability.checks.keyFacts],
-                          ["Question H2s", citability.checks.questionH2s],
-                          ["Answer under each question", citability.checks.answersUnderH2s],
-                          ["At least one table", citability.checks.table],
-                          ["Visible date", citability.checks.dated],
-                          ["Author byline", citability.checks.byline],
-                          ["JSON-LD", citability.checks.jsonLd],
-                        ] as const
-                      ).map(([label, ok]) => (
-                        <li key={label} className="flex items-start gap-2">
-                          <span aria-hidden="true" className={ok ? "text-success" : "text-error"}>
-                            {ok ? "✓" : "✗"}
-                          </span>
-                          <span className={ok ? "" : "text-muted-foreground"}>{label}</span>
-                        </li>
-                      ))
-                    : null}
-                </ul>
-                {citability && citability.fixes.length > 0 ? (
-                  <ul className="mt-4 space-y-2 text-xs text-muted-foreground">
-                    {citability.fixes.map((fix) => (
-                      <li key={fix} className="rounded-md border border-border/70 px-3 py-2">
-                        {fix}
-                      </li>
-                    ))}
-                  </ul>
-                ) : null}
-                <p className="mt-4 text-xs text-muted-foreground">
-                  {citability
-                    ? `${citability.detail.wordCount} words · ${citability.detail.questionH2Count} of ${citability.detail.h2Count} H2s are questions · ${citability.detail.tableCount} tables.`
-                    : null}{" "}
+                {citability ? <CitabilityChecklist result={citability} /> : null}
+                <p className="mt-3 text-xs">
                   <Link href="/admin/aeo" className="no-underline hover:underline">
                     Fix answers in the AEO panel →
                   </Link>
