@@ -6,6 +6,7 @@ export * from "./_shared";
 export * from "./admin";
 export * from "./analytics";
 export * from "./booking";
+export * from "./contact";
 export * from "./content";
 export * from "./locations";
 export * from "./seo";
