@@ -25,7 +25,8 @@
     "test:seo": "tsx tests/seo-plumbing/run.ts",
     "test:learn": "tsx tests/learn/run.mts",
     "test:forms": "tsx tests/forms/run.ts",
-    "test": "pnpm test:seed && pnpm test:consultation-window && pnpm test:migrations && pnpm test:schema && pnpm test:seo && pnpm test:forms && pnpm test:learn"
+    "test:notifications": "tsx tests/notifications/run.ts",
+    "test": "pnpm test:seed && pnpm test:consultation-window && pnpm test:migrations && pnpm test:schema && pnpm test:seo && pnpm test:forms && pnpm test:learn && pnpm test:notifications"
   },
   "dependencies": {
     "@date-fns/tz": "^1.5.0",
