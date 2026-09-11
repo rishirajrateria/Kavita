@@ -508,6 +508,12 @@ touching the app.
   ~155KB gzipped, of which ~114KB is the React 19 + Next 16 runtime floor; the brief's 100KB geo
   budget is not reachable with hydration on, so keep every site-wide client component tiny and
   never add a client dependency to the layout.
+- Owner decisions (2026-09-11): Phases 3–6 run back to back without per-phase sign-off; the
+  build stays runnable offline (no Supabase/Vercel connected yet); the owner asked that
+  `clientConcerns` for the researched locations be written by the build team rather than left
+  empty. Those entries are therefore informed generalisations grounded in each place's verifiable
+  context (housing market, diaspora pattern, work culture, time zone), never claims about Kavita's
+  actual clients or numbers, and every one is listed in NEEDS-REAL-DATA.md for her to edit.
 - Folder layout: `src/app` (routes), `src/components/{ui,layout,seo,motifs}`, `src/lib`,
   `src/hooks`, `src/db` (Drizzle schema + client), `src/content/{locations,articles}`,
   `src/styles`, `src/types`, `supabase/{migrations,seed}`, `scripts`, `tests`.
