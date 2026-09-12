@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+<style>@media (prefers-reduced-motion:no-preference){.t{animation:s 52s linear infinite}}@keyframes s{to{transform:translateX(-40px)}}</style>
+<defs>
+<radialGradient id="b" cx="36%" cy="34%" r="72%"><stop offset="0" stop-color="#d9d3c7"/><stop offset=".6" stop-color="#8f8778"/><stop offset="1" stop-color="#3a352d"/></radialGradient>
+<radialGradient id="cr" cx="40%" cy="38%" r="60%"><stop offset=".6" stop-color="#000" stop-opacity=".1"/><stop offset="1" stop-color="#000" stop-opacity=".4"/></radialGradient>
+<radialGradient id="sh" cx="36%" cy="34%" r="70%"><stop offset=".5" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".75"/></radialGradient>
+<clipPath id="k"><circle cx="32" cy="32" r="20"/></clipPath>
+</defs>
+<circle cx="32" cy="32" r="20" fill="url(#b)"/>
+<g clip-path="url(#k)"><g class="t" fill="url(#cr)">
+<circle cx="20" cy="26" r="3.5"/><circle cx="34" cy="36" r="4.5"/><circle cx="44" cy="22" r="2.4"/><circle cx="27" cy="44" r="2"/>
+<circle cx="60" cy="26" r="3.5"/><circle cx="74" cy="36" r="4.5"/><circle cx="84" cy="22" r="2.4"/><circle cx="67" cy="44" r="2"/>
+</g><circle cx="32" cy="32" r="20" fill="url(#sh)"/></g>
+</svg>

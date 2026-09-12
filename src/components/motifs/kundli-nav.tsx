@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { useId } from "react";
 import { cn } from "@/lib/utils";
-import { PLANETS, PlanetSymbols, type PlanetKey } from "./planets";
+import { PLANETS, type PlanetKey } from "./planets";
 
 /**
  * The Kundli hub — the landing page's centrepiece, and its navigation.
@@ -18,8 +18,8 @@ import { PLANETS, PlanetSymbols, type PlanetKey } from "./planets";
  * are pure CSS (`.kundli-nav` in globals.css; cursors are 32px PNGs in /public/cursors with the
  * SVG as fallback).
  *
- * Motion: the frame, diagonals and diamond draw themselves, then a dashed light keeps flowing
- * along them; a single point of light travels the frame's own rectangle (`offset-path`); the
+ * Motion: the frame, diagonals and diamond draw themselves, then a single comet of light keeps
+ * travelling each of them; every planet rotates and drifts in its own place; a single point of light travels the frame's own rectangle (`offset-path`); the
  * centre breathes; a hovered house glows in its planet's colour and the planet swells. All CSS,
  * all resting in the finished state.
  *
@@ -44,26 +44,83 @@ export interface KundliNavProps {
   className?: string;
 }
 
-// Polygon and label anchor per house; the planet sits above the label.
-const GEOMETRY: Record<number, { d: string; x: number; y: number }> = {
-  1: { d: "M300 48 426 124 300 200 174 124Z", x: 300, y: 140 },
-  2: { d: "M48 48 300 48 174 124Z", x: 174, y: 98 },
-  3: { d: "M48 48 174 124 48 200Z", x: 106, y: 138 },
-  4: { d: "M48 200 174 124 300 200 174 276Z", x: 174, y: 216 },
-  5: { d: "M48 200 174 276 48 352Z", x: 106, y: 290 },
-  6: { d: "M48 352 174 276 300 352Z", x: 174, y: 334 },
-  7: { d: "M300 352 174 276 300 200 426 276Z", x: 300, y: 292 },
-  8: { d: "M300 352 426 276 552 352Z", x: 426, y: 334 },
-  9: { d: "M552 352 426 276 552 200Z", x: 494, y: 290 },
-  10: { d: "M552 200 426 276 300 200 426 124Z", x: 426, y: 216 },
-  11: { d: "M552 200 426 124 552 48Z", x: 494, y: 138 },
-  12: { d: "M552 48 300 48 426 124Z", x: 426, y: 98 },
+// Per-house layout. Each triangle is widest somewhere different — the top and bottom ones near
+// the frame, the side ones at mid-height — so the label sits where its house is widest and the
+// planet takes the narrower end. Side-triangle labels with two words wrap onto two lines, because
+// Cinzel's capitals are wide and those houses are only ~126 units across at their widest.
+interface HouseLayout {
+  d: string;
+  label: { x: number; y: number };
+  planet: { x: number; y: number };
+  /** Where the house number goes relative to the label: below (default) or above. */
+  numberAbove?: boolean;
+  wrap?: boolean;
+}
+const GEOMETRY: Record<number, HouseLayout> = {
+  1: {
+    d: "M300 48 426 124 300 200 174 124Z",
+    label: { x: 300, y: 146 },
+    planet: { x: 300, y: 96 },
+  },
+  2: { d: "M48 48 300 48 174 124Z", label: { x: 174, y: 74 }, planet: { x: 174, y: 104 } },
+  3: {
+    d: "M48 48 174 124 48 200Z",
+    label: { x: 104, y: 128 },
+    planet: { x: 84, y: 90 },
+    wrap: true,
+  },
+  4: {
+    d: "M48 200 174 124 300 200 174 276Z",
+    label: { x: 150, y: 204 },
+    planet: { x: 150, y: 156 },
+  },
+  5: {
+    d: "M48 200 174 276 48 352Z",
+    label: { x: 104, y: 280 },
+    planet: { x: 84, y: 244 },
+    wrap: true,
+  },
+  6: {
+    d: "M48 352 174 276 300 352Z",
+    label: { x: 174, y: 340 },
+    planet: { x: 174, y: 300 },
+    numberAbove: true,
+  },
+  7: {
+    d: "M300 352 174 276 300 200 426 276Z",
+    label: { x: 300, y: 262 },
+    planet: { x: 300, y: 306 },
+  },
+  8: {
+    d: "M300 352 426 276 552 352Z",
+    label: { x: 426, y: 340 },
+    planet: { x: 426, y: 300 },
+    numberAbove: true,
+  },
+  9: {
+    d: "M552 352 426 276 552 200Z",
+    label: { x: 496, y: 280 },
+    planet: { x: 516, y: 244 },
+    wrap: true,
+  },
+  10: {
+    d: "M552 200 426 276 300 200 426 124Z",
+    label: { x: 450, y: 204 },
+    planet: { x: 450, y: 156 },
+  },
+  11: {
+    d: "M552 200 426 124 552 48Z",
+    label: { x: 496, y: 128 },
+    planet: { x: 516, y: 90 },
+    wrap: true,
+  },
+  12: { d: "M552 48 300 48 426 124Z", label: { x: 426, y: 74 }, planet: { x: 426, y: 104 } },
 };
 
 const FRAME = "M48 48H552V352H48Z";
 const DIAGONALS = "M48 48 552 352M552 48 48 352";
 const DIAMOND = "M300 48 552 200 300 352 48 200Z";
-const PLANET_SIZE = 26;
+const PLANET_SIZE = 40;
 
 export function KundliNav({ houses, centre, className }: KundliNavProps) {
   const id = useId();
@@ -85,14 +142,13 @@ export function KundliNav({ houses, centre, className }: KundliNavProps) {
         className="absolute inset-0 size-full overflow-visible"
         role="presentation"
       >
-        <PlanetSymbols />
-
         {/* The twelve doors. Each is a link wrapping its house shape, planet and label. */}
         {houses.map((h) => {
           const g = GEOMETRY[h.n];
           if (!g) return null;
           const planet = PLANETS[h.planet];
           const titleId = `${id}-h${h.n}`;
+          const lines = g.wrap && h.label.includes(" ") ? h.label.split(" ", 2) : [h.label];
           return (
             <a
               key={h.n}
@@ -111,20 +167,30 @@ export function KundliNav({ houses, centre, className }: KundliNavProps) {
                 id={titleId}
               >{`${h.title} Signified by ${planet.name} (${planet.sanskrit}).`}</title>
               <path d={g.d} className="kundli-house-fill" />
-              <use
-                href={`#planet-${h.planet}`}
-                x={g.x - PLANET_SIZE / 2}
-                y={g.y - PLANET_SIZE - 12}
+              <image
+                href={`/planets/${h.planet}.svg`}
+                x={g.planet.x - PLANET_SIZE / 2}
+                y={g.planet.y - PLANET_SIZE / 2}
                 width={PLANET_SIZE}
                 height={PLANET_SIZE}
                 className="kundli-house-planet"
+                style={
+                  {
+                    "--float-duration": `${6 + (h.n % 5)}s`,
+                    "--float-delay": `${-(h.n * 0.9)}s`,
+                  } as React.CSSProperties
+                }
               />
-              <text x={g.x} y={g.y} textAnchor="middle" className="kundli-house-label">
-                {h.label}
+              <text x={g.label.x} y={g.label.y} textAnchor="middle" className="kundli-house-label">
+                {lines.map((line, i) => (
+                  <tspan key={line} x={g.label.x} dy={i === 0 ? 0 : "1.2em"}>
+                    {line}
+                  </tspan>
+                ))}
               </text>
               <text
-                x={g.x}
-                y={g.y + 13}
+                x={g.label.x}
+                y={g.numberAbove ? g.label.y - 15 : g.label.y + 13 + (lines.length - 1) * 16}
                 textAnchor="middle"
                 className="kundli-house-number"
                 aria-hidden="true"
@@ -139,7 +205,7 @@ export function KundliNav({ houses, centre, className }: KundliNavProps) {
             rest; a dashed twin of each keeps light travelling along them, slowly, for good. */}
         <g
           fill="none"
-          className="pointer-events-none"
+          className="kundli-lines pointer-events-none"
           style={{ stroke: "var(--accent-strong)", strokeWidth: 1.2, opacity: 0.92 }}
           aria-hidden="true"
         >
@@ -162,17 +228,22 @@ export function KundliNav({ houses, centre, className }: KundliNavProps) {
           }}
           aria-hidden="true"
         >
-          <path data-flow d={FRAME} style={{ "--flow-duration": "44s" } as React.CSSProperties} />
+          <path data-flow d={FRAME} style={{ "--flow-duration": "22s" } as React.CSSProperties} />
           <path
             data-flow
             d={DIAGONALS}
-            style={{ "--flow-duration": "52s" } as React.CSSProperties}
+            style={{ "--flow-duration": "26s" } as React.CSSProperties}
           />
-          <path data-flow d={DIAMOND} style={{ "--flow-duration": "36s" } as React.CSSProperties} />
+          <path data-flow d={DIAMOND} style={{ "--flow-duration": "17s" } as React.CSSProperties} />
         </g>
 
         {/* One point of light travelling the frame itself. */}
-        <g data-travel className="pointer-events-none" aria-hidden="true">
+        <g
+          data-travel
+          className="pointer-events-none"
+          style={{ ["--travel-duration" as string]: "24s" }}
+          aria-hidden="true"
+        >
           <circle r="7" style={{ fill: "var(--glow)" }} />
           <circle r="2.6" style={{ fill: "var(--brass-200)" }} />
         </g>
@@ -182,7 +253,7 @@ export function KundliNav({ houses, centre, className }: KundliNavProps) {
       <Link
         href={centre.href}
         title={centre.title}
-        className="kundli-centre absolute top-1/2 left-1/2 flex aspect-square w-[11%] -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full px-[8%] text-center font-serif text-[clamp(0.7rem,1.15vw,1.05rem)] leading-tight font-medium tracking-wide no-underline"
+        className="kundli-centre absolute top-1/2 left-1/2 flex aspect-square w-[11%] -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full px-[8%] text-center font-display text-[clamp(0.62rem,1vw,0.92rem)] leading-tight font-semibold tracking-[0.12em] uppercase no-underline"
       >
         <span
           data-pulse

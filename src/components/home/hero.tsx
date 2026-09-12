@@ -26,10 +26,10 @@ export function Hero({ settings }: { settings: SiteSettings }) {
     <Section as="header" spacing="none" className="pt-8 pb-12 sm:pt-12 sm:pb-16 lg:pt-14 lg:pb-20">
       <Container size="wide" className="relative">
         <div className="mx-auto max-w-[44rem] text-center">
-          <p className="text-[0.72rem] font-semibold tracking-[0.22em] text-accent-strong uppercase">
+          <p className="font-display text-[0.72rem] font-semibold tracking-[0.3em] text-accent-strong uppercase">
             {HUB.eyebrow}
           </p>
-          <h1 className="mt-5 font-serif text-[clamp(2.1rem,1.3rem+3.4vw,3.9rem)] leading-[1.05] font-normal tracking-[-0.015em] text-balance">
+          <h1 className="mt-6 font-display text-[clamp(1.7rem,1rem+2.6vw,3.1rem)] leading-[1.18] font-medium tracking-[0.04em] text-balance">
             {HUB.h1}
           </h1>
           <p className="mx-auto mt-5 max-w-[36rem] text-base leading-relaxed text-muted-foreground sm:text-lg">

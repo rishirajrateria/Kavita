@@ -10,7 +10,7 @@ import { Sky } from "@/components/motifs";
 import { JsonLd } from "@/components/seo/json-ld";
 import { ThemeScript } from "@/components/ui/theme-script";
 import { getCountries, getSameAsUrls, getSiteSettings } from "@/lib/data";
-import { fontSans, fontSerif } from "@/lib/fonts";
+import { fontDisplay, fontSans, fontSerif } from "@/lib/fonts";
 import { personSchema, professionalServiceSchema, webSiteSchema } from "@/lib/seo/schema";
 import { getSiteUrl, whatsappHref } from "@/lib/site";
 import "./globals.css";
@@ -69,7 +69,7 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="en"
-      className={`${fontSerif.variable} ${fontSans.variable}`}
+      className={`${fontSerif.variable} ${fontSans.variable} ${fontDisplay.variable}`}
       suppressHydrationWarning
     >
       <head>

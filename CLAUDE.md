@@ -159,7 +159,14 @@ animation may add JavaScript to a page**; slow enough that a loop is never notic
 - Semantic tokens only; never a primitive ramp in a component. Ramps: `--ink-*`, `--bone-*`,
   `--brass-*`, `--violet-*`, `--rose-*`.
 - WCAG 2.2 AA in both themes, focus rings, landmarks, skip link, `prefers-reduced-motion`.
-- Typography: Cormorant (`font-serif`) + Karla (`font-sans`), self-hosted; no Google Fonts.
+- Typography: **Cinzel** (`font-display` — engraved capitals for the hero, the hub's house labels
+  and display headings; its lowercase is small caps by design), Cormorant (`font-serif`) and Karla
+  (`font-sans`), all self-hosted from `@fontsource-variable`; no Google Fonts.
+- The planets are standalone animated SVGs in `public/planets/` (lit spheres, sliding surface
+  texture, own `<style>`), shown via `<image>` in the hub and rasterised to `public/cursors/*.png`
+  for the pointer. A single source: edit the SVG, re-render the PNG. Never redraw them flat.
+- Clicking a house warps into the page: `@view-transition { navigation: auto }` with a zoom-and-blur
+  pair in globals.css. CSS-only and progressive; browsers without it just navigate.
 - The old home sections (`comparison`, `services-overview`, `how-it-works`, `serving`,
   `testimonials-strip`, `method`, `key-facts`, `faq`, `final-cta`) are no longer rendered but
   stay on disk because `question-heading` is shared with the geo pages; remove them when the

@@ -414,7 +414,7 @@ export const HUB = {
       href: "/contact",
     },
   ],
-  hint: "Each house carries its planet. Hover or tap one to see what it opens.",
+  hint: "Choose the part of your life you want to know about. Each house carries its planet.",
 } as const;
 
 export const INSTRUMENTS = {

@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+<style>@media (prefers-reduced-motion:no-preference){.ph{animation:ph 46s ease-in-out infinite alternate}}@keyframes ph{from{transform:translateX(-10px)}to{transform:translateX(12px)}}</style>
+<defs>
+<radialGradient id="b" cx="38%" cy="34%" r="70%"><stop offset="0" stop-color="#f4f1ea"/><stop offset=".6" stop-color="#bcb7ab"/><stop offset="1" stop-color="#6d685e"/></radialGradient>
+<radialGradient id="cr" cx="40%" cy="38%" r="60%"><stop offset="0" stop-color="#000" stop-opacity=".0"/><stop offset=".7" stop-color="#000" stop-opacity=".18"/><stop offset="1" stop-color="#000" stop-opacity=".38"/></radialGradient>
+<radialGradient id="sh" cx="50%" cy="50%" r="50%"><stop offset=".8" stop-color="#05061a" stop-opacity=".9"/><stop offset="1" stop-color="#05061a" stop-opacity="0"/></radialGradient>
+<clipPath id="k"><circle cx="32" cy="32" r="22"/></clipPath>
+<filter id="tx"><feTurbulence type="fractalNoise" baseFrequency=".55" numOctaves="3" seed="7"/><feColorMatrix values="0 0 0 0 .2 0 0 0 0 .19 0 0 0 0 .17 0 0 0 .22 0"/><feComposite in2="SourceGraphic" operator="in"/></filter>
+</defs>
+<circle cx="32" cy="32" r="22" fill="url(#b)"/>
+<g clip-path="url(#k)">
+<circle cx="32" cy="32" r="22" fill="#bcb7ab" filter="url(#tx)"/>
+<g fill="url(#cr)"><circle cx="22" cy="24" r="4.5"/><circle cx="38" cy="19" r="3"/><circle cx="41" cy="36" r="5.5"/><circle cx="27" cy="41" r="3.6"/><circle cx="18" cy="35" r="2.4"/></g>
+<circle class="ph" cx="62" cy="30" r="27" fill="url(#sh)"/>
+</g>
+<circle cx="32" cy="32" r="22" fill="none" stroke="#fff" stroke-opacity=".25" stroke-width=".6"/>
+</svg>

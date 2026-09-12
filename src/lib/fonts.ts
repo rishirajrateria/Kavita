@@ -46,3 +46,23 @@ export const fontSans = localFont({
   adjustFontFallback: "Arial",
   preload: true,
 });
+
+/**
+ * Cinzel — engraved Roman capitals, the lettering of star maps and old astrolabes. The display
+ * face: the home hero, the hub's house labels, section headings. Its lowercase is small
+ * capitals, which is the point. Preloaded because the H1 is the LCP element.
+ */
+export const fontDisplay = localFont({
+  src: [
+    {
+      path: "../../node_modules/@fontsource-variable/cinzel/files/cinzel-latin-wght-normal.woff2",
+      weight: "400 900",
+      style: "normal",
+    },
+  ],
+  variable: "--font-cinzel",
+  display: "swap",
+  fallback: ["Cormorant", "Georgia", "serif"],
+  adjustFontFallback: "Times New Roman",
+  preload: true,
+});

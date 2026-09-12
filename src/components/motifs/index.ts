@@ -19,4 +19,4 @@ export { VastuDirections, type VastuDirectionsProps } from "./vastu-directions";
 export { TransitArc, type TransitArcProps } from "./transit-arc";
 export { zoneRect, type DirectionZone, type ZoneRect } from "./zones";
 export { KundliNav, type KundliNavProps, type KundliHouse } from "./kundli-nav";
-export { PLANETS, PlanetSymbols, type Planet, type PlanetKey } from "./planets";
+export { PLANETS, type Planet, type PlanetKey } from "./planets";

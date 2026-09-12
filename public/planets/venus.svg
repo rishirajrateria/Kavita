@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+<style>@media (prefers-reduced-motion:no-preference){.t{animation:s 60s linear infinite}}@keyframes s{to{transform:translateX(-48px)}}</style>
+<defs>
+<radialGradient id="b" cx="38%" cy="34%" r="72%"><stop offset="0" stop-color="#fff5dc"/><stop offset=".55" stop-color="#e9c489"/><stop offset="1" stop-color="#8a5a2a"/></radialGradient>
+<linearGradient id="cl" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".0"/><stop offset=".3" stop-color="#fff" stop-opacity=".35"/><stop offset=".5" stop-color="#c9975a" stop-opacity=".25"/><stop offset=".7" stop-color="#fff" stop-opacity=".3"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient>
+<radialGradient id="sh" cx="38%" cy="34%" r="70%"><stop offset=".55" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".62"/></radialGradient>
+<radialGradient id="hz"><stop offset=".7" stop-color="#ffe6b3" stop-opacity=".0"/><stop offset=".9" stop-color="#ffe6b3" stop-opacity=".35"/><stop offset="1" stop-color="#ffe6b3" stop-opacity="0"/></radialGradient>
+<clipPath id="k"><circle cx="32" cy="32" r="22"/></clipPath>
+<filter id="sw"><feTurbulence type="fractalNoise" baseFrequency=".03 .09" numOctaves="2" seed="9"/><feDisplacementMap in="SourceGraphic" scale="4" xChannelSelector="R" yChannelSelector="G"/></filter>
+</defs>
+<circle cx="32" cy="32" r="30" fill="url(#hz)"/>
+<circle cx="32" cy="32" r="22" fill="url(#b)"/>
+<g clip-path="url(#k)"><g class="t"><rect x="10" y="10" width="96" height="44" fill="url(#cl)" filter="url(#sw)"/></g><circle cx="32" cy="32" r="22" fill="url(#sh)"/></g>
+</svg>
