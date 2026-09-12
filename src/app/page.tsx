@@ -41,7 +41,7 @@ export default async function HomePage() {
   return (
     <>
       <JsonLd data={faqSchema} />
-      <Hero settings={settings} />
+      <Hero />
       <Instruments />
       <Timing />
       <Practitioner settings={settings} />

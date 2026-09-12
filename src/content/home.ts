@@ -414,6 +414,12 @@ export const HUB = {
       href: "/contact",
     },
   ],
+  /** The reference composition: a title, a ruled tagline, side columns, a closing line. */
+  title: "Your Kundli",
+  tagline: "Vedic astrology and vastu, read as one",
+  sideLeft: ["The chart", "The home", "One reading"],
+  sideRight: ["Timing", "Direction", "Remedy"],
+  words: ["Choose", "Read", "Know"],
   hint: "Choose the part of your life you want to know about. Each house carries its planet.",
 } as const;
 

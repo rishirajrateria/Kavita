@@ -70,6 +70,7 @@
   --color-accent: var(--accent);
   --color-accent-foreground: var(--accent-foreground);
   --color-accent-strong: var(--accent-strong);
+  --color-display-title: var(--display-title);
   --color-accent-border: var(--accent-border);
   --color-destructive: var(--destructive);
   --color-destructive-foreground: var(--destructive-foreground);
@@ -743,19 +744,49 @@
   outline: none;
 }
 .kundli-nav .kundli-lines {
-  filter: drop-shadow(0 0 3px rgb(245 208 138 / 0.55));
+  filter: drop-shadow(0 0 2px rgb(245 208 138 / 0.45));
+}
+.kundli-nav .kundli-house-rule {
+  stroke: var(--brass-400);
+  stroke-opacity: 0.7;
+  stroke-width: 0.8;
+  pointer-events: none;
+}
+/* The crescent leans, slowly. */
+@keyframes sway {
+  0%,
+  100% {
+    rotate: -8deg;
+  }
+  50% {
+    rotate: 8deg;
+  }
+}
+@media (prefers-reduced-motion: no-preference) {
+  [data-sway] {
+    animation: sway 9s ease-in-out infinite;
+  }
 }
 .kundli-nav .kundli-house-fill {
-  fill: var(--glass-fill);
+  fill: transparent;
   stroke: none;
   transition: fill var(--duration-base) var(--ease-standard);
 }
+/* The chart's interior stays night in both themes — it is a night chart on a day page — so the
+   bone labels keep their contrast; by day it is simply more opaque. */
+.kundli-nav .kundli-interior {
+  fill: var(--ink-1000);
+  fill-opacity: 0.5;
+}
+:root[data-theme="light"] .kundli-nav .kundli-interior {
+  fill-opacity: 0.9;
+}
 .kundli-nav .kundli-house-label {
-  font-size: 13px; /* user units; the phone override below enlarges it */
-  fill: var(--foreground);
+  font-size: 12.5px; /* user units; the phone override below enlarges it */
+  fill: var(--bone-100);
   font-family: var(--font-display);
   font-weight: 500;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.16em;
   filter: drop-shadow(0 0 6px rgb(245 208 138 / 0.35));
   pointer-events: none;
   transition: fill var(--duration-base) var(--ease-standard);
@@ -788,8 +819,9 @@
   }
 }
 .kundli-nav .kundli-house-number {
-  font-size: 7px;
-  fill: var(--muted-foreground);
+  font-size: 9.5px;
+  fill: var(--brass-300);
+  fill-opacity: 0.85;
   font-family: var(--font-serif);
   pointer-events: none;
 }
@@ -807,21 +839,33 @@
   stroke-width: 1.5;
 }
 .kundli-nav .kundli-centre {
-  background: var(--cta-gradient);
-  color: var(--cta-foreground);
-  box-shadow: var(--shadow-cta);
-  transition:
-    transform var(--duration-base) var(--ease-standard),
-    box-shadow var(--duration-base) var(--ease-standard);
+  /* The disc itself is drawn in the SVG (`.kundli-centre-disc`) so it scales with the chart;
+     this is the hit target and the words, with the hover lifting both. */
+  color: #1c1408;
+  text-shadow: 0 1px 0 rgb(255 255 255 / 0.35);
+  transition: transform var(--duration-base) var(--ease-standard);
 }
 .kundli-nav .kundli-centre:hover,
 .kundli-nav .kundli-centre:focus-visible {
   transform: translate(-50%, -50%) scale(1.04);
-  box-shadow: var(--shadow-cta-hover);
 }
-.kundli-nav .kundli-centre-glow {
-  background: radial-gradient(closest-side, var(--glow), transparent 75%);
-  transform: scale(1.6);
+.kundli-nav .kundli-centre:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 4px;
+}
+.kundli-nav .kundli-centre-disc {
+  transform-box: fill-box;
+  transform-origin: center;
+  filter: drop-shadow(0 0 1px rgb(255 255 255 / 0.5)) drop-shadow(0 0 14px rgb(245 208 138 / 0.45));
+  transition: scale var(--duration-base) var(--ease-standard);
+}
+.kundli-nav:has(.kundli-centre:hover) .kundli-centre-disc,
+.kundli-nav:has(.kundli-centre:focus-visible) .kundli-centre-disc {
+  scale: 1.04;
+}
+.kundli-nav .kundli-centre-halo {
+  transform-box: fill-box;
+  transform-origin: center;
   pointer-events: none;
 }
 
@@ -852,10 +896,10 @@
  * px reads px as user units, so a larger value here enlarges the labels only at phone width. */
 @media (max-width: 640px) {
   .kundli-nav .kundli-house-label {
-    font-size: 17px;
+    font-size: 16px;
   }
   .kundli-nav .kundli-house-number {
-    font-size: 9px;
+    font-size: 11px;
   }
 }
 

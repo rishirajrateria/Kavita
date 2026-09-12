@@ -181,6 +181,8 @@
   --accent-foreground: var(--brass-200);
   --accent-strong: var(--brass-300); /* 13.44:1 */
   --accent-border: var(--brass-500);
+  /* The hero's engraved title: pale gold on the night sky, deep brass by day. */
+  --display-title: var(--brass-100);
 
   --destructive: var(--rose-400);
   --destructive-foreground: var(--ink-1000);
@@ -241,9 +243,9 @@
   --star-faint: rgb(201 179 255 / 0.4);
 
   /* The reference sky: violet Milky Way, rose aurora, gold horizon — each on its own clock. */
-  --aurora-1: rgb(138 102 224 / 0.34);
-  --aurora-2: rgb(217 90 165 / 0.26);
-  --aurora-3: rgb(232 180 94 / 0.34);
+  --aurora-1: rgb(138 102 224 / 0.22);
+  --aurora-2: rgb(217 90 165 / 0.12);
+  --aurora-3: rgb(232 180 94 / 0.24);
   --glow: rgb(245 208 138 / 0.3);
   --vignette: rgb(0 0 0 / 0.55);
 }
@@ -279,6 +281,7 @@
   --accent-foreground: var(--brass-700);
   --accent-strong: var(--brass-700);
   --accent-border: var(--brass-500);
+  --display-title: var(--brass-700);
 
   --destructive: #b23a1c;
   --destructive-foreground: var(--bone-50);

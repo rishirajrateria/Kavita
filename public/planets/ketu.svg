@@ -1,14 +1,8 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
-<style>@media (prefers-reduced-motion:no-preference){.tl{animation:f 3.2s ease-in-out infinite}.tl2{animation:f 4.7s ease-in-out infinite reverse}.h{animation:p 2.6s ease-in-out infinite;transform-origin:16px 48px}}@keyframes f{0%,100%{opacity:.55}50%{opacity:1}}@keyframes p{0%,100%{transform:scale(1)}50%{transform:scale(1.12)}}</style>
-<defs>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64"><style>@media (prefers-reduced-motion:no-preference){.tl{animation:f 3.4s ease-in-out infinite}.tl2{animation:f 4.9s ease-in-out infinite reverse}.h{animation:p 2.8s ease-in-out infinite;transform-origin:16px 48px}}</style><defs>
 <linearGradient id="t" x1="0" y1="1" x2="1" y2="0"><stop offset="0" stop-color="#ffe9b0" stop-opacity=".95"/><stop offset=".5" stop-color="#f0b45c" stop-opacity=".5"/><stop offset="1" stop-color="#c9a227" stop-opacity="0"/></linearGradient>
 <radialGradient id="h" cx="40%" cy="38%" r="65%"><stop offset="0" stop-color="#fff8e1"/><stop offset=".5" stop-color="#f5c453"/><stop offset="1" stop-color="#a86a12"/></radialGradient>
 <radialGradient id="g"><stop offset=".4" stop-color="#ffd977" stop-opacity=".7"/><stop offset="1" stop-color="#ffd977" stop-opacity="0"/></radialGradient>
-<filter id="w"><feTurbulence type="fractalNoise" baseFrequency=".08" numOctaves="2" seed="11"/><feDisplacementMap in="SourceGraphic" scale="4" xChannelSelector="R" yChannelSelector="G"/></filter>
-<filter id="bl"><feGaussianBlur stdDeviation="1.2"/></filter>
-</defs>
-<path class="tl" d="M16 48 58 4 27 44Z" fill="url(#t)" filter="url(#w)"/>
-<path class="tl2" d="M16 48 56 12 23 46Z" fill="url(#t)" filter="url(#bl)" opacity=".8"/>
-<circle class="h" cx="16" cy="48" r="13" fill="url(#g)"/>
-<circle class="h" cx="16" cy="48" r="6.5" fill="url(#h)"/>
-</svg>
+<filter id="w"><feTurbulence type="fractalNoise" baseFrequency=".08" numOctaves="2" seed="11"/><feDisplacementMap in="SourceGraphic" scale="4" xChannelSelector="R" yChannelSelector="G"/></filter><filter id="bl"><feGaussianBlur stdDeviation="1.2"/></filter>
+<style>@keyframes f{0%,100%{opacity:.55}50%{opacity:1}}@keyframes p{0%,100%{transform:scale(1)}50%{transform:scale(1.12)}}</style></defs>
+<path class="tl" d="M16 48 58 4 27 44Z" fill="url(#t)" filter="url(#w)"/><path class="tl2" d="M16 48 56 12 23 46Z" fill="url(#t)" filter="url(#bl)" opacity=".8"/>
+<circle class="h" cx="16" cy="48" r="13" fill="url(#g)"/><circle class="h" cx="16" cy="48" r="6.5" fill="url(#h)"/></svg>

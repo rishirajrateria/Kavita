@@ -119,9 +119,23 @@ convenience; a circle stretched to fit it looked exactly like that and was remov
 carries its traditional signifying planet** (`src/components/motifs/planets.tsx` — Sun for the
 1st, Moon for the 4th, Venus for the 7th, Rahu for the 12th…), drawn above its label in the serif,
 glowing in that planet's colour on hover, and **set as the pointer** (`public/cursors/*.png`, 32px,
-with the SVG as fallback) so moving between houses visibly changes the planet under the hand.
-Regenerate the PNGs from the SVGs with a headless-Chromium screenshot if the drawings change;
-keep `planets.tsx` and `public/cursors/*.svg` in step.
+plain pointer as fallback) so moving between houses visibly changes the planet under the hand.
+Regenerate the PNGs from `public/planets/*.svg` with a headless-Chromium screenshot if the
+drawings change; keep `planets.tsx` and the two folders in step.
+
+**The first section is built to the client's reference image (2026-09-12).** Black space with a
+little violet; the H1 "Your Kundli" in Cinzel with a ruled tagline; the chart's thin gold lines
+over a night interior (`.kundli-interior`, more opaque by day so the bone labels keep contrast);
+house numbers above the labels, a short rule under each; the lit planets beside them; a luminous
+parchment disc for _Book a reading_ drawn **inside the SVG** (`.kundli-centre-disc` and its
+breathing halo) so it scales with the chart, with the HTML link over it as a transparent hit
+target; a slowly turning ring of ticks around it; two quiet three-word columns with a star and a
+crescent outside the chart on screens ≥1400px (`SideColumn` in `hero.tsx`, decorative,
+`aria-hidden`); the Earth's lit horizon curving across the bottom-left
+(`src/components/motifs/earth-horizon.tsx` — atmosphere breathing, city lights turning, parallax);
+and three words under the chart. The chart is capped by viewport height as well as width so the
+whole figure sits above the fold on a laptop. The H1 colour is the `--display-title` token (pale
+gold by night, deep brass by day).
 
 **Pictures first, one line under each.** After the hub: the Convergence figure (chart and floor
 plan carried into one point), the Vimshottari dasha timeline ("when, not only what" — the

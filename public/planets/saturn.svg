@@ -1,20 +1,10 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
-<style>@media (prefers-reduced-motion:no-preference){.t{animation:s 44s linear infinite}}@keyframes s{to{transform:translateX(-40px)}}</style>
-<defs>
-<linearGradient id="bands" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#d9c7a3"/><stop offset=".3" stop-color="#e9dcbd"/><stop offset=".45" stop-color="#c9ae7e"/><stop offset=".6" stop-color="#efe3c6"/><stop offset=".8" stop-color="#bfa273"/><stop offset="1" stop-color="#d9c7a3"/></linearGradient>
-<radialGradient id="sh" cx="36%" cy="34%" r="70%"><stop offset=".5" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".75"/></radialGradient>
-<linearGradient id="ring" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#e7dcc4" stop-opacity=".2"/><stop offset=".35" stop-color="#f1e7d2" stop-opacity=".9"/><stop offset=".5" stop-color="#b9a98a" stop-opacity=".5"/><stop offset=".65" stop-color="#f1e7d2" stop-opacity=".9"/><stop offset="1" stop-color="#e7dcc4" stop-opacity=".2"/></linearGradient>
-<clipPath id="k"><circle cx="32" cy="32" r="15"/></clipPath>
-<clipPath id="top"><rect x="0" y="0" width="64" height="32"/></clipPath>
-<clipPath id="bot"><rect x="0" y="32" width="64" height="32"/></clipPath>
-</defs>
-<g transform="rotate(-24 32 32)">
-<g clip-path="url(#top)"><ellipse cx="32" cy="32" rx="29" ry="7.5" fill="none" stroke="url(#ring)" stroke-width="5"/><ellipse cx="32" cy="32" rx="22" ry="5.4" fill="none" stroke="#2a2418" stroke-opacity=".5" stroke-width="1"/></g>
-</g>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64"><style>@media (prefers-reduced-motion:no-preference){.t{animation:s 48s linear infinite}}</style><defs>
+<linearGradient id="bands" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#d4c29c"/><stop offset=".25" stop-color="#e9dcbd"/><stop offset=".45" stop-color="#c4a877"/><stop offset=".6" stop-color="#efe3c6"/><stop offset=".8" stop-color="#b89c6d"/><stop offset="1" stop-color="#d4c29c"/></linearGradient>
+<linearGradient id="ring" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#e7dcc4" stop-opacity=".15"/><stop offset=".3" stop-color="#f3ead6" stop-opacity=".92"/><stop offset=".5" stop-color="#b3a385" stop-opacity=".45"/><stop offset=".7" stop-color="#f3ead6" stop-opacity=".92"/><stop offset="1" stop-color="#e7dcc4" stop-opacity=".15"/></linearGradient>
+<radialGradient id="lb" cx="34%" cy="30%" r="72%"><stop offset=".42" stop-color="#000" stop-opacity="0"/><stop offset=".78" stop-color="#000" stop-opacity="0.38"/><stop offset="1" stop-color="#000" stop-opacity="0.85"/></radialGradient>
+<clipPath id="k"><circle cx="32" cy="32" r="15"/></clipPath><clipPath id="top"><rect x="0" y="0" width="64" height="32"/></clipPath><clipPath id="bot"><rect x="0" y="32" width="64" height="32"/></clipPath>
+<style>@keyframes s{to{transform:translateX(-40px)}}</style></defs>
+<g transform="rotate(-24 32 32)" clip-path="url(#top)"><ellipse cx="32" cy="32" rx="29" ry="7.5" fill="none" stroke="url(#ring)" stroke-width="5.5"/><ellipse cx="32" cy="32" rx="22.5" ry="5.6" fill="none" stroke="#2a2418" stroke-opacity=".55" stroke-width=".9"/></g>
 <circle cx="32" cy="32" r="15" fill="#e2d3b0"/>
-<g clip-path="url(#k)"><g class="t"><rect x="12" y="12" width="80" height="40" fill="url(#bands)"/></g><circle cx="32" cy="32" r="15" fill="url(#sh)"/>
-<g transform="rotate(-24 32 32)"><ellipse cx="32" cy="27" rx="29" ry="7.5" fill="none" stroke="#000" stroke-opacity=".35" stroke-width="4"/></g></g>
-<g transform="rotate(-24 32 32)">
-<g clip-path="url(#bot)"><ellipse cx="32" cy="32" rx="29" ry="7.5" fill="none" stroke="url(#ring)" stroke-width="5"/><ellipse cx="32" cy="32" rx="22" ry="5.4" fill="none" stroke="#2a2418" stroke-opacity=".5" stroke-width="1"/><path d="M17 32a15 15 0 0 0 30 0" fill="none" stroke="#000" stroke-opacity=".45" stroke-width="6"/></g>
-</g>
-</svg>
+<g clip-path="url(#k)"><g class="t"><rect x="12" y="12" width="80" height="40" fill="url(#bands)"/></g><circle cx="32" cy="32" r="15" fill="url(#lb)"/><g transform="rotate(-24 32 32)"><ellipse cx="32" cy="27.5" rx="29" ry="7.5" fill="none" stroke="#000" stroke-opacity=".4" stroke-width="4"/></g></g>
+<g transform="rotate(-24 32 32)" clip-path="url(#bot)"><ellipse cx="32" cy="32" rx="29" ry="7.5" fill="none" stroke="url(#ring)" stroke-width="5.5"/><ellipse cx="32" cy="32" rx="22.5" ry="5.6" fill="none" stroke="#2a2418" stroke-opacity=".55" stroke-width=".9"/><path d="M17 32a15 15 0 0 0 30 0" fill="none" stroke="#000" stroke-opacity=".5" stroke-width="6"/></g></svg>

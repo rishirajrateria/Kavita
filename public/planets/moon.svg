@@ -1,17 +1,15 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
-<style>@media (prefers-reduced-motion:no-preference){.ph{animation:ph 46s ease-in-out infinite alternate}}@keyframes ph{from{transform:translateX(-10px)}to{transform:translateX(12px)}}</style>
-<defs>
-<radialGradient id="b" cx="38%" cy="34%" r="70%"><stop offset="0" stop-color="#f4f1ea"/><stop offset=".6" stop-color="#bcb7ab"/><stop offset="1" stop-color="#6d685e"/></radialGradient>
-<radialGradient id="cr" cx="40%" cy="38%" r="60%"><stop offset="0" stop-color="#000" stop-opacity=".0"/><stop offset=".7" stop-color="#000" stop-opacity=".18"/><stop offset="1" stop-color="#000" stop-opacity=".38"/></radialGradient>
-<radialGradient id="sh" cx="50%" cy="50%" r="50%"><stop offset=".8" stop-color="#05061a" stop-opacity=".9"/><stop offset="1" stop-color="#05061a" stop-opacity="0"/></radialGradient>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64"><style>@media (prefers-reduced-motion:no-preference){.ph{animation:ph 52s ease-in-out infinite alternate}}</style><defs><filter id="rl" x="-10%" y="-10%" width="120%" height="120%" color-interpolation-filters="sRGB">
+<feTurbulence type="fractalNoise" baseFrequency="0.62" numOctaves="4" seed="7" result="n"/>
+<feDiffuseLighting in="n" surfaceScale="2.2" diffuseConstant="1.15" lighting-color="#fff" result="lit"><fePointLight x="22" y="16" z="60"/></feDiffuseLighting>
+<feComposite in="lit" in2="SourceGraphic" operator="arithmetic" k1="1.05" k2="0" k3="0" k4="0" result="tex"/>
+<feSpecularLighting in="n" surfaceScale="2.2" specularConstant="0.2" specularExponent="12" lighting-color="#fff" result="sp"><fePointLight x="22" y="16" z="60"/></feSpecularLighting>
+<feComposite in="sp" in2="SourceGraphic" operator="in" result="spi"/>
+<feComposite in="spi" in2="tex" operator="arithmetic" k1="0" k2="1" k3="1" k4="0"/>
+</filter><radialGradient id="lb" cx="34%" cy="30%" r="72%"><stop offset=".42" stop-color="#000" stop-opacity="0"/><stop offset=".78" stop-color="#000" stop-opacity="0.38"/><stop offset="1" stop-color="#000" stop-opacity="0.85"/></radialGradient>
+<radialGradient id="sh" cx="50%" cy="50%" r="50%"><stop offset=".82" stop-color="#05061a" stop-opacity=".93"/><stop offset="1" stop-color="#05061a" stop-opacity="0"/></radialGradient>
 <clipPath id="k"><circle cx="32" cy="32" r="22"/></clipPath>
-<filter id="tx"><feTurbulence type="fractalNoise" baseFrequency=".55" numOctaves="3" seed="7"/><feColorMatrix values="0 0 0 0 .2 0 0 0 0 .19 0 0 0 0 .17 0 0 0 .22 0"/><feComposite in2="SourceGraphic" operator="in"/></filter>
-</defs>
-<circle cx="32" cy="32" r="22" fill="url(#b)"/>
-<g clip-path="url(#k)">
-<circle cx="32" cy="32" r="22" fill="#bcb7ab" filter="url(#tx)"/>
-<g fill="url(#cr)"><circle cx="22" cy="24" r="4.5"/><circle cx="38" cy="19" r="3"/><circle cx="41" cy="36" r="5.5"/><circle cx="27" cy="41" r="3.6"/><circle cx="18" cy="35" r="2.4"/></g>
-<circle class="ph" cx="62" cy="30" r="27" fill="url(#sh)"/>
-</g>
-<circle cx="32" cy="32" r="22" fill="none" stroke="#fff" stroke-opacity=".25" stroke-width=".6"/>
-</svg>
+<style>@keyframes ph{from{transform:translateX(-9px)}to{transform:translateX(13px)}}</style></defs>
+<g clip-path="url(#k)"><rect x="8" y="8" width="48" height="48" fill="#c9c4b8" filter="url(#rl)"/>
+<g fill="#000" opacity=".22"><circle cx="21" cy="25" r="4.4"/><circle cx="40" cy="20" r="2.8"/><circle cx="42" cy="37" r="5.4"/><circle cx="27" cy="42" r="3.4"/></g>
+<circle cx="32" cy="32" r="22" fill="url(#lb)"/><circle class="ph" cx="63" cy="30" r="27" fill="url(#sh)"/></g>
+<circle cx="32" cy="32" r="22" fill="none" stroke="#fff" stroke-opacity=".18" stroke-width=".5"/></svg>

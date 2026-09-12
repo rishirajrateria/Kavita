@@ -15,8 +15,8 @@ import { PLANETS, type PlanetKey } from "./planets";
  *
  * One SVG with native `<a>` elements around each house: every link is in the served HTML,
  * crawlable, keyboard-reachable, and needs no JavaScript. Hover, focus and the planet cursors
- * are pure CSS (`.kundli-nav` in globals.css; cursors are 32px PNGs in /public/cursors with the
- * SVG as fallback).
+ * are pure CSS (`.kundli-nav` in globals.css; the cursors are 32px PNGs in /public/cursors,
+ * rasterised from the planet drawings, with the plain pointer as fallback).
  *
  * Motion: the frame, diagonals and diamond draw themselves, then a single comet of light keeps
  * travelling each of them; every planet rotates and drifts in its own place; a single point of light travels the frame's own rectangle (`offset-path`); the
@@ -52,15 +52,13 @@ interface HouseLayout {
   d: string;
   label: { x: number; y: number };
   planet: { x: number; y: number };
-  /** Where the house number goes relative to the label: below (default) or above. */
-  numberAbove?: boolean;
   wrap?: boolean;
 }
 const GEOMETRY: Record<number, HouseLayout> = {
   1: {
     d: "M300 48 426 124 300 200 174 124Z",
-    label: { x: 300, y: 146 },
-    planet: { x: 300, y: 96 },
+    label: { x: 300, y: 138 },
+    planet: { x: 300, y: 92 },
   },
   2: { d: "M48 48 300 48 174 124Z", label: { x: 174, y: 74 }, planet: { x: 174, y: 104 } },
   3: {
@@ -82,20 +80,18 @@ const GEOMETRY: Record<number, HouseLayout> = {
   },
   6: {
     d: "M48 352 174 276 300 352Z",
-    label: { x: 174, y: 340 },
-    planet: { x: 174, y: 300 },
-    numberAbove: true,
+    label: { x: 174, y: 342 },
+    planet: { x: 174, y: 296 },
   },
   7: {
     d: "M300 352 174 276 300 200 426 276Z",
-    label: { x: 300, y: 262 },
-    planet: { x: 300, y: 306 },
+    label: { x: 300, y: 272 },
+    planet: { x: 300, y: 312 },
   },
   8: {
     d: "M300 352 426 276 552 352Z",
-    label: { x: 426, y: 340 },
-    planet: { x: 426, y: 300 },
-    numberAbove: true,
+    label: { x: 426, y: 342 },
+    planet: { x: 426, y: 296 },
   },
   9: {
     d: "M552 352 426 276 552 200Z",
@@ -120,7 +116,9 @@ const GEOMETRY: Record<number, HouseLayout> = {
 const FRAME = "M48 48H552V352H48Z";
 const DIAGONALS = "M48 48 552 352M552 48 48 352";
 const DIAMOND = "M300 48 552 200 300 352 48 200Z";
-const PLANET_SIZE = 40;
+const PLANET_SIZE = 54;
+/** The Sun's drawing is mostly corona, so it reads small at the shared size; draw it larger. */
+const PLANET_SCALE: Partial<Record<PlanetKey, number>> = { sun: 1.3 };
 
 export function KundliNav({ houses, centre, className }: KundliNavProps) {
   const id = useId();
@@ -142,67 +140,28 @@ export function KundliNav({ houses, centre, className }: KundliNavProps) {
         className="absolute inset-0 size-full overflow-visible"
         role="presentation"
       >
-        {/* The twelve doors. Each is a link wrapping its house shape, planet and label. */}
-        {houses.map((h) => {
-          const g = GEOMETRY[h.n];
-          if (!g) return null;
-          const planet = PLANETS[h.planet];
-          const titleId = `${id}-h${h.n}`;
-          const lines = g.wrap && h.label.includes(" ") ? h.label.split(" ", 2) : [h.label];
-          return (
-            <a
-              key={h.n}
-              href={h.href}
-              className="kundli-house"
-              aria-labelledby={titleId}
-              data-house={h.n}
-              style={
-                {
-                  "--house-glow": planet.glow,
-                  cursor: `url(/cursors/${h.planet}.png) 16 16, url(/cursors/${h.planet}.svg) 16 16, pointer`,
-                } as React.CSSProperties
-              }
-            >
-              <title
-                id={titleId}
-              >{`${h.title} Signified by ${planet.name} (${planet.sanskrit}).`}</title>
-              <path d={g.d} className="kundli-house-fill" />
-              <image
-                href={`/planets/${h.planet}.svg`}
-                x={g.planet.x - PLANET_SIZE / 2}
-                y={g.planet.y - PLANET_SIZE / 2}
-                width={PLANET_SIZE}
-                height={PLANET_SIZE}
-                className="kundli-house-planet"
-                style={
-                  {
-                    "--float-duration": `${6 + (h.n % 5)}s`,
-                    "--float-delay": `${-(h.n * 0.9)}s`,
-                  } as React.CSSProperties
-                }
-              />
-              <text x={g.label.x} y={g.label.y} textAnchor="middle" className="kundli-house-label">
-                {lines.map((line, i) => (
-                  <tspan key={line} x={g.label.x} dy={i === 0 ? 0 : "1.2em"}>
-                    {line}
-                  </tspan>
-                ))}
-              </text>
-              <text
-                x={g.label.x}
-                y={g.numberAbove ? g.label.y - 15 : g.label.y + 13 + (lines.length - 1) * 16}
-                textAnchor="middle"
-                className="kundli-house-number"
-                aria-hidden="true"
-              >
-                {h.n}
-              </text>
-            </a>
-          );
-        })}
-
-        {/* The chart's lines, above the house fills. Solid strokes draw themselves once and then
-            rest; a dashed twin of each keeps light travelling along them, slowly, for good. */}
+        {/* A dark interior, so the chart reads as an object over the sky rather than a wireframe. */}
+        <rect
+          x="48"
+          y="48"
+          width="504"
+          height="304"
+          className="kundli-interior"
+          aria-hidden="true"
+        />
+        {/* A soft outer border, as on a printed chart. */}
+        <rect
+          x="40"
+          y="40"
+          width="520"
+          height="320"
+          rx="6"
+          fill="none"
+          style={{ stroke: "var(--accent-border)", strokeOpacity: 0.28, strokeWidth: 0.8 }}
+          aria-hidden="true"
+        />
+        {/* The chart's lines, beneath the planets and labels. Solid strokes draw themselves once
+            and rest; a single comet of light then keeps travelling each of them. */}
         <g
           fill="none"
           className="kundli-lines pointer-events-none"
@@ -247,19 +206,137 @@ export function KundliNav({ houses, centre, className }: KundliNavProps) {
           <circle r="7" style={{ fill: "var(--glow)" }} />
           <circle r="2.6" style={{ fill: "var(--brass-200)" }} />
         </g>
+        {/* The centre's ring of ticks, turning slowly. */}
+        <g data-turn style={{ ["--turn-duration" as string]: "160s" }} aria-hidden="true">
+          <circle
+            cx="300"
+            cy="200"
+            r="58"
+            fill="none"
+            style={{
+              stroke: "var(--brass-300)",
+              strokeOpacity: 0.55,
+              strokeWidth: 1.2,
+              strokeDasharray: "1.4 7.2",
+            }}
+          />
+        </g>
+        {/* The centre disc: parchment lit from within, its glow breathing behind it. Drawn here so
+            it scales with the chart; the link below is only the hit target and the words. */}
+        <defs>
+          <radialGradient id={`${id}-parchment`} cx="42%" cy="36%" r="62%">
+            <stop offset="0" stopColor="#fbefcf" />
+            <stop offset="0.48" stopColor="#edd49a" />
+            <stop offset="0.82" stopColor="#cfae66" />
+            <stop offset="1" stopColor="#b8923a" />
+          </radialGradient>
+          <radialGradient id={`${id}-halo`}>
+            <stop offset="0" stopColor="var(--brass-200)" stopOpacity="0.5" />
+            <stop offset="0.6" stopColor="var(--brass-300)" stopOpacity="0.14" />
+            <stop offset="1" stopColor="var(--brass-300)" stopOpacity="0" />
+          </radialGradient>
+        </defs>
+        <g className="kundli-centre-halo" data-pulse aria-hidden="true">
+          <circle cx="300" cy="200" r="66" fill={`url(#${id}-halo)`} />
+        </g>
+        <circle
+          cx="300"
+          cy="200"
+          r="52"
+          fill="none"
+          style={{ stroke: "var(--brass-300)", strokeOpacity: 0.25, strokeWidth: 0.6 }}
+          aria-hidden="true"
+        />
+        <circle
+          cx="300"
+          cy="200"
+          r="40"
+          className="kundli-centre-disc"
+          fill={`url(#${id}-parchment)`}
+          aria-hidden="true"
+        />
+
+        {/* The twelve doors. Each is a link wrapping its house shape, planet and label. */}
+        {houses.map((h) => {
+          const g = GEOMETRY[h.n];
+          if (!g) return null;
+          const planet = PLANETS[h.planet];
+          const titleId = `${id}-h${h.n}`;
+          const lines = g.wrap && h.label.includes(" ") ? h.label.split(" ", 2) : [h.label];
+          const size = PLANET_SIZE * (PLANET_SCALE[h.planet] ?? 1);
+          return (
+            <a
+              key={h.n}
+              href={h.href}
+              className="kundli-house"
+              aria-labelledby={titleId}
+              data-house={h.n}
+              style={
+                {
+                  "--house-glow": planet.glow,
+                  cursor: `url(/cursors/${h.planet}.png) 16 16, pointer`,
+                } as React.CSSProperties
+              }
+            >
+              <title
+                id={titleId}
+              >{`${h.title} Signified by ${planet.name} (${planet.sanskrit}).`}</title>
+              <path d={g.d} className="kundli-house-fill" />
+              <image
+                href={`/planets/${h.planet}.svg`}
+                x={g.planet.x - size / 2}
+                y={g.planet.y - size / 2}
+                width={size}
+                height={size}
+                className="kundli-house-planet"
+                style={
+                  {
+                    "--float-duration": `${6 + (h.n % 5)}s`,
+                    "--float-delay": `${-(h.n * 0.9)}s`,
+                  } as React.CSSProperties
+                }
+              />
+              <text x={g.label.x} y={g.label.y} textAnchor="middle" className="kundli-house-label">
+                {lines.map((line, i) => (
+                  <tspan key={line} x={g.label.x} dy={i === 0 ? 0 : "1.2em"}>
+                    {line}
+                  </tspan>
+                ))}
+              </text>
+              <text
+                x={g.label.x}
+                y={g.label.y - 17}
+                textAnchor="middle"
+                className="kundli-house-number"
+                aria-hidden="true"
+              >
+                {h.n}
+              </text>
+              <line
+                data-draw
+                x1={g.label.x - 11}
+                x2={g.label.x + 11}
+                y1={g.label.y + 7 + (lines.length - 1) * 16}
+                y2={g.label.y + 7 + (lines.length - 1) * 16}
+                className="kundli-house-rule"
+                style={
+                  {
+                    "--draw-length": "22",
+                    "--draw-delay": `${1.2 + h.n * 0.06}s`,
+                  } as React.CSSProperties
+                }
+              />
+            </a>
+          );
+        })}
       </svg>
 
       {/* The centre — where every line of the chart meets — is the one real call to action. */}
       <Link
         href={centre.href}
         title={centre.title}
-        className="kundli-centre absolute top-1/2 left-1/2 flex aspect-square w-[11%] -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full px-[8%] text-center font-display text-[clamp(0.62rem,1vw,0.92rem)] leading-tight font-semibold tracking-[0.12em] uppercase no-underline"
+        className="kundli-centre absolute top-1/2 left-1/2 flex aspect-square w-[13.4%] -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full px-[9%] text-center font-display text-[clamp(0.58rem,0.5rem+0.6vw,0.98rem)] leading-snug font-semibold tracking-[0.16em] uppercase no-underline"
       >
-        <span
-          data-pulse
-          aria-hidden="true"
-          className="kundli-centre-glow absolute inset-0 rounded-full"
-        />
         <span className="relative">{centre.label}</span>
       </Link>
     </nav>
