@@ -1,38 +1,56 @@
 import { cn } from "@/lib/utils";
 
 /**
- * The lit darkness behind the whole document.
+ * The living sky behind the whole document — the site's largest piece of movement.
  *
- * Three layers, and the order is the design:
+ * Five layers, and the order is the design:
  *
- *   1. Two deep vermilion/oxblood washes bedded into the ground — where the page's red actually
- *      lives. Blurred across hundreds of pixels at low alpha, so red is atmosphere rather than a
- *      field behind text, which is the thing that makes a red palette fatiguing.
- *   2. A drifting field of warm-white embers. This is the "white" in red-and-white doing its real
- *      job: light emerging from dark. A flat dark ground reads as a dark UI; embers read as night.
- *   3. A vignette, which is what stops the whole thing feeling like a flat panel.
+ *   1-3. Three aurora washes, each a large soft gradient drifting on its own clock (64s, 92s,
+ *        128s). Because the periods do not divide into one another, the combined pattern does
+ *        not visibly repeat — the colour genuinely moves without ever looking like a loop.
+ *   4.   A drifting field of warm embers, so the dark reads as night rather than as a dark UI.
+ *   5.   A vignette, which is what stops the whole thing feeling like a flat panel.
  *
- * Glass also needs something to refract — `backdrop-filter` over a flat fill is just a tinted
- * rectangle — so this component and the `.glass` utility in globals.css are one decision split
- * across two files.
+ * Everything animates transform only, so the browser composites it on the GPU and the whole sky
+ * costs roughly one layer rather than five repaints. Glass also needs something to refract —
+ * `backdrop-filter` over a flat fill is just a tinted rectangle — so this component and the
+ * `.glass` utility in globals.css are one decision split across two files.
  *
- * Fixed, `pointer-events: none`, behind everything (`-z-10`), entirely decorative: it holds no
- * text, so the server-rendered content is untouched. Every colour is a theme token, so the light
- * ground gets the same construction at much lower intensity rather than a separate treatment.
+ * Fixed, `pointer-events: none`, behind everything (`-z-10`), and entirely decorative: it holds
+ * no text, so the server-rendered content is untouched and `prefers-reduced-motion` simply gets
+ * the same sky standing still. Every colour is a token, so the daylight theme is the same
+ * construction at much lower intensity rather than a separate treatment.
  */
 export function Sky({ className }: { className?: string }) {
   return (
     <div
       aria-hidden="true"
       className={cn("pointer-events-none fixed inset-0 -z-10 overflow-hidden", className)}
-      style={{
-        background:
-          "radial-gradient(105% 70% at 76% -10%, var(--sky-warm), transparent 58%)," +
-          "radial-gradient(95% 65% at 10% 106%, var(--sky-cool), transparent 62%)," +
-          "var(--background)",
-      }}
+      style={{ background: "var(--background)" }}
     >
-      {/* Embers. Eight sizes on one tiled layer: a single paint, no DOM, and `inset: -25%`
+      <div
+        data-aurora="a"
+        className="absolute -inset-[30%]"
+        style={{
+          background: "radial-gradient(38% 34% at 28% 26%, var(--aurora-1), transparent 70%)",
+        }}
+      />
+      <div
+        data-aurora="b"
+        className="absolute -inset-[30%]"
+        style={{
+          background: "radial-gradient(42% 36% at 74% 18%, var(--aurora-2), transparent 72%)",
+        }}
+      />
+      <div
+        data-aurora="c"
+        className="absolute -inset-[30%]"
+        style={{
+          background: "radial-gradient(46% 40% at 56% 88%, var(--aurora-3), transparent 74%)",
+        }}
+      />
+
+      {/* Embers: eight sizes on one tiled layer — a single paint and no DOM. `inset: -25%`
           gives the drift room to move without ever exposing an edge. */}
       <div
         data-drift
@@ -52,16 +70,6 @@ export function Sky({ className }: { className?: string }) {
         }}
       />
 
-      {/* A slow bloom behind the upper third, so the accent has something to glow into. */}
-      <div
-        data-breathe
-        className="absolute inset-0"
-        style={{
-          background: "radial-gradient(50% 38% at 62% 12%, var(--glow), transparent 72%)",
-        }}
-      />
-
-      {/* Vignette last: darkens the corners so the page reads as depth, not as a flat panel. */}
       <div
         className="absolute inset-0"
         style={{

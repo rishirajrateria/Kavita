@@ -20,34 +20,38 @@
 }
 
 @theme inline {
-  /* Primitive ramps → bg-white-100, text-ink-950, border-red-500 … */
-  --color-white-50: var(--white-50);
-  --color-white-100: var(--white-100);
-  --color-white-200: var(--white-200);
-  --color-white-300: var(--white-300);
-  --color-white-400: var(--white-400);
-  --color-white-500: var(--white-500);
-  --color-white-600: var(--white-600);
-  --color-white-700: var(--white-700);
-  --color-white-800: var(--white-800);
-  --color-white-900: var(--white-900);
-  --color-white-950: var(--white-950);
-
-  --color-red-50: var(--red-50);
-  --color-red-100: var(--red-100);
-  --color-red-200: var(--red-200);
-  --color-red-300: var(--red-300);
-  --color-red-400: var(--red-400);
-  --color-red-500: var(--red-500);
-  --color-red-600: var(--red-600);
-  --color-red-700: var(--red-700);
-  --color-red-800: var(--red-800);
-  --color-red-900: var(--red-900);
-  --color-red-950: var(--red-950);
-
+  /* Primitive ramps → bg-ink-950, text-bone-100, border-brass-500 … */
+  --color-ink-700: var(--ink-700);
+  --color-ink-800: var(--ink-800);
   --color-ink-900: var(--ink-900);
   --color-ink-950: var(--ink-950);
   --color-ink-1000: var(--ink-1000);
+
+  --color-bone-50: var(--bone-50);
+  --color-bone-100: var(--bone-100);
+  --color-bone-200: var(--bone-200);
+  --color-bone-300: var(--bone-300);
+  --color-bone-400: var(--bone-400);
+  --color-bone-500: var(--bone-500);
+  --color-bone-600: var(--bone-600);
+  --color-bone-700: var(--bone-700);
+
+  --color-brass-100: var(--brass-100);
+  --color-brass-200: var(--brass-200);
+  --color-brass-300: var(--brass-300);
+  --color-brass-400: var(--brass-400);
+  --color-brass-500: var(--brass-500);
+  --color-brass-600: var(--brass-600);
+  --color-brass-700: var(--brass-700);
+
+  --color-aqua-300: var(--aqua-300);
+  --color-aqua-400: var(--aqua-400);
+  --color-aqua-500: var(--aqua-500);
+  --color-aqua-700: var(--aqua-700);
+
+  --color-ember-300: var(--ember-300);
+  --color-ember-400: var(--ember-400);
+  --color-ember-500: var(--ember-500);
 
   /* Semantic (shadcn contract) */
   --color-background: var(--background);
@@ -251,23 +255,23 @@
     --card-foreground: var(--surface-inverse-foreground);
     --popover: var(--surface-inverse-deep);
     --popover-foreground: var(--surface-inverse-foreground);
-    --primary: var(--white-100);
+    --primary: var(--bone-100);
     --primary-foreground: var(--ink-1000);
-    --primary-hover: var(--white-50);
+    --primary-hover: var(--bone-50);
     --secondary: var(--surface-inverse-muted);
     --secondary-foreground: var(--surface-inverse-foreground);
     --muted: var(--surface-inverse-muted);
     --muted-foreground: var(--surface-inverse-muted-foreground);
     --accent: var(--surface-inverse-accent);
-    --accent-foreground: var(--red-200);
-    --accent-strong: var(--red-300);
-    --accent-border: var(--red-400);
+    --accent-foreground: var(--brass-200);
+    --accent-strong: var(--brass-300);
+    --accent-border: var(--brass-500);
     --border: var(--surface-inverse-border);
-    --input: var(--white-600);
-    --ring: var(--red-300);
+    --input: var(--bone-600);
+    --ring: var(--brass-300);
     --surface-muted: var(--surface-inverse-deep);
-    --selection: var(--red-800);
-    --selection-foreground: var(--white-50);
+    --selection: var(--brass-700);
+    --selection-foreground: var(--bone-50);
     --shadow-color: 0 0 0;
   }
   [data-tone="inverse"][data-depth="deep"] {
@@ -572,5 +576,159 @@
   }
   [data-drift] {
     animation: drift 150s linear infinite alternate;
+  }
+}
+
+/* ==============================================================================================
+ * THE MOTION SYSTEM
+ *
+ * The brief is that magic is movement. So the page is never entirely still — but every one of
+ * these animates TRANSFORM or OPACITY only (both composited on the GPU, so a dozen of them cost
+ * about one), every one RESTS in its finished state, and not one adds a byte of JavaScript.
+ * The page is complete and readable before a single frame runs, which is what keeps crawlers,
+ * `prefers-reduced-motion` visitors and JS-disabled readers getting the whole thing.
+ *
+ * Durations are deliberately long. If you can watch a loop and notice it repeat, it is too fast.
+ * ============================================================================================ */
+
+@keyframes aurora-a {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(6%, -4%, 0) scale(1.18);
+  }
+}
+@keyframes aurora-b {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) scale(1.1);
+  }
+  50% {
+    transform: translate3d(-7%, 5%, 0) scale(1);
+  }
+}
+@keyframes aurora-c {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) scale(1.05) rotate(0deg);
+  }
+  50% {
+    transform: translate3d(4%, 6%, 0) scale(1.2) rotate(8deg);
+  }
+}
+
+/* A sheen that crosses a glass plate every so often, the way light crosses real glass. */
+@keyframes sheen {
+  0%,
+  88%,
+  100% {
+    transform: translateX(-120%) skewX(-18deg);
+    opacity: 0;
+  }
+  92% {
+    opacity: 1;
+  }
+  96% {
+    transform: translateX(220%) skewX(-18deg);
+    opacity: 0.6;
+  }
+}
+
+/* Slow levitation, for the one object a section is built around. */
+@keyframes levitate {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+/* A point travelling around the instrument's rim. */
+@keyframes orbit {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* A soft pulse for the brahmasthan and other single points of light. */
+@keyframes pulse-glow {
+  0%,
+  100% {
+    opacity: 0.55;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.45);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  [data-aurora="a"] {
+    animation: aurora-a 64s ease-in-out infinite;
+  }
+  [data-aurora="b"] {
+    animation: aurora-b 92s ease-in-out infinite;
+  }
+  [data-aurora="c"] {
+    animation: aurora-c 128s ease-in-out infinite;
+  }
+
+  [data-levitate] {
+    animation: levitate 9s ease-in-out infinite;
+  }
+  [data-orbit] {
+    transform-origin: 50% 50%;
+    animation: orbit var(--orbit-duration, 90s) linear infinite;
+  }
+  [data-pulse] {
+    animation: pulse-glow 5s ease-in-out infinite;
+  }
+
+  .sheen {
+    position: relative;
+    overflow: hidden;
+  }
+  .sheen::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: 40%;
+    pointer-events: none;
+    background: linear-gradient(
+      100deg,
+      transparent,
+      color-mix(in srgb, var(--glass-spec) 70%, transparent),
+      transparent
+    );
+    animation: sheen 14s ease-in-out infinite;
+    animation-delay: var(--sheen-delay, 0s);
+  }
+
+  /*
+   * Scroll-linked parallax on backdrop layers. `animation-timeline: scroll()` is CSS-only — no
+   * observers, no JS — and is feature-queried, so a browser without it simply gets the element
+   * at rest rather than a broken position.
+   */
+  @supports (animation-timeline: scroll()) {
+    [data-parallax] {
+      animation: parallax-drift linear both;
+      animation-timeline: scroll();
+    }
+  }
+}
+
+@keyframes parallax-drift {
+  from {
+    transform: translateY(calc(var(--parallax-depth, 40px) * -1));
+  }
+  to {
+    transform: translateY(var(--parallax-depth, 40px));
   }
 }

@@ -7,7 +7,7 @@ import { Slot } from "radix-ui";
  * Button.
  *
  * Gold is the only loud colour on the site and it belongs here, on exactly one action per view:
- * `variant="gold"` is the gradient vermilion CTA — the one loud element on a page. (The name is
+ * `variant="gold"` is the gradient brass CTA — the one loud element on a page. (The name is
  * kept because every call site uses it; the colour is a token, not the variant name.) Everything
  * else is quieter by design — `gold-outline` is the hairline second action, `outline` is a
  * frosted pane that lets the wash
@@ -27,9 +27,10 @@ const buttonVariants = cva(
         primary:
           "bg-primary text-primary-foreground shadow-xs hover:-translate-y-px hover:bg-primary-hover hover:shadow-sm",
         /**
-         * The gradient vermilion call to action. The gradient runs red-600 → red-700 rather
-         * than starting brighter, because white on red-500 measures only 3.99:1 — at this
-         * ramp the lightest point of the gradient still carries text at 5.60:1.
+         * The gradient brass call to action — lamp light, and the one loud thing on a page.
+         * `--shadow-cta` gives it a real bloom rather than a drop shadow, because a CTA that
+         * glows is the difference between a dark page and a lit one. Ink on brass measures
+         * 10.47:1 at the gradient's darkest point.
          */
         gold: "bg-(image:--cta-gradient) text-cta-foreground shadow-cta hover:-translate-y-px hover:bg-(image:--cta-gradient-hover) hover:shadow-cta-hover",
         /** Antique-gold hairline outline — the quieter gold action. */
