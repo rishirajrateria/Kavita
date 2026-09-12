@@ -1,21 +1,24 @@
 import { cn } from "@/lib/utils";
 
 /**
- * The gradient wash behind the whole document.
+ * The lit darkness behind the whole document.
  *
- * This exists for two reasons, in order of importance:
+ * Three layers, and the order is the design:
  *
- *   1. Glass needs something to refract. A `backdrop-filter` over a flat fill produces a
- *      slightly tinted rectangle and nothing else; over two drifting colour washes it produces
- *      the depth the direction depends on. The `.glass` utility in globals.css and this
- *      component are one design decision in two files.
- *   2. It is where the palette's red actually lives. Red is the accent, not a field colour —
- *      putting it here, at 14–30% alpha and blurred across hundreds of pixels, gives the page
- *      its warmth without ever laying saturated red behind body text.
+ *   1. Two deep vermilion/oxblood washes bedded into the ground — where the page's red actually
+ *      lives. Blurred across hundreds of pixels at low alpha, so red is atmosphere rather than a
+ *      field behind text, which is the thing that makes a red palette fatiguing.
+ *   2. A drifting field of warm-white embers. This is the "white" in red-and-white doing its real
+ *      job: light emerging from dark. A flat dark ground reads as a dark UI; embers read as night.
+ *   3. A vignette, which is what stops the whole thing feeling like a flat panel.
  *
- * Fixed, `pointer-events: none`, behind everything (`-z-10`), and entirely decorative: it holds
- * no text, so the server-rendered content is untouched. Both washes come from theme tokens, so
- * it re-themes with the rest of the site rather than being a light-only flourish.
+ * Glass also needs something to refract — `backdrop-filter` over a flat fill is just a tinted
+ * rectangle — so this component and the `.glass` utility in globals.css are one decision split
+ * across two files.
+ *
+ * Fixed, `pointer-events: none`, behind everything (`-z-10`), entirely decorative: it holds no
+ * text, so the server-rendered content is untouched. Every colour is a theme token, so the light
+ * ground gets the same construction at much lower intensity rather than a separate treatment.
  */
 export function Sky({ className }: { className?: string }) {
   return (
@@ -24,22 +27,45 @@ export function Sky({ className }: { className?: string }) {
       className={cn("pointer-events-none fixed inset-0 -z-10 overflow-hidden", className)}
       style={{
         background:
-          "radial-gradient(110% 70% at 78% -8%, var(--sky-warm), transparent 60%)," +
-          "radial-gradient(95% 65% at 12% 104%, var(--sky-cool), transparent 64%)," +
+          "radial-gradient(105% 70% at 76% -10%, var(--sky-warm), transparent 58%)," +
+          "radial-gradient(95% 65% at 10% 106%, var(--sky-cool), transparent 62%)," +
           "var(--background)",
       }}
     >
-      {/*
-       * A third, slowly drifting wash. `inset: -25%` gives the drift room to move without ever
-       * exposing an edge, and the whole field costs one paint and no DOM.
-       */}
+      {/* Embers. Eight sizes on one tiled layer: a single paint, no DOM, and `inset: -25%`
+          gives the drift room to move without ever exposing an edge. */}
       <div
         data-drift
-        className="absolute -inset-[25%] opacity-70"
+        className="absolute -inset-[25%]"
         style={{
-          background:
-            "radial-gradient(42% 38% at 30% 28%, var(--sky-warm), transparent 70%)," +
-            "radial-gradient(38% 34% at 72% 66%, var(--sky-cool), transparent 72%)",
+          backgroundSize: "44rem 44rem",
+          backgroundImage: [
+            "radial-gradient(1.5px 1.5px at 18% 22%, var(--star), transparent)",
+            "radial-gradient(1.1px 1.1px at 74% 14%, var(--star), transparent)",
+            "radial-gradient(1.3px 1.3px at 42% 62%, var(--star), transparent)",
+            "radial-gradient(1px 1px at 88% 48%, var(--star), transparent)",
+            "radial-gradient(1.2px 1.2px at 8% 74%, var(--star), transparent)",
+            "radial-gradient(1px 1px at 58% 86%, var(--star), transparent)",
+            "radial-gradient(1.6px 1.6px at 30% 38%, var(--star), transparent)",
+            "radial-gradient(1px 1px at 66% 70%, var(--star), transparent)",
+          ].join(","),
+        }}
+      />
+
+      {/* A slow bloom behind the upper third, so the accent has something to glow into. */}
+      <div
+        data-breathe
+        className="absolute inset-0"
+        style={{
+          background: "radial-gradient(50% 38% at 62% 12%, var(--glow), transparent 72%)",
+        }}
+      />
+
+      {/* Vignette last: darkens the corners so the page reads as depth, not as a flat panel. */}
+      <div
+        className="absolute inset-0"
+        style={{
+          background: "radial-gradient(125% 95% at 50% 42%, transparent 52%, var(--vignette) 100%)",
         }}
       />
     </div>

@@ -1,26 +1,28 @@
 /*
- * Design tokens — RED AND WHITE.
+ * Design tokens — VERMILION ON BLACK.
  *
- * White-dominant with vermilion as the accent. Red is the auspicious colour in Indian ritual,
- * which is why it suits this practice; it is also fatiguing in quantity and reads as an alert
- * state when over-used, so it is spent on one CTA, the hairlines, and soft gradient washes —
- * never as a field behind text.
+ * Red and white, with white as the LIGHT rather than the ground. The white-ground version of
+ * this palette read as corporate, because a bright, crisp, high-contrast page is structurally a
+ * landing page whatever colour its accent is. Mysticism comes from darkness and luminosity, not
+ * from hue — so the ground is oxblood-black, the text is warm white, and the vermilion glows
+ * out of it rather than sitting on it.
  *
- *   1. bare `:root`               → white (the default, whatever the OS prefers)
- *   2. `:root[data-theme="dark"]` → deep red-black, chosen in the toggle and persisted
+ *   1. bare `:root`                → oxblood black (the default, whatever the OS prefers)
+ *   2. `:root[data-theme="light"]` → the white ground, chosen in the toggle and persisted
  *
  * Layout order inside `:root` matters: the theme-independent tokens (type scale, spacing,
- * radii, shadows, motion) are declared BEFORE the colour block, because the dark block
- * re-points four of the shadow tokens and must win. Components never read a primitive ramp —
- * they read the semantic tokens, which is why retargeting this one file re-themes the site.
+ * radii, shadows, motion) are declared BEFORE the colour block, because that block re-points
+ * four of the shadow tokens and must win. The light block puts them back. Components never read
+ * a primitive ramp — they read the semantic tokens, which is why retargeting this one file
+ * re-themes the whole site.
  *
- * Every value below was checked against WCAG 2.2 AA on its own ground. Two results drove the
- * palette: white on red-500 is only 3.99:1 and therefore never carries text, and the CTA
- * gradient runs red-600 → red-700 so its lightest point still measures 5.60:1.
+ * Measured, not guessed. On the black ground: foreground 18.39:1, muted 8.43:1, accent 9.91:1.
+ * On white: ink 18.21:1, muted 6.35:1, red accent text 5.60:1. White on red-500 is only 3.99:1,
+ * which is why the CTA gradient never starts brighter than red-600 on the light theme.
  */
 
 :root {
-  color-scheme: light;
+  color-scheme: dark;
 
   /* ------------------------------------------------------------------ */
   /* Primitive ramps                                                     */
@@ -55,7 +57,7 @@
   /* Ink — near-black with a red bias, so text belongs to the same family */
   --ink-900: #33201d;
   --ink-950: #1c100e;
-  --ink-1000: #14090a;
+  --ink-1000: #0d0406;
 
   /* Status hues, warm-leaning so they sit in the same world as the accent */
   --green-400: #6bbf88;
@@ -148,6 +150,108 @@
   --ease-in: cubic-bezier(0.4, 0, 1, 1);
 
   /* ------------------------------------------------------------------ */
+  /* ------------------------------------------------------------------ */
+  /* Semantic colour tokens (shadcn/ui contract) — oxblood black        */
+  /* ------------------------------------------------------------------ */
+
+  --background: var(--ink-1000);
+  --foreground: var(--white-100);
+
+  --card: var(--ink-950);
+  --card-foreground: var(--white-100);
+  --popover: var(--ink-950);
+  --popover-foreground: var(--white-100);
+
+  --primary: var(--white-100);
+  --primary-foreground: var(--ink-1000);
+  --primary-hover: var(--white-50);
+
+  --secondary: var(--ink-900);
+  --secondary-foreground: var(--white-100);
+
+  --muted: var(--ink-900);
+  --muted-foreground: var(--white-500);
+
+  --accent: var(--ink-900);
+  --accent-foreground: var(--red-200);
+  --accent-strong: var(--red-300); /* 9.91:1 on the ink ground */
+  --accent-border: var(--red-400);
+
+  --destructive: var(--red-400);
+  --destructive-foreground: var(--ink-1000);
+
+  --border: #3d2523;
+  --input: var(--white-600);
+  --ring: var(--red-300);
+
+  --success: var(--green-400);
+  --success-foreground: var(--ink-1000);
+  --success-soft: #14291d;
+  --warning: var(--amber-400);
+  --warning-foreground: var(--ink-1000);
+  --warning-soft: #2b2211;
+  --error: var(--red-400);
+  --error-foreground: var(--ink-1000);
+  --error-soft: #2f1513;
+  --info: var(--blue-400);
+  --info-foreground: var(--ink-1000);
+  --info-soft: #151f36;
+
+  --cta: var(--red-500);
+  --cta-hover: var(--red-400);
+  --cta-foreground: var(--ink-1000);
+  --cta-gradient: linear-gradient(135deg, var(--red-400) 0%, var(--red-600) 100%);
+  --cta-gradient-hover: linear-gradient(135deg, var(--red-300) 0%, var(--red-500) 100%);
+
+  --surface-muted: var(--ink-950);
+  --surface-gold: #2a1412;
+
+  --surface-inverse: #120809;
+  --surface-inverse-deep: #0d0506;
+  --surface-inverse-foreground: var(--white-100);
+  --surface-inverse-muted-foreground: var(--white-500);
+  --surface-inverse-border: rgb(244 112 95 / 0.26);
+  --surface-inverse-card: rgb(255 255 255 / 0.04);
+  --surface-inverse-muted: rgb(255 255 255 / 0.06);
+  --surface-inverse-accent: rgb(244 112 95 / 0.14);
+
+  --selection: var(--red-800);
+  --selection-foreground: var(--white-50);
+
+  --shadow-color: 0 0 0;
+  --shadow-accent: 0 0 0 1px rgb(255 159 147 / 0.32), 0 8px 24px -8px rgb(255 159 147 / 0.2);
+  --shadow-cta: 0 10px 26px -10px rgb(224 72 58 / 0.5);
+  --shadow-cta-hover: 0 16px 32px -10px rgb(224 72 58 / 0.6);
+
+  /* Glass on ink is a dark plate, not a bright one. */
+  --glass-fill: rgb(255 255 255 / 0.05);
+  --glass-edge: rgb(255 255 255 / 0.11);
+  --glass-spec: rgb(255 255 255 / 0.2);
+  --glass-shade: rgb(0 0 0 / 0.35);
+  --glass-shadow: 0 24px 60px -20px rgb(0 0 0 / 0.75);
+  --glass-blur: 24px;
+  --glass-saturate: 150%;
+
+  --mandala: rgb(255 159 147 / 0.2);
+  --mandala-strong: rgb(255 159 147 / 0.4);
+  /* Warm white embers, not red dots — the white in "red and white" is the light. */
+  --star: rgb(255 226 219 / 0.6);
+  --sky-warm: rgb(224 72 58 / 0.3);
+  --sky-cool: rgb(120 21 12 / 0.45);
+  /* Bloom behind the accent. Glow is what separates mystical from merely dark. */
+  --glow: rgb(244 112 95 / 0.3);
+  --vignette: rgb(0 0 0 / 0.55);
+}
+
+/* ---------------------------------------------------------------------- */
+/* White ground — opt-in only                                              */
+/*                                                                         */
+/* Not switched on by `prefers-color-scheme`: the dark ground is the        */
+/* identity, and this is the alternate the toggle offers. Complete and      */
+/* WCAG-AA in its own right.                                               */
+/* ---------------------------------------------------------------------- */
+:root[data-theme="light"] {
+  color-scheme: light;
   /* Semantic colour tokens (shadcn/ui contract) — white                 */
   /* ------------------------------------------------------------------ */
   --background: var(--white-50);
@@ -238,101 +342,14 @@
   --star: rgb(194 44 31 / 0.18);
   --sky-warm: rgb(255 159 147 / 0.3);
   --sky-cool: rgb(224 72 58 / 0.14);
-}
+  --glow: rgb(224 72 58 / 0.14);
+  --vignette: rgb(90 20 14 / 0.06);
 
-/* ---------------------------------------------------------------------- */
-/* Deep red-black — opt-in only                                            */
-/*                                                                         */
-/* Not switched on by `prefers-color-scheme`: white is the identity here,   */
-/* reached by default, and this is the alternate the toggle offers.         */
-/* ---------------------------------------------------------------------- */
-:root[data-theme="dark"] {
-  color-scheme: dark;
-
-  --background: var(--ink-1000);
-  --foreground: var(--white-100);
-
-  --card: var(--ink-950);
-  --card-foreground: var(--white-100);
-  --popover: var(--ink-950);
-  --popover-foreground: var(--white-100);
-
-  --primary: var(--white-100);
-  --primary-foreground: var(--ink-1000);
-  --primary-hover: var(--white-50);
-
-  --secondary: var(--ink-900);
-  --secondary-foreground: var(--white-100);
-
-  --muted: var(--ink-900);
-  --muted-foreground: var(--white-500);
-
-  --accent: var(--ink-900);
-  --accent-foreground: var(--red-200);
-  --accent-strong: var(--red-300); /* 9.91:1 on the ink ground */
-  --accent-border: var(--red-400);
-
-  --destructive: var(--red-400);
-  --destructive-foreground: var(--ink-1000);
-
-  --border: #3d2523;
-  --input: var(--white-600);
-  --ring: var(--red-300);
-
-  --success: var(--green-400);
-  --success-foreground: var(--ink-1000);
-  --success-soft: #14291d;
-  --warning: var(--amber-400);
-  --warning-foreground: var(--ink-1000);
-  --warning-soft: #2b2211;
-  --error: var(--red-400);
-  --error-foreground: var(--ink-1000);
-  --error-soft: #2f1513;
-  --info: var(--blue-400);
-  --info-foreground: var(--ink-1000);
-  --info-soft: #151f36;
-
-  --cta: var(--red-500);
-  --cta-hover: var(--red-400);
-  --cta-foreground: var(--ink-1000);
-  --cta-gradient: linear-gradient(135deg, var(--red-400) 0%, var(--red-600) 100%);
-  --cta-gradient-hover: linear-gradient(135deg, var(--red-300) 0%, var(--red-500) 100%);
-
-  --surface-muted: var(--ink-950);
-  --surface-gold: #2a1412;
-
-  --surface-inverse: #120809;
-  --surface-inverse-deep: #0d0506;
-  --surface-inverse-foreground: var(--white-100);
-  --surface-inverse-muted-foreground: var(--white-500);
-  --surface-inverse-border: rgb(244 112 95 / 0.26);
-  --surface-inverse-card: rgb(255 255 255 / 0.04);
-  --surface-inverse-muted: rgb(255 255 255 / 0.06);
-  --surface-inverse-accent: rgb(244 112 95 / 0.14);
-
-  --selection: var(--red-800);
-  --selection-foreground: var(--white-50);
-
-  /* Restore the four shadow tokens the light block declares. */
-  --shadow-color: 0 0 0;
-  --shadow-accent: 0 0 0 1px rgb(255 159 147 / 0.32), 0 8px 24px -8px rgb(255 159 147 / 0.2);
-  --shadow-cta: 0 10px 26px -10px rgb(224 72 58 / 0.5);
-  --shadow-cta-hover: 0 16px 32px -10px rgb(224 72 58 / 0.6);
-
-  /* Glass on ink is a dark plate, not a bright one. */
-  --glass-fill: rgb(255 255 255 / 0.05);
-  --glass-edge: rgb(255 255 255 / 0.11);
-  --glass-spec: rgb(255 255 255 / 0.2);
-  --glass-shade: rgb(0 0 0 / 0.35);
-  --glass-shadow: 0 24px 60px -20px rgb(0 0 0 / 0.75);
-  --glass-blur: 24px;
-  --glass-saturate: 150%;
-
-  --mandala: rgb(255 159 147 / 0.18);
-  --mandala-strong: rgb(255 159 147 / 0.34);
-  --star: rgb(255 159 147 / 0.25);
-  --sky-warm: rgb(224 72 58 / 0.2);
-  --sky-cool: rgb(120 21 12 / 0.3);
+  /* Restore the four shadow tokens the black block re-points. */
+  --shadow-color: 28 16 14; /* ink-950 rgb */
+  --shadow-accent: 0 0 0 1px rgb(194 44 31 / 0.28), 0 8px 24px -8px rgb(194 44 31 / 0.22);
+  --shadow-cta: 0 10px 26px -10px rgb(194 44 31 / 0.45), 0 1px 2px rgb(28 16 14 / 0.08);
+  --shadow-cta-hover: 0 16px 32px -10px rgb(194 44 31 / 0.55), 0 1px 2px rgb(28 16 14 / 0.08);
 }
 
 /* ---------------------------------------------------------------------- */

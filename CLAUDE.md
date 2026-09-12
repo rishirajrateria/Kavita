@@ -91,20 +91,26 @@ Each service page must state whether it is astrology-led, vastu-led, or integrat
 - Core Web Vitals targets (mobile 4G): **LCP < 2.0s, INP < 200ms, CLS < 0.05**.
 - Total JS on a geo landing page: **under 100KB gzipped**.
 
-## 4. Design direction — "Vermilion"
+## 4. Design direction — "Vermilion on Black"
 
 > **Superseded twice (2026-09-12).** The original brief asked for light premium-calm. The client
 > rejected that and asked for mystical/midnight, which was built. The client then asked for
 > _"the entire website to be red and white - glass like feel and gradient and minimal design"_.
-> That is the direction now, and it replaces the Midnight Observatory section entirely. The
-> standard carried through all three revisions is unchanged: a practice a Dubai finance
-> professional and a Delhi homemaker would both trust.
+> That was first built on a white ground; the client's verdict was _"doesnt feel mystical feels
+> corporate"_, which was correct — a bright, crisp, high-contrast page is structurally a landing
+> page whatever colour its accent is. The palette stayed red and white; the GROUND inverted. The
+> standard carried through every revision is unchanged: a practice a Dubai finance professional
+> and a Delhi homemaker would both trust.
 
-**White-dominant, vermilion as accent.** Red is the auspicious colour in Indian ritual — sindoor,
-temple red, wedding red — so it belongs to this practice rather than being decoration. It is also
-fatiguing in quantity and starts reading as an alert state when over-used. The whole palette is
-built around that tension: **red never sits as a field behind body text.** It is spent on one
-gradient CTA, the hairlines, the linework, and soft gradient washes.
+**Red and white, with white as the LIGHT rather than the ground.** The ground is oxblood-black,
+the text is warm white, and the vermilion glows out of the dark rather than sitting on a page.
+**Mysticism comes from darkness and luminosity, not from hue** — that is the lesson the white
+version taught, and it is the single most important sentence in this section.
+
+Red is the auspicious colour in Indian ritual — sindoor, temple red, wedding red — so it belongs
+to this practice rather than being decoration. It is also fatiguing in quantity and reads as an
+alert state when over-used, so **red never sits as a field behind body text.** It is spent on one
+gradient CTA, the hairlines, the linework, and blurred washes bedded into the ground.
 
 | Avoid                                                                                                                      | Aim for                                                                                                                                       |
 | -------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -112,9 +118,11 @@ gradient CTA, the hairlines, the linework, and soft gradient washes.
 
 ### The five decisions that define it
 
-1. **White is the identity.** `:root` is white and `prefers-color-scheme` does **not** switch it
-   off. A deep red-black alternate is reachable only through the explicit theme toggle (persisted
-   by `<ThemeScript />`). Same architecture as before, inverted content.
+1. **The dark ground is the identity.** `:root` is oxblood-black and `prefers-color-scheme` does
+   **not** switch it off. The white ground survives complete and WCAG-AA as the toggle's
+   alternate (persisted by `<ThemeScript />`). Note the trap this fixes: the `dark:` variant in
+   globals.css matches `:root:not([data-theme="light"])`, so **whichever palette is the bare
+   `:root` default must be the dark one**, or `dark:` utilities fire on the light theme.
 2. **Red is an accent, never a field.** `--accent-strong` (red-600) is red text on white at
    5.60:1. Full-bleed inverse bands invert to **ink**, not to red — a red field behind copy is the
    fatigue this palette exists to avoid.
@@ -122,9 +130,16 @@ gradient CTA, the hairlines, the linework, and soft gradient washes.
    white on red-500 measures only **3.99:1**; at this ramp the gradient's lightest point still
    carries text at 5.60:1. `<Sky />` supplies two more washes at 14–30% alpha, blurred across
    hundreds of pixels — that is where the page's warmth comes from.
-4. **Glass over the wash.** `.glass` is a bright frosted sheet with a red-tinted lower lip on
-   white, and a dark plate on ink. It only reads as glass when something sits behind it, so
-   `<Sky />` is half the contract. Section tones stay translucent panes, never opaque bands.
+4. **Glass over the lit darkness.** `.glass` is a dark plate on the black ground and a bright
+   frosted sheet on white. It only reads as glass when something sits behind it, so `<Sky />` is
+   half the contract. Section tones stay translucent panes, never opaque bands.
+
+   `<Sky />` is three layers and the order is the design: two deep washes bedded into the ground,
+   a drifting field of **warm-white embers** (this is the "white" doing its real job — light
+   emerging from dark; a flat dark ground reads as a dark UI, embers read as night), and a
+   vignette so the page reads as depth rather than a flat panel. `--glow` is the bloom the accent
+   glows into; **glow is what separates mystical from merely dark.**
+
 5. **The Instrument and the motion are unchanged.** `<Instrument />` (kundli over vastu purusha
    mandala) still leads the home page and simply re-inks to vermilion, because it is line art
    reading semantic tokens. Motion is still CSS-only, still additive, still resting in its
