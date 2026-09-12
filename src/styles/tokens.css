@@ -1,75 +1,69 @@
 /*
- * Design tokens — MIDNIGHT FIRST.
+ * Design tokens — RED AND WHITE.
  *
- * The practice is read at night: the default palette is deep indigo with antique gold, and
- * parchment is the alternate. Midnight is a committed identity rather than a preference, so
- * the OS setting does not switch it off — only an explicit choice does:
+ * White-dominant with vermilion as the accent. Red is the auspicious colour in Indian ritual,
+ * which is why it suits this practice; it is also fatiguing in quantity and reads as an alert
+ * state when over-used, so it is spent on one CTA, the hairlines, and soft gradient washes —
+ * never as a field behind text.
  *
- *   1. bare `:root`                → midnight (the default, whatever the OS prefers)
- *   2. `:root[data-theme="light"]` → parchment, chosen in the toggle, persisted by ThemeScript
+ *   1. bare `:root`               → white (the default, whatever the OS prefers)
+ *   2. `:root[data-theme="dark"]` → deep red-black, chosen in the toggle and persisted
  *
  * Layout order inside `:root` matters: the theme-independent tokens (type scale, spacing,
- * radii, shadows, motion) are declared BEFORE the midnight colour block, because that block
- * re-points four of the shadow tokens and must win. `[data-theme="light"]` puts those four
- * back. Components never read a primitive ramp directly — they read the semantic tokens, which
- * is why retargeting this one file re-themes the entire site.
+ * radii, shadows, motion) are declared BEFORE the colour block, because the dark block
+ * re-points four of the shadow tokens and must win. Components never read a primitive ramp —
+ * they read the semantic tokens, which is why retargeting this one file re-themes the site.
+ *
+ * Every value below was checked against WCAG 2.2 AA on its own ground. Two results drove the
+ * palette: white on red-500 is only 3.99:1 and therefore never carries text, and the CTA
+ * gradient runs red-600 → red-700 so its lightest point still measures 5.60:1.
  */
 
 :root {
-  color-scheme: dark;
+  color-scheme: light;
+
   /* ------------------------------------------------------------------ */
   /* Primitive ramps                                                     */
   /* ------------------------------------------------------------------ */
 
-  /* Ivory / parchment — warm neutrals */
-  --ivory-50: #fdfbf7;
-  --ivory-100: #f8f4ec;
-  --ivory-200: #efe8db;
-  --ivory-300: #e2d8c6;
-  --ivory-400: #c9bca5;
-  --ivory-500: #a89a80;
-  --ivory-600: #857760;
-  --ivory-700: #665a47;
-  --ivory-800: #47402f;
-  --ivory-900: #2e2a20;
-  --ivory-950: #1c1912;
+  /* Warm near-whites, biased very slightly red so the ground reads chosen */
+  --white-50: #fffcfb;
+  --white-100: #fff6f4;
+  --white-200: #fcedea;
+  --white-300: #f5deda;
+  --white-400: #e6c4be;
+  --white-500: #c9a19a;
+  --white-600: #a67b73;
+  --white-700: #7a554f;
+  --white-800: #543733;
+  --white-900: #33201d;
+  --white-950: #1c100e;
 
-  /* Midnight indigo */
-  --indigo-50: #f0f1f8;
-  --indigo-100: #dee0f0;
-  --indigo-200: #bec2e0;
-  --indigo-300: #959cc8;
-  --indigo-400: #6b74ab;
-  --indigo-500: #4d5690;
-  --indigo-600: #3a4275;
-  --indigo-700: #2c325c;
-  --indigo-800: #1f2445;
-  --indigo-900: #161a33;
-  --indigo-950: #0e1124;
+  /* Vermilion — the accent, and the only loud colour on the site */
+  --red-50: #fff4f2;
+  --red-100: #ffe4e0;
+  --red-200: #ffc8c0;
+  --red-300: #ff9f93;
+  --red-400: #f4705f;
+  --red-500: #e0483a;
+  --red-600: #c22c1f;
+  --red-700: #9e1e13;
+  --red-800: #78150c;
+  --red-900: #530e08;
+  --red-950: #2c0604;
 
-  /* Antique gold — the restrained accent */
-  --gold-50: #fbf7ec;
-  --gold-100: #f5ecd1;
-  --gold-200: #ead9a3;
-  --gold-300: #dcc276;
-  --gold-400: #cba84f;
-  --gold-500: #b8923a;
-  --gold-600: #9a7530;
-  --gold-700: #7a5c27;
-  --gold-800: #5c4520;
-  --gold-900: #3f2f17;
-  --gold-950: #261c0d;
+  /* Ink — near-black with a red bias, so text belongs to the same family */
+  --ink-900: #33201d;
+  --ink-950: #1c100e;
+  --ink-1000: #14090a;
 
-  /* Status hues (muted, warm-leaning) */
-  --red-400: #f28b82;
-  --red-600: #b3261e;
-  --green-400: #7fc79a;
-  --green-700: #2e6b3f;
-  --amber-400: #e3b23c;
-  --amber-700: #8a5a0b;
+  /* Status hues, warm-leaning so they sit in the same world as the accent */
+  --green-400: #6bbf88;
+  --green-700: #2f7d4f;
+  --amber-400: #e8b44a;
+  --amber-700: #96681a;
   --blue-400: #8fb3e8;
   --blue-700: #2f5d9e;
-
   /* ------------------------------------------------------------------ */
   /* Typography — fluid steps (clamp between 360px and 1280px viewports) */
   /* ------------------------------------------------------------------ */
@@ -124,9 +118,9 @@
   --radius-full: 9999px;
 
   /* ------------------------------------------------------------------ */
-  /* Shadows — warm, soft, indigo-tinted                                 */
+  /* Shadows — warm, soft, ink-tinted                                    */
   /* ------------------------------------------------------------------ */
-  --shadow-color: 14 17 36; /* indigo-950 rgb */
+  --shadow-color: 28 16 14; /* ink-950 rgb */
   --shadow-xs: 0 1px 2px rgb(var(--shadow-color) / 0.05);
   --shadow-sm: 0 1px 3px rgb(var(--shadow-color) / 0.07), 0 1px 2px rgb(var(--shadow-color) / 0.05);
   --shadow-md:
@@ -136,9 +130,9 @@
   --shadow-xl:
     0 24px 48px -12px rgb(var(--shadow-color) / 0.16),
     0 8px 16px -8px rgb(var(--shadow-color) / 0.08);
-  --shadow-gold: 0 0 0 1px rgb(184 146 58 / 0.35), 0 8px 24px -8px rgb(184 146 58 / 0.25);
-  --shadow-cta: 0 10px 24px -10px rgb(184 146 58 / 0.55), 0 1px 2px rgb(14 17 36 / 0.08);
-  --shadow-cta-hover: 0 14px 28px -10px rgb(184 146 58 / 0.6), 0 1px 2px rgb(14 17 36 / 0.08);
+  --shadow-accent: 0 0 0 1px rgb(194 44 31 / 0.28), 0 8px 24px -8px rgb(194 44 31 / 0.22);
+  --shadow-cta: 0 10px 26px -10px rgb(194 44 31 / 0.45), 0 1px 2px rgb(28 16 14 / 0.08);
+  --shadow-cta-hover: 0 16px 32px -10px rgb(194 44 31 / 0.55), 0 1px 2px rgb(28 16 14 / 0.08);
 
   /* ------------------------------------------------------------------ */
   /* Motion                                                              */
@@ -152,203 +146,193 @@
   --ease-emphasized: cubic-bezier(0.3, 0, 0, 1);
   --ease-out: cubic-bezier(0, 0, 0.2, 1);
   --ease-in: cubic-bezier(0.4, 0, 1, 1);
-  /* ------------------------------------------------------------------ */
-  /* Semantic colour tokens (shadcn/ui contract) — midnight              */
-  /* ------------------------------------------------------------------ */
-
-  --background: var(--indigo-950);
-  --foreground: var(--ivory-100);
-
-  --card: var(--indigo-900);
-  --card-foreground: var(--ivory-100);
-  --popover: var(--indigo-900);
-  --popover-foreground: var(--ivory-100);
-
-  --primary: var(--ivory-100);
-  --primary-foreground: var(--indigo-950);
-  --primary-hover: var(--ivory-50);
-
-  --secondary: var(--indigo-800);
-  --secondary-foreground: var(--ivory-100);
-
-  --muted: var(--indigo-800);
-  --muted-foreground: var(--ivory-400);
-
-  --accent: var(--indigo-800);
-  --accent-foreground: var(--gold-200);
-  --accent-strong: var(--gold-300);
-  --accent-border: var(--gold-400);
-
-  --destructive: var(--red-400);
-  --destructive-foreground: var(--indigo-950);
-
-  --border: var(--indigo-700);
-  --input: var(--indigo-400);
-  --ring: var(--gold-300);
-
-  --success: var(--green-400);
-  --success-foreground: var(--indigo-950);
-  --success-soft: #16291e;
-  --warning: var(--amber-400);
-  --warning-foreground: var(--indigo-950);
-  --warning-soft: #2b2311;
-  --error: var(--red-400);
-  --error-foreground: var(--indigo-950);
-  --error-soft: #2f1a1a;
-  --info: var(--blue-400);
-  --info-foreground: var(--indigo-950);
-  --info-soft: #15213a;
-
-  --cta: var(--gold-400);
-  --cta-hover: var(--gold-300);
-  --cta-foreground: var(--indigo-950);
-
-  --surface-muted: var(--indigo-900);
-  --surface-gold: #1a1a2c;
-
-  /* In dark mode an inverse band goes a shade deeper than the page, never to ivory. */
-  --surface-inverse: #0b0e20;
-  --surface-inverse-deep: #080a19;
-  --surface-inverse-foreground: var(--ivory-100);
-  --surface-inverse-muted-foreground: var(--ivory-400);
-  --surface-inverse-border: rgb(203 168 79 / 0.24);
-  --surface-inverse-card: rgb(253 251 247 / 0.035);
-  --surface-inverse-muted: rgb(253 251 247 / 0.06);
-  --surface-inverse-accent: rgb(203 168 79 / 0.14);
-
-  --selection: var(--gold-700);
-  --selection-foreground: var(--ivory-50);
-
-  --shadow-color: 0 0 0;
-  --shadow-gold: 0 0 0 1px rgb(220 194 118 / 0.35), 0 8px 24px -8px rgb(220 194 118 / 0.2);
-  --shadow-cta: 0 10px 24px -10px rgb(203 168 79 / 0.45);
-  --shadow-cta-hover: 0 14px 28px -10px rgb(203 168 79 / 0.5);
 
   /* ------------------------------------------------------------------ */
-  /* Glass — frosted panels over the night sky                           */
+  /* Semantic colour tokens (shadcn/ui contract) — white                 */
+  /* ------------------------------------------------------------------ */
+  --background: var(--white-50);
+  --foreground: var(--ink-950);
+
+  --card: var(--white-100);
+  --card-foreground: var(--ink-950);
+  --popover: var(--white-50);
+  --popover-foreground: var(--ink-950);
+
+  --primary: var(--ink-950);
+  --primary-foreground: var(--white-50);
+  --primary-hover: var(--ink-900);
+
+  --secondary: var(--white-200);
+  --secondary-foreground: var(--ink-950);
+
+  --muted: var(--white-200);
+  --muted-foreground: var(--white-700); /* 6.35:1 on the page ground */
+
+  --accent: var(--red-50);
+  --accent-foreground: var(--red-800);
+  --accent-strong: var(--red-600); /* red text on white, 5.60:1 */
+  --accent-border: var(--red-400);
+
+  --destructive: var(--red-700);
+  --destructive-foreground: var(--white-50);
+
+  --border: var(--white-300);
+  --input: #c9a19a;
+  --ring: var(--red-500);
+
+  --success: var(--green-700);
+  --success-foreground: var(--white-50);
+  --success-soft: #e8f2ec;
+  --warning: var(--amber-700);
+  --warning-foreground: var(--white-50);
+  --warning-soft: #faefd8;
+  --error: var(--red-700);
+  --error-foreground: var(--white-50);
+  --error-soft: #ffe9e6;
+  --info: var(--blue-700);
+  --info-foreground: var(--white-50);
+  --info-soft: #e7eef9;
+
+  /* The one loud thing on the page. A gradient, because the brief asks for one and because
+     a flat red field at this size is where "premium" turns into "alert". */
+  --cta: var(--red-600);
+  --cta-hover: var(--red-700);
+  --cta-foreground: var(--white-50); /* 5.60:1 at the gradient's lightest point */
+  --cta-gradient: linear-gradient(135deg, var(--red-600) 0%, var(--red-700) 100%);
+  --cta-gradient-hover: linear-gradient(135deg, var(--red-700) 0%, var(--red-800) 100%);
+
+  --surface-muted: var(--white-100);
+  --surface-gold: var(--red-50);
+
+  /* Inverse bands invert to ink, not to red: a full-bleed red field behind body copy is
+     exactly the fatigue this palette is built to avoid. */
+  --surface-inverse: var(--ink-950);
+  --surface-inverse-deep: var(--ink-1000);
+  --surface-inverse-foreground: var(--white-100);
+  --surface-inverse-muted-foreground: var(--white-400);
+  --surface-inverse-border: rgb(244 112 95 / 0.28);
+  --surface-inverse-card: rgb(255 255 255 / 0.04);
+  --surface-inverse-muted: rgb(255 255 255 / 0.07);
+  --surface-inverse-accent: rgb(244 112 95 / 0.16);
+
+  --selection: var(--red-200);
+  --selection-foreground: var(--ink-950);
+
+  /* ------------------------------------------------------------------ */
+  /* Glass — frosted white plates over the gradient wash                 */
   /*                                                                     */
-  /* A panel only reads as glass when something moves behind it, so the  */
-  /* <Sky /> backdrop in the root layout is half of this contract and    */
-  /* the `.glass` utility in globals.css is the other half.              */
+  /* On a white ground the plate is a BRIGHT sheet with a red-tinted     */
+  /* edge; <Sky /> supplies the gradient it refracts.                    */
   /* ------------------------------------------------------------------ */
-  --glass-fill: rgb(255 255 255 / 0.045);
-  --glass-edge: rgb(255 255 255 / 0.1);
-  --glass-spec: rgb(255 255 255 / 0.2); /* specular top lip */
-  --glass-shade: rgb(0 0 0 / 0.35); /* shaded bottom lip */
-  --glass-shadow: 0 24px 60px -20px rgb(0 0 0 / 0.75);
-  --glass-blur: 26px;
-  --glass-saturate: 155%;
+  --glass-fill: rgb(255 255 255 / 0.55);
+  --glass-edge: rgb(255 255 255 / 0.85);
+  --glass-spec: rgb(255 255 255 / 0.95);
+  --glass-shade: rgb(194 44 31 / 0.08);
+  --glass-shadow: 0 24px 60px -24px rgb(90 20 14 / 0.22);
+  --glass-blur: 22px;
+  --glass-saturate: 165%;
 
-  /* Celestial linework: the vastu mandala grid and the drifting starfield */
-  --mandala: rgb(203 168 79 / 0.16);
-  --mandala-strong: rgb(203 168 79 / 0.3);
-  --star: rgb(248 244 236 / 0.75);
-  --sky-warm: rgb(203 168 79 / 0.1);
-  --sky-cool: rgb(70 84 170 / 0.16);
+  /* Linework: the mandala grid, and the two gradient washes behind the page */
+  --mandala: rgb(194 44 31 / 0.16);
+  --mandala-strong: rgb(194 44 31 / 0.32);
+  --star: rgb(194 44 31 / 0.18);
+  --sky-warm: rgb(255 159 147 / 0.3);
+  --sky-cool: rgb(224 72 58 / 0.14);
 }
 
 /* ---------------------------------------------------------------------- */
-/* Parchment — opt-in only                                                 */
+/* Deep red-black — opt-in only                                            */
 /*                                                                         */
-/* Deliberately NOT switched on by `prefers-color-scheme: light`: a         */
-/* mystical site that turns into a white document on a light laptop is not  */
-/* a mystical site. Reached only through the theme toggle.                  */
+/* Not switched on by `prefers-color-scheme`: white is the identity here,   */
+/* reached by default, and this is the alternate the toggle offers.         */
 /* ---------------------------------------------------------------------- */
-:root[data-theme="light"] {
-  color-scheme: light;
-  /* ------------------------------------------------------------------ */
-  /* Semantic colour tokens (shadcn/ui contract)                         */
-  /* ------------------------------------------------------------------ */
-  --background: var(--ivory-50);
-  --foreground: var(--indigo-900);
+:root[data-theme="dark"] {
+  color-scheme: dark;
 
-  --card: var(--ivory-100);
-  --card-foreground: var(--indigo-900);
-  --popover: var(--ivory-50);
-  --popover-foreground: var(--indigo-900);
+  --background: var(--ink-1000);
+  --foreground: var(--white-100);
 
-  --primary: var(--indigo-800);
-  --primary-foreground: var(--ivory-50);
-  --primary-hover: var(--indigo-900);
+  --card: var(--ink-950);
+  --card-foreground: var(--white-100);
+  --popover: var(--ink-950);
+  --popover-foreground: var(--white-100);
 
-  --secondary: var(--ivory-200);
-  --secondary-foreground: var(--indigo-900);
+  --primary: var(--white-100);
+  --primary-foreground: var(--ink-1000);
+  --primary-hover: var(--white-50);
 
-  --muted: var(--ivory-200);
-  --muted-foreground: var(--ivory-700);
+  --secondary: var(--ink-900);
+  --secondary-foreground: var(--white-100);
 
-  --accent: var(--gold-100);
-  --accent-foreground: var(--gold-800);
-  --accent-strong: var(--gold-700); /* gold text on light surfaces (6.00:1) */
-  --accent-border: var(--gold-600); /* gold outline border (4.10:1) */
+  --muted: var(--ink-900);
+  --muted-foreground: var(--white-500);
 
-  --destructive: var(--red-600);
-  --destructive-foreground: var(--ivory-50);
+  --accent: var(--ink-900);
+  --accent-foreground: var(--red-200);
+  --accent-strong: var(--red-300); /* 9.91:1 on the ink ground */
+  --accent-border: var(--red-400);
 
-  --border: var(--ivory-300);
-  --input: #978970; /* input boundary, ~3.1:1 on ivory-50 */
-  --ring: var(--indigo-600);
+  --destructive: var(--red-400);
+  --destructive-foreground: var(--ink-1000);
 
-  /* Status */
-  --success: var(--green-700);
-  --success-foreground: var(--ivory-50);
-  --success-soft: #e6f1e9;
-  --warning: var(--amber-700);
-  --warning-foreground: var(--ivory-50);
-  --warning-soft: #f9efd6;
-  --error: var(--red-600);
-  --error-foreground: var(--ivory-50);
-  --error-soft: #f8e4e2;
-  --info: var(--blue-700);
-  --info-foreground: var(--ivory-50);
-  --info-soft: #e5edf8;
+  --border: #3d2523;
+  --input: var(--white-600);
+  --ring: var(--red-300);
 
-  /* Solid antique-gold call to action (the one loud thing on the page) */
-  --cta: var(--gold-500);
-  --cta-hover: var(--gold-400);
-  --cta-foreground: var(--indigo-950);
+  --success: var(--green-400);
+  --success-foreground: var(--ink-1000);
+  --success-soft: #14291d;
+  --warning: var(--amber-400);
+  --warning-foreground: var(--ink-1000);
+  --warning-soft: #2b2211;
+  --error: var(--red-400);
+  --error-foreground: var(--ink-1000);
+  --error-soft: #2f1513;
+  --info: var(--blue-400);
+  --info-foreground: var(--ink-1000);
+  --info-soft: #151f36;
 
-  /* Surface tones for sections */
-  --surface-muted: var(--ivory-100);
-  --surface-gold: var(--gold-50);
+  --cta: var(--red-500);
+  --cta-hover: var(--red-400);
+  --cta-foreground: var(--ink-1000);
+  --cta-gradient: linear-gradient(135deg, var(--red-400) 0%, var(--red-600) 100%);
+  --cta-gradient-hover: linear-gradient(135deg, var(--red-300) 0%, var(--red-500) 100%);
 
-  /*
-   * Inverse (deep indigo) bands. `[data-tone="inverse"]` in globals.css re-points the
-   * semantic tokens at these so every child component re-themes without a `dark:` class.
-   */
-  --surface-inverse: var(--indigo-900);
-  --surface-inverse-deep: var(--indigo-950);
-  --surface-inverse-foreground: var(--ivory-100);
-  --surface-inverse-muted-foreground: var(--ivory-400);
-  --surface-inverse-border: rgb(203 168 79 / 0.28); /* gold-400 hairline */
-  --surface-inverse-card: rgb(253 251 247 / 0.04); /* glass panel */
-  --surface-inverse-muted: rgb(253 251 247 / 0.07);
-  --surface-inverse-accent: rgb(203 168 79 / 0.14);
+  --surface-muted: var(--ink-950);
+  --surface-gold: #2a1412;
 
-  /* Selection */
-  --selection: var(--gold-200);
-  --selection-foreground: var(--indigo-950);
+  --surface-inverse: #120809;
+  --surface-inverse-deep: #0d0506;
+  --surface-inverse-foreground: var(--white-100);
+  --surface-inverse-muted-foreground: var(--white-500);
+  --surface-inverse-border: rgb(244 112 95 / 0.26);
+  --surface-inverse-card: rgb(255 255 255 / 0.04);
+  --surface-inverse-muted: rgb(255 255 255 / 0.06);
+  --surface-inverse-accent: rgb(244 112 95 / 0.14);
 
-  /* Restore the four shadow tokens the midnight block re-points. */
-  --shadow-color: 14 17 36; /* indigo-950 rgb */
-  --shadow-gold: 0 0 0 1px rgb(184 146 58 / 0.35), 0 8px 24px -8px rgb(184 146 58 / 0.25);
-  --shadow-cta: 0 10px 24px -10px rgb(184 146 58 / 0.55), 0 1px 2px rgb(14 17 36 / 0.08);
-  --shadow-cta-hover: 0 14px 28px -10px rgb(184 146 58 / 0.6), 0 1px 2px rgb(14 17 36 / 0.08);
+  --selection: var(--red-800);
+  --selection-foreground: var(--white-50);
 
-  /* Glass on parchment is a bright frosted sheet, not a dark one. */
-  --glass-fill: rgb(255 255 255 / 0.48);
-  --glass-edge: rgb(255 255 255 / 0.7);
-  --glass-spec: rgb(255 255 255 / 0.95);
-  --glass-shade: rgb(120 100 60 / 0.1);
-  --glass-shadow: 0 24px 60px -24px rgb(40 32 12 / 0.28);
-  --glass-blur: 22px;
+  /* Restore the four shadow tokens the light block declares. */
+  --shadow-color: 0 0 0;
+  --shadow-accent: 0 0 0 1px rgb(255 159 147 / 0.32), 0 8px 24px -8px rgb(255 159 147 / 0.2);
+  --shadow-cta: 0 10px 26px -10px rgb(224 72 58 / 0.5);
+  --shadow-cta-hover: 0 16px 32px -10px rgb(224 72 58 / 0.6);
+
+  /* Glass on ink is a dark plate, not a bright one. */
+  --glass-fill: rgb(255 255 255 / 0.05);
+  --glass-edge: rgb(255 255 255 / 0.11);
+  --glass-spec: rgb(255 255 255 / 0.2);
+  --glass-shade: rgb(0 0 0 / 0.35);
+  --glass-shadow: 0 24px 60px -20px rgb(0 0 0 / 0.75);
+  --glass-blur: 24px;
   --glass-saturate: 150%;
 
-  --mandala: rgb(143 109 28 / 0.22);
-  --mandala-strong: rgb(143 109 28 / 0.38);
-  --star: rgb(18 22 44 / 0.3);
-  --sky-warm: rgb(143 109 28 / 0.1);
-  --sky-cool: rgb(70 84 170 / 0.08);
+  --mandala: rgb(255 159 147 / 0.18);
+  --mandala-strong: rgb(255 159 147 / 0.34);
+  --star: rgb(255 159 147 / 0.25);
+  --sky-warm: rgb(224 72 58 / 0.2);
+  --sky-cool: rgb(120 21 12 / 0.3);
 }
 
 /* ---------------------------------------------------------------------- */

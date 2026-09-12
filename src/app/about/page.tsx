@@ -313,7 +313,7 @@ function Portrait({ name }: { name: string }) {
         aria-hidden="true"
         className="pointer-events-none absolute top-1/2 left-1/2 size-[150%] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(closest-side,rgb(184_146_58_/_0.16),transparent_72%)] dark:bg-[radial-gradient(closest-side,rgb(203_168_79_/_0.12),transparent_72%)]"
       />
-      <div className="arch arch-frame relative overflow-hidden border border-accent-border/60 bg-linear-to-b from-ivory-50 to-ivory-200 shadow-lg dark:from-indigo-900 dark:to-indigo-950">
+      <div className="arch arch-frame relative overflow-hidden border border-accent-border/60 bg-linear-to-b from-card to-muted shadow-lg">
         <Image
           src={PRACTITIONER.photo.src}
           width={PRACTITIONER.photo.width}

@@ -7,8 +7,10 @@ import { Slot } from "radix-ui";
  * Button.
  *
  * Gold is the only loud colour on the site and it belongs here, on exactly one action per view:
- * `variant="gold"` is the solid antique-gold CTA. Everything else is quieter by design —
- * `gold-outline` is the hairline second action, `outline` is a frosted pane that lets the night
+ * `variant="gold"` is the gradient vermilion CTA — the one loud element on a page. (The name is
+ * kept because every call site uses it; the colour is a token, not the variant name.) Everything
+ * else is quieter by design — `gold-outline` is the hairline second action, `outline` is a
+ * frosted pane that lets the wash
  * sky through instead of punching an opaque hole in it, and `ghost` is a link with a target.
  *
  * Lift on hover is 1px here (a button is a small object; 2px is the card's move), over
@@ -24,8 +26,12 @@ const buttonVariants = cva(
           "bg-primary text-primary-foreground shadow-xs hover:-translate-y-px hover:bg-primary-hover hover:shadow-sm",
         primary:
           "bg-primary text-primary-foreground shadow-xs hover:-translate-y-px hover:bg-primary-hover hover:shadow-sm",
-        /** Solid antique gold with midnight text — the one loud call to action on a page. */
-        gold: "bg-cta text-cta-foreground shadow-cta hover:-translate-y-px hover:bg-cta-hover hover:shadow-cta-hover",
+        /**
+         * The gradient vermilion call to action. The gradient runs red-600 → red-700 rather
+         * than starting brighter, because white on red-500 measures only 3.99:1 — at this
+         * ramp the lightest point of the gradient still carries text at 5.60:1.
+         */
+        gold: "bg-(image:--cta-gradient) text-cta-foreground shadow-cta hover:-translate-y-px hover:bg-(image:--cta-gradient-hover) hover:shadow-cta-hover",
         /** Antique-gold hairline outline — the quieter gold action. */
         "gold-outline":
           "border border-accent-border/70 bg-transparent text-accent-strong hover:-translate-y-px hover:border-accent-border hover:bg-accent/60 hover:text-accent-foreground",

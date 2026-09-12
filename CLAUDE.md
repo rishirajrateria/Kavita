@@ -91,61 +91,58 @@ Each service page must state whether it is astrology-led, vastu-led, or integrat
 - Core Web Vitals targets (mobile 4G): **LCP < 2.0s, INP < 200ms, CLS < 0.05**.
 - Total JS on a geo landing page: **under 100KB gzipped**.
 
-## 4. Design direction — "Midnight Observatory"
+## 4. Design direction — "Vermilion"
 
-> **Superseded (2026-09-12).** The original brief asked for a light, premium-calm, explicitly
-> _non_-mystical look. The client reviewed the built site and rejected it: _"i dont like the
-> website design at all its astrology and vastu service it needs to be mystical with animations
-> and all and very minimalistic also apple glass like feel and effect."_ That is the direction
-> now. What follows replaces the old ivory-editorial section entirely. The one thing carried
-> forward unchanged is the standard it must still meet: a practice a Dubai finance professional
-> and a Delhi homemaker would both trust.
+> **Superseded twice (2026-09-12).** The original brief asked for light premium-calm. The client
+> rejected that and asked for mystical/midnight, which was built. The client then asked for
+> _"the entire website to be red and white - glass like feel and gradient and minimal design"_.
+> That is the direction now, and it replaces the Midnight Observatory section entirely. The
+> standard carried through all three revisions is unchanged: a practice a Dubai finance
+> professional and a Delhi homemaker would both trust.
 
-**Mystical, but the restrained kind.** The register is a night observatory, not a fairground
-fortune teller. Deep indigo, antique gold linework, enormous silence between elements, and motion
-so slow it reads as atmosphere. The old "avoid" list still holds in full — it is what separates
-this from kitsch.
+**White-dominant, vermilion as accent.** Red is the auspicious colour in Indian ritual — sindoor,
+temple red, wedding red — so it belongs to this practice rather than being decoration. It is also
+fatiguing in quantity and starts reading as an alert state when over-used. The whole palette is
+built around that tension: **red never sits as a field behind body text.** It is spent on one
+gradient CTA, the hairlines, the linework, and soft gradient washes.
 
-| Still avoid                                                                                                                                         | Now aim for                                                                                                                                                                                    |
-| --------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Purple gradients, glowing crystal balls, neon zodiac wheels, stock galaxy photos, Comic-Sans-adjacent "mystical" fonts, anything that twinkles fast | Near-black indigo ground, antique-gold hairlines, frosted glass panes, one continuous starfield, a kundli-over-mandala centrepiece, vast negative space, Cormorant at 300 weight against Karla |
+| Avoid                                                                                                                      | Aim for                                                                                                                                       |
+| -------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
+| Saturated red panels behind paragraphs, red-on-red, pure #FF0000, crystal balls, neon zodiac wheels, anything that flashes | Warm near-white ground, vermilion hairlines and linework, frosted white glass, blurred gradient washes, one gradient CTA, vast negative space |
 
-### The four decisions that define it
+### The five decisions that define it
 
-1. **Midnight is an identity, not a preference.** `:root` is midnight and
-   `prefers-color-scheme` does **not** switch it off — a mystical site that turns into a white
-   document on a light laptop is not a mystical site. Parchment stays a complete, WCAG-AA palette
-   reachable only through the explicit theme toggle (persisted by `<ThemeScript />`). This is a
-   deliberate reversal of the old "light palette on `:root`" rule.
-2. **Glass over sky.** `.glass` (globals.css) is a frosted plate: specular top lip, shaded bottom
-   lip, diagonal sweep, `backdrop-filter` blur + saturate. It only reads as glass when something
-   moves behind it, so `<Sky />` — the fixed starfield in the root layout — is half the contract,
-   not decoration. Section tones are therefore **translucent panes over one continuous sky**, never
-   opaque bands.
-3. **The Instrument is the thesis.** `<Instrument />` draws a North Indian kundli (square,
-   diagonals, inscribed diamond) over the vastu purusha mandala (9×9 padas, brahmasthan open at
-   centre), ringed by twelve house ticks. It is the one graphic no other practitioner could use,
-   because no one else reads both together. It leads the home page in place of a portrait; the
-   photograph carries E-E-A-T on `/about`, where a reader has asked who she is.
-4. **Motion is additive, never load-bearing.** Every animation is CSS, and every element **rests
-   in its finished state** — `stroke-dashoffset: 0`, full opacity. The page is complete before a
-   single frame runs, so crawlers, `prefers-reduced-motion` visitors and anyone with JS disabled
-   get the whole thing. **No animation may add JavaScript to a page.** The ring turns once every
-   four minutes; the starfield drifts over 150s. If motion is noticeable as motion, it is too fast.
+1. **White is the identity.** `:root` is white and `prefers-color-scheme` does **not** switch it
+   off. A deep red-black alternate is reachable only through the explicit theme toggle (persisted
+   by `<ThemeScript />`). Same architecture as before, inverted content.
+2. **Red is an accent, never a field.** `--accent-strong` (red-600) is red text on white at
+   5.60:1. Full-bleed inverse bands invert to **ink**, not to red — a red field behind copy is the
+   fatigue this palette exists to avoid.
+3. **The gradient is real but disciplined.** `--cta-gradient` runs red-600 → red-700, because
+   white on red-500 measures only **3.99:1**; at this ramp the gradient's lightest point still
+   carries text at 5.60:1. `<Sky />` supplies two more washes at 14–30% alpha, blurred across
+   hundreds of pixels — that is where the page's warmth comes from.
+4. **Glass over the wash.** `.glass` is a bright frosted sheet with a red-tinted lower lip on
+   white, and a dark plate on ink. It only reads as glass when something sits behind it, so
+   `<Sky />` is half the contract. Section tones stay translucent panes, never opaque bands.
+5. **The Instrument and the motion are unchanged.** `<Instrument />` (kundli over vastu purusha
+   mandala) still leads the home page and simply re-inks to vermilion, because it is line art
+   reading semantic tokens. Motion is still CSS-only, still additive, still resting in its
+   finished state; **no animation may add JavaScript to a page.**
 
 ### Standing rules (unchanged)
 
-- **Aesthetics are non-negotiable** (client mandate, restated). Every new page is
-  screenshot-reviewed at 1440px and 390px, in **both** midnight and parchment, before it is
-  reported done. Never let a page read as a plain document.
-- Build from tokens: CSS custom properties for the full colour scale, type scale, spacing scale,
-  radii, shadows, motion. Every component reads semantic tokens, never a primitive ramp — which is
-  why retargeting `src/styles/tokens.css` re-themes the whole site at once.
-- Accessibility is not optional: WCAG 2.2 AA contrast in **both** themes, visible focus rings, real
-  semantic landmarks, skip link, everything keyboard-reachable, `prefers-reduced-motion` respected.
-- Typography: `--font-cormorant` → `font-serif` (display/headings, 300 weight at display sizes),
-  `--font-karla` → `font-sans` (body). Self-hosted from `@fontsource-variable`; never a Google
-  Fonts request.
+- **Aesthetics are non-negotiable** (client mandate). Every new page is screenshot-reviewed at
+  1440px and 390px, in **both** themes, before it is reported done. Never a plain document.
+- Build from tokens. Components read semantic tokens, never a primitive ramp — which is why this
+  palette change touched `src/styles/tokens.css` and only two component files.
+- Accessibility is not optional: WCAG 2.2 AA in **both** themes, visible focus rings, semantic
+  landmarks, skip link, keyboard reachable, `prefers-reduced-motion` respected.
+- Typography: `--font-cormorant` → `font-serif`, `--font-karla` → `font-sans`. Self-hosted from
+  `@fontsource-variable`; never a Google Fonts request.
+- Ramp names are `--white-*`, `--red-*`, `--ink-*`. The old `--ivory/--indigo/--gold` ramps are
+  gone; `--shadow-gold` is now `--shadow-accent`. The `variant="gold"` button keeps its name only
+  because every call site uses it — the colour is a token, not the variant name.
 
 ## 5. Site map and URL structure
 

@@ -42,7 +42,7 @@ export function ChoiceCard({
         "hover:border-accent-border hover:bg-background focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50",
         "disabled:cursor-not-allowed disabled:opacity-50 motion-safe:hover:-translate-y-0.5",
         selected
-          ? "border-accent-border bg-accent/40 shadow-gold ring-1 ring-accent-border/60"
+          ? "border-accent-border bg-accent/40 shadow-accent ring-1 ring-accent-border/60"
           : "border-border",
         className,
       )}

@@ -35,7 +35,7 @@ const SHADOWS = [
   "shadow-md",
   "shadow-lg",
   "shadow-xl",
-  "shadow-gold",
+  "shadow-accent",
 ] as const;
 
 export function TypographySection() {
