@@ -330,12 +330,14 @@ export const HUB = {
   houses: [
     {
       n: 1,
+      planet: "sun",
       label: "Your kundli",
       title: "1st house — the self. Your birth chart, read in full.",
       href: "/services/kundli-analysis",
     },
     {
       n: 2,
+      planet: "mercury",
       label: "Life reading",
       title:
         "2nd house — family and what you hold. The integrated life reading: chart and home together.",
@@ -343,66 +345,76 @@ export const HUB = {
     },
     {
       n: 3,
+      planet: "mars",
       label: "Learn",
       title: "3rd house — communication and learning. Articles and the glossary.",
       href: "/learn",
     },
     {
       n: 4,
+      planet: "moon",
       label: "Home vastu",
       title: "4th house — home and property. Vastu for the place you live.",
       href: "/services/vastu-for-home",
     },
     {
       n: 5,
+      planet: "jupiter",
       label: "Muhurat",
       title: "5th house — what you begin. Auspicious timing for a start.",
       href: "/services/muhurat-selection",
     },
     {
       n: 6,
+      planet: "saturn",
       label: "Remedies",
       title: "6th house — obstacles and health. Gemstone and remedial guidance.",
       href: "/services/gemstone-and-remedial-guidance",
     },
     {
       n: 7,
+      planet: "venus",
       label: "Match making",
       title: "7th house — partnership. Kundli milan for marriage.",
       href: "/services/kundli-milan",
     },
     {
       n: 8,
+      planet: "ketu",
       label: "Follow-up",
       title: "8th house — turning points. A follow-up session when life changes.",
       href: "/services/follow-up-session",
     },
     {
       n: 9,
+      planet: "jupiter",
       label: "About Kavita",
       title: "9th house — the teacher. Who Astrologer Kavita is and how she works.",
       href: "/about",
     },
     {
       n: 10,
+      planet: "saturn",
       label: "Career",
       title: "10th house — career and public life. Career and business consultation.",
       href: "/services/career-and-business-consultation",
     },
     {
       n: 11,
+      planet: "jupiter",
       label: "Office vastu",
       title: "11th house — gains and enterprise. Vastu for offices, shops and factories.",
       href: "/services/vastu-for-commercial",
     },
     {
       n: 12,
+      planet: "rahu",
       label: "From abroad",
       title: "12th house — distant lands. Consult online from anywhere in the world.",
       href: "/contact",
     },
   ],
-  hint: "Hover or tap a house to see what it opens.",
+  hint: "Each house carries its planet. Hover or tap one to see what it opens.",
 } as const;
 
 export const INSTRUMENTS = {

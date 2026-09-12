@@ -11,9 +11,10 @@ import { cn } from "@/lib/utils";
  *        into one another, so the combined pattern never visibly repeats — the colour genuinely
  *        moves without ever reading as a loop. Violet sits high like the galaxy's core, rose
  *        drifts across the middle, gold pools along the horizon.
- *   4-5. Two star fields: a dense faint one that reads as the Milky Way's dust, and a sparser
- *        bright one for the stars you would actually pick out. They drift at different speeds
- *        and the whole field turns once in ten minutes, so the sky is never still.
+ *   4-7. Four star fields: a dense faint one that reads as the Milky Way's dust and drifts,
+ *        and three bright ones that TWINKLE — each blinking on its own clock (2.9s, 4.3s, 6.1s,
+ *        periods that don't divide) and offset so different stars blink. The whole field also
+ *        turns once in ten minutes.
  *   6.   A vignette, which is what stops it feeling like a flat panel.
  *
  * Everything animates transform only, so the browser composites the whole sky on the GPU at
@@ -84,23 +85,60 @@ export function Sky({ className }: { className?: string }) {
           }}
         />
 
-        {/* Sparse bright field — the stars you would pick out. Larger tile, slower drift. */}
+        {/* Bright stars, layer 1: blinks on its own clock, offset so different stars twinkle. */}
         <div
-          data-aurora="b"
+          data-twinkle="1"
           className="absolute -inset-[60%]"
           style={{
             backgroundSize: "44rem 44rem",
+            backgroundPosition: "0 0",
             backgroundImage: [
-              "radial-gradient(1.6px 1.6px at 18% 22%, var(--star), transparent)",
-              "radial-gradient(1.1px 1.1px at 74% 14%, var(--star), transparent)",
-              "radial-gradient(1.4px 1.4px at 42% 62%, var(--star), transparent)",
-              "radial-gradient(1px 1px at 88% 48%, var(--star), transparent)",
-              "radial-gradient(1.2px 1.2px at 8% 74%, var(--star), transparent)",
-              "radial-gradient(1px 1px at 58% 86%, var(--star), transparent)",
-              "radial-gradient(1.8px 1.8px at 30% 38%, var(--star), transparent)",
-              "radial-gradient(1px 1px at 66% 70%, var(--star), transparent)",
-              "radial-gradient(1.3px 1.3px at 51% 8%, var(--star), transparent)",
-              "radial-gradient(1px 1px at 95% 90%, var(--star), transparent)",
+              "radial-gradient(1.9px 1.9px at 18% 22%, var(--star), transparent)",
+              "radial-gradient(1.3px 1.3px at 74% 14%, var(--star), transparent)",
+              "radial-gradient(1.6px 1.6px at 42% 62%, var(--star), transparent)",
+              "radial-gradient(1.2px 1.2px at 88% 48%, var(--star), transparent)",
+              "radial-gradient(1.4px 1.4px at 8% 74%, var(--star), transparent)",
+              "radial-gradient(1.2px 1.2px at 58% 86%, var(--star), transparent)",
+              "radial-gradient(2.1px 2.1px at 30% 38%, var(--star), transparent)",
+              "radial-gradient(1.2px 1.2px at 66% 70%, var(--star), transparent)",
+            ].join(","),
+          }}
+        />
+        {/* Bright stars, layer 2: blinks on its own clock, offset so different stars twinkle. */}
+        <div
+          data-twinkle="2"
+          className="absolute -inset-[60%]"
+          style={{
+            backgroundSize: "37rem 37rem",
+            backgroundPosition: "9rem 5rem",
+            backgroundImage: [
+              "radial-gradient(1.9px 1.9px at 18% 22%, var(--star), transparent)",
+              "radial-gradient(1.3px 1.3px at 74% 14%, var(--star), transparent)",
+              "radial-gradient(1.6px 1.6px at 42% 62%, var(--star), transparent)",
+              "radial-gradient(1.2px 1.2px at 88% 48%, var(--star), transparent)",
+              "radial-gradient(1.4px 1.4px at 8% 74%, var(--star), transparent)",
+              "radial-gradient(1.2px 1.2px at 58% 86%, var(--star), transparent)",
+              "radial-gradient(2.1px 2.1px at 30% 38%, var(--star), transparent)",
+              "radial-gradient(1.2px 1.2px at 66% 70%, var(--star), transparent)",
+            ].join(","),
+          }}
+        />
+        {/* Bright stars, layer 3: blinks on its own clock, offset so different stars twinkle. */}
+        <div
+          data-twinkle="3"
+          className="absolute -inset-[60%]"
+          style={{
+            backgroundSize: "51rem 51rem",
+            backgroundPosition: "3rem 14rem",
+            backgroundImage: [
+              "radial-gradient(1.9px 1.9px at 18% 22%, var(--star), transparent)",
+              "radial-gradient(1.3px 1.3px at 74% 14%, var(--star), transparent)",
+              "radial-gradient(1.6px 1.6px at 42% 62%, var(--star), transparent)",
+              "radial-gradient(1.2px 1.2px at 88% 48%, var(--star), transparent)",
+              "radial-gradient(1.4px 1.4px at 8% 74%, var(--star), transparent)",
+              "radial-gradient(1.2px 1.2px at 58% 86%, var(--star), transparent)",
+              "radial-gradient(2.1px 2.1px at 30% 38%, var(--star), transparent)",
+              "radial-gradient(1.2px 1.2px at 66% 70%, var(--star), transparent)",
             ].join(","),
           }}
         />

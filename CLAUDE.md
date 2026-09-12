@@ -114,7 +114,14 @@ mean in Vedic astrology: 1st (self) → your kundli; 2nd → the integrated life
 vastu; **12th (distant lands) → consult from abroad**. The centre, where every line meets, is
 _Book a reading_. `src/components/motifs/kundli-nav.tsx`; mapping in `HUB` in
 `src/content/home.ts`. Twelve real `<a>` links inside one SVG — crawlable, keyboard-reachable,
-no JavaScript.
+no JavaScript. **Drawn as a 3:2 rectangle**, as a real North Indian chart is (a square is a screen
+convenience; a circle stretched to fit it looked exactly like that and was removed). **Each house
+carries its traditional signifying planet** (`src/components/motifs/planets.tsx` — Sun for the
+1st, Moon for the 4th, Venus for the 7th, Rahu for the 12th…), drawn above its label in the serif,
+glowing in that planet's colour on hover, and **set as the pointer** (`public/cursors/*.png`, 32px,
+with the SVG as fallback) so moving between houses visibly changes the planet under the hand.
+Regenerate the PNGs from the SVGs with a headless-Chromium screenshot if the drawings change;
+keep `planets.tsx` and `public/cursors/*.svg` in step.
 
 **Pictures first, one line under each.** After the hub: the Convergence figure (chart and floor
 plan carried into one point), the Vimshottari dasha timeline ("when, not only what" — the
@@ -137,9 +144,10 @@ saturated ever sits behind body copy.
 ### Motion (`src/app/globals.css`, `sky.tsx`)
 
 Magic is movement, so the page is never entirely still: three sky washes on 64/92/128s clocks
-(periods that don't divide, so it never visibly loops), two star fields drifting at different
-speeds, the chart drawing itself, a rim turning once in four minutes, a point orbiting it, the
-centre breathing, sheen crossing glass, levitation and scroll parallax. Rules that outrank taste:
+(periods that don't divide, so it never visibly loops), a dust field drifting under three fields
+of stars that **twinkle** on their own clocks, the whole sky turning once in ten minutes, the chart
+drawing itself and then light **flowing along its lines for good**, a point travelling the frame,
+the centre breathing, sheen crossing glass, levitation and scroll parallax. Rules that outrank taste:
 **transform and opacity only** (GPU-composited); **everything rests in its finished state**
 (nothing parked at `opacity: 0` — `.reveal` once hid every heading below the fold); **no
 animation may add JavaScript to a page**; slow enough that a loop is never noticed as a loop.

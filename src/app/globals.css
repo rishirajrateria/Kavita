@@ -747,13 +747,23 @@
   transition: fill var(--duration-base) var(--ease-standard);
 }
 .kundli-nav .kundli-house-label {
-  font-size: 11px; /* user units; the phone override below enlarges it */
+  font-size: 15px; /* user units; the phone override below enlarges it */
   fill: var(--foreground);
-  font-family: var(--font-sans);
-  font-weight: 600;
-  letter-spacing: 0.02em;
+  font-family: var(--font-serif);
+  font-weight: 500;
+  letter-spacing: 0.04em;
   pointer-events: none;
   transition: fill var(--duration-base) var(--ease-standard);
+}
+.kundli-nav .kundli-house-planet {
+  pointer-events: none;
+  transform-box: fill-box;
+  transform-origin: center;
+  transition: transform var(--duration-slow) var(--ease-emphasized);
+}
+.kundli-nav .kundli-house:hover .kundli-house-planet,
+.kundli-nav .kundli-house:focus-visible .kundli-house-planet {
+  transform: scale(1.35);
 }
 .kundli-nav .kundli-house-number {
   font-size: 7px;
@@ -763,11 +773,12 @@
 }
 .kundli-nav .kundli-house:hover .kundli-house-fill,
 .kundli-nav .kundli-house:focus-visible .kundli-house-fill {
-  fill: var(--surface-inverse-accent);
+  /* Each house glows in its own planet's colour; --house-glow is set inline per house. */
+  fill: color-mix(in srgb, var(--house-glow, var(--accent-strong)) 22%, transparent);
 }
 .kundli-nav .kundli-house:hover .kundli-house-label,
 .kundli-nav .kundli-house:focus-visible .kundli-house-label {
-  fill: var(--accent-strong);
+  fill: var(--house-glow, var(--accent-strong));
 }
 .kundli-nav .kundli-house:focus-visible .kundli-house-fill {
   stroke: var(--ring);
@@ -812,9 +823,52 @@
  * px reads px as user units, so a larger value here enlarges the labels only at phone width. */
 @media (max-width: 640px) {
   .kundli-nav .kundli-house-label {
-    font-size: 14.5px;
+    font-size: 19px;
   }
   .kundli-nav .kundli-house-number {
-    font-size: 8.5px;
+    font-size: 9px;
+  }
+}
+
+/* Twinkle: real blinking, on three clocks whose periods do not divide, so the sky never settles
+ * into a rhythm. Opacity only, so it composites. */
+@keyframes twinkle {
+  0%,
+  100% {
+    opacity: 0.25;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+/* A point of light travelling the chart's own frame — the rectangle, not a fitted ellipse. */
+@keyframes travel {
+  to {
+    offset-distance: 100%;
+  }
+}
+@media (prefers-reduced-motion: no-preference) {
+  [data-twinkle="1"] {
+    animation: twinkle 2.9s ease-in-out infinite;
+  }
+  [data-twinkle="2"] {
+    animation: twinkle 4.3s ease-in-out infinite;
+    animation-delay: -1.7s;
+  }
+  [data-twinkle="3"] {
+    animation: twinkle 6.1s ease-in-out infinite;
+    animation-delay: -3.2s;
+  }
+  @supports (offset-path: path("M0 0L1 1")) {
+    [data-travel] {
+      offset-path: path("M48 48H552V352H48Z");
+      offset-rotate: 0deg;
+      animation: travel var(--travel-duration, 38s) linear infinite;
+    }
+  }
+}
+@supports not (offset-path: path("M0 0L1 1")) {
+  [data-travel] {
+    display: none;
   }
 }
