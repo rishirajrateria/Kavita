@@ -12,8 +12,8 @@ import { cn } from "@/lib/utils";
  *        moves without ever reading as a loop. Violet sits high like the galaxy's core, rose
  *        drifts across the middle, gold pools along the horizon.
  *   4-5. Two star fields: a dense faint one that reads as the Milky Way's dust, and a sparser
- *        bright one for the stars you would actually pick out. They drift at different speeds,
- *        which is what gives the sky depth rather than the look of a single wallpaper.
+ *        bright one for the stars you would actually pick out. They drift at different speeds
+ *        and the whole field turns once in ten minutes, so the sky is never still.
  *   6.   A vignette, which is what stops it feeling like a flat panel.
  *
  * Everything animates transform only, so the browser composites the whole sky on the GPU at
@@ -58,49 +58,53 @@ export function Sky({ className }: { className?: string }) {
         }}
       />
 
-      {/* Dense faint field — the galaxy's dust. Tiled small so it reads as thousands. */}
-      <div
-        data-drift
-        className="absolute -inset-[25%]"
-        style={{
-          backgroundSize: "19rem 19rem",
-          backgroundImage: [
-            "radial-gradient(0.8px 0.8px at 12% 18%, var(--star-faint), transparent)",
-            "radial-gradient(0.7px 0.7px at 63% 9%, var(--star-faint), transparent)",
-            "radial-gradient(0.9px 0.9px at 38% 44%, var(--star-faint), transparent)",
-            "radial-gradient(0.7px 0.7px at 84% 37%, var(--star-faint), transparent)",
-            "radial-gradient(0.8px 0.8px at 21% 71%, var(--star-faint), transparent)",
-            "radial-gradient(0.7px 0.7px at 55% 83%, var(--star-faint), transparent)",
-            "radial-gradient(0.9px 0.9px at 92% 66%, var(--star-faint), transparent)",
-            "radial-gradient(0.7px 0.7px at 47% 27%, var(--star-faint), transparent)",
-            "radial-gradient(0.8px 0.8px at 73% 55%, var(--star-faint), transparent)",
-            "radial-gradient(0.7px 0.7px at 6% 52%, var(--star-faint), transparent)",
-            "radial-gradient(0.8px 0.8px at 30% 93%, var(--star-faint), transparent)",
-            "radial-gradient(0.7px 0.7px at 97% 13%, var(--star-faint), transparent)",
-          ].join(","),
-        }}
-      />
+      {/* The whole star field turns once every ten minutes — slow enough never to read as
+          spinning, fast enough that the sky is visibly alive. Oversized so no corner shows. */}
+      <div data-turn style={{ ["--turn-duration" as string]: "600s" }} className="absolute inset-0">
+        {/* Dense faint field — the galaxy's dust. Tiled small so it reads as thousands. */}
+        <div
+          data-drift
+          className="absolute -inset-[60%]"
+          style={{
+            backgroundSize: "19rem 19rem",
+            backgroundImage: [
+              "radial-gradient(0.8px 0.8px at 12% 18%, var(--star-faint), transparent)",
+              "radial-gradient(0.7px 0.7px at 63% 9%, var(--star-faint), transparent)",
+              "radial-gradient(0.9px 0.9px at 38% 44%, var(--star-faint), transparent)",
+              "radial-gradient(0.7px 0.7px at 84% 37%, var(--star-faint), transparent)",
+              "radial-gradient(0.8px 0.8px at 21% 71%, var(--star-faint), transparent)",
+              "radial-gradient(0.7px 0.7px at 55% 83%, var(--star-faint), transparent)",
+              "radial-gradient(0.9px 0.9px at 92% 66%, var(--star-faint), transparent)",
+              "radial-gradient(0.7px 0.7px at 47% 27%, var(--star-faint), transparent)",
+              "radial-gradient(0.8px 0.8px at 73% 55%, var(--star-faint), transparent)",
+              "radial-gradient(0.7px 0.7px at 6% 52%, var(--star-faint), transparent)",
+              "radial-gradient(0.8px 0.8px at 30% 93%, var(--star-faint), transparent)",
+              "radial-gradient(0.7px 0.7px at 97% 13%, var(--star-faint), transparent)",
+            ].join(","),
+          }}
+        />
 
-      {/* Sparse bright field — the stars you would pick out. Larger tile, slower drift. */}
-      <div
-        data-aurora="b"
-        className="absolute -inset-[25%]"
-        style={{
-          backgroundSize: "44rem 44rem",
-          backgroundImage: [
-            "radial-gradient(1.6px 1.6px at 18% 22%, var(--star), transparent)",
-            "radial-gradient(1.1px 1.1px at 74% 14%, var(--star), transparent)",
-            "radial-gradient(1.4px 1.4px at 42% 62%, var(--star), transparent)",
-            "radial-gradient(1px 1px at 88% 48%, var(--star), transparent)",
-            "radial-gradient(1.2px 1.2px at 8% 74%, var(--star), transparent)",
-            "radial-gradient(1px 1px at 58% 86%, var(--star), transparent)",
-            "radial-gradient(1.8px 1.8px at 30% 38%, var(--star), transparent)",
-            "radial-gradient(1px 1px at 66% 70%, var(--star), transparent)",
-            "radial-gradient(1.3px 1.3px at 51% 8%, var(--star), transparent)",
-            "radial-gradient(1px 1px at 95% 90%, var(--star), transparent)",
-          ].join(","),
-        }}
-      />
+        {/* Sparse bright field — the stars you would pick out. Larger tile, slower drift. */}
+        <div
+          data-aurora="b"
+          className="absolute -inset-[60%]"
+          style={{
+            backgroundSize: "44rem 44rem",
+            backgroundImage: [
+              "radial-gradient(1.6px 1.6px at 18% 22%, var(--star), transparent)",
+              "radial-gradient(1.1px 1.1px at 74% 14%, var(--star), transparent)",
+              "radial-gradient(1.4px 1.4px at 42% 62%, var(--star), transparent)",
+              "radial-gradient(1px 1px at 88% 48%, var(--star), transparent)",
+              "radial-gradient(1.2px 1.2px at 8% 74%, var(--star), transparent)",
+              "radial-gradient(1px 1px at 58% 86%, var(--star), transparent)",
+              "radial-gradient(1.8px 1.8px at 30% 38%, var(--star), transparent)",
+              "radial-gradient(1px 1px at 66% 70%, var(--star), transparent)",
+              "radial-gradient(1.3px 1.3px at 51% 8%, var(--star), transparent)",
+              "radial-gradient(1px 1px at 95% 90%, var(--star), transparent)",
+            ].join(","),
+          }}
+        />
+      </div>
 
       <div
         className="absolute inset-0"

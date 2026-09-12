@@ -37,11 +37,11 @@ export function Hero({ settings }: { settings: SiteSettings }) {
           </p>
         </div>
 
-        <div className="relative mx-auto mt-10 w-full max-w-[min(92vw,44rem)] sm:mt-12 lg:mt-14">
+        <div className="relative mx-auto mt-10 w-full max-w-[min(94vw,66rem)] sm:mt-12 lg:mt-14">
           {/* A soft bloom behind the hub so it reads as lit from within, not pasted on. */}
           <div
             aria-hidden="true"
-            className="pointer-events-none absolute top-1/2 left-1/2 size-[140%] -translate-x-1/2 -translate-y-1/2 rounded-full"
+            className="pointer-events-none absolute top-1/2 left-1/2 h-[150%] w-[110%] -translate-x-1/2 -translate-y-1/2 rounded-full"
             style={{ background: "radial-gradient(closest-side, var(--glow), transparent 70%)" }}
           />
           <KundliNav houses={HUB.houses} centre={HUB.centre} />

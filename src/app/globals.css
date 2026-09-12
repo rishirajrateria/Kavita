@@ -747,6 +747,7 @@
   transition: fill var(--duration-base) var(--ease-standard);
 }
 .kundli-nav .kundli-house-label {
+  font-size: 11px; /* user units; the phone override below enlarges it */
   fill: var(--foreground);
   font-family: var(--font-sans);
   font-weight: 600;
@@ -755,6 +756,7 @@
   transition: fill var(--duration-base) var(--ease-standard);
 }
 .kundli-nav .kundli-house-number {
+  font-size: 7px;
   fill: var(--muted-foreground);
   font-family: var(--font-serif);
   pointer-events: none;
@@ -788,4 +790,31 @@
   background: radial-gradient(closest-side, var(--glow), transparent 75%);
   transform: scale(1.6);
   pointer-events: none;
+}
+
+/* Lines that keep moving. A dashed overlay of the chart's own lines whose dash pattern travels
+ * along the stroke forever, so light appears to flow around the chart long after it has drawn.
+ * stroke-dashoffset on a handful of paths is cheap; the solid lines beneath never move, so the
+ * figure is complete at rest and reduced-motion visitors simply get a still chart. */
+@keyframes flow {
+  to {
+    stroke-dashoffset: -480;
+  }
+}
+@media (prefers-reduced-motion: no-preference) {
+  [data-flow] {
+    stroke-dasharray: 14 34;
+    animation: flow var(--flow-duration, 40s) linear infinite;
+  }
+}
+
+/* On a phone the 3:2 chart is under 400px wide and its labels shrink with it. SVG text set in
+ * px reads px as user units, so a larger value here enlarges the labels only at phone width. */
+@media (max-width: 640px) {
+  .kundli-nav .kundli-house-label {
+    font-size: 14.5px;
+  }
+  .kundli-nav .kundli-house-number {
+    font-size: 8.5px;
+  }
 }
