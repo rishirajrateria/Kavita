@@ -6,6 +6,7 @@ import { Header } from "@/components/layout/header";
 import { Integrations } from "@/components/layout/integrations";
 import { MobileCtaBar } from "@/components/layout/mobile-cta-bar";
 import { BOOK_HREF } from "@/components/layout/nav-items";
+import { Sky } from "@/components/motifs";
 import { JsonLd } from "@/components/seo/json-ld";
 import { ThemeScript } from "@/components/ui/theme-script";
 import { getCountries, getSameAsUrls, getSiteSettings } from "@/lib/data";
@@ -75,6 +76,8 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
         <ThemeScript />
       </head>
       <body className="flex min-h-full flex-col">
+        {/* The backdrop every .glass panel refracts; decorative, fixed, behind everything. */}
+        <Sky />
         <a href="#main" className="skip-link">
           Skip to content
         </a>

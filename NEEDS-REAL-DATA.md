@@ -131,7 +131,7 @@ fails if any token below disappears from this file while still present in the se
 
 - [ ] `{{LANGUAGES OF CONSULTATION}}` — home key-facts block (`src/content/home.ts`); `site_settings` has no languages column yet, add one when the real list is known.
 - [ ] `{{CONFIRM IN-PERSON AVAILABILITY}}` — home key-facts block; `site_settings.in_person_available` is seeded `false` until the practitioner confirms where she sees clients in person.
-- [ ] `{{PRACTITIONER PHOTO}}` — `public/images/kavita-placeholder.svg` is a labelled placeholder; replace with a professional photograph (portrait, at least 960×1200) and update the hero `alt` text.
+- [ ] `{{PRACTITIONER PHOTO}}` — `public/images/kavita-placeholder.svg` is a labelled placeholder; replace with a professional photograph (portrait, at least 960×1200) and update the `alt` text. Rendered on `/about`; the home hero leads with the kundli-over-mandala Instrument instead, so no placeholder portrait appears above the fold.
 - [ ] Person/ProfessionalService `sameAs` is currently empty because every social URL is a placeholder — fills automatically once real URLs land in `social_links`.
 
 ## 9. Locations — research needed (Phase 2)

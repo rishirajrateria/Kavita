@@ -10,12 +10,18 @@ const sectionVariants = cva("relative w-full", {
       md: "py-section-md",
       lg: "py-section-lg",
     },
+    /*
+     * Tones are TRANSLUCENT, not opaque. The whole site sits on one continuous <Sky /> (root
+     * layout), and an opaque band would paint over it — the rhythm now comes from panes of
+     * differing density over the same night, which is also what gives the glass panels
+     * something to refract. `default` deliberately adds no fill at all.
+     */
     tone: {
-      default: "bg-background text-foreground",
-      muted: "bg-surface-muted text-foreground",
-      gold: "bg-surface-gold text-foreground",
-      /** Deep indigo band. `data-tone="inverse"` re-points every semantic token (globals.css). */
-      inverse: "bg-background text-foreground",
+      default: "text-foreground",
+      muted: "bg-surface-muted/60 text-foreground backdrop-blur-[2px]",
+      gold: "bg-surface-gold/55 text-foreground backdrop-blur-[2px]",
+      /** Deeper pane. `data-tone="inverse"` re-points every semantic token (globals.css). */
+      inverse: "bg-surface-inverse/55 text-foreground backdrop-blur-[2px]",
       transparent: "",
     },
     bordered: {

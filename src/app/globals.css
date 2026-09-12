@@ -3,20 +3,19 @@
 @import "../styles/tokens.css";
 
 /*
- * `dark:` utilities fire when either
- *   a) <html data-theme="dark"> is set (manual toggle), or
- *   b) the OS prefers dark AND the user has not forced data-theme="light".
- * Colour tokens already flip through CSS variables; this variant exists for
- * the handful of shadcn utilities that need a structural dark override.
+ * `dark:` means "the midnight palette is active" — which, since midnight is now the DEFAULT
+ * (see src/styles/tokens.css), is the common case rather than the exception. It fires when
+ *   a) <html data-theme="dark"> is set (toggle forced midnight), or
+ *   b) the OS is not set to light AND the user has not forced data-theme="light".
+ * Colour tokens already flip through CSS variables; this variant is
+ * only for the handful of shadcn utilities that need a structural override.
  */
 @custom-variant dark {
   &:where([data-theme="dark"], [data-theme="dark"] *) {
     @slot;
   }
-  @media (prefers-color-scheme: dark) {
-    &:where(:root:not([data-theme="light"]), :root:not([data-theme="light"]) *) {
-      @slot;
-    }
+  &:where(:root:not([data-theme="light"]), :root:not([data-theme="light"]) *) {
+    @slot;
   }
 }
 
@@ -106,9 +105,9 @@
   --color-surface-inverse-muted-foreground: var(--surface-inverse-muted-foreground);
   --color-surface-gold: var(--surface-gold);
 
-  /* Fonts — `--font-fraunces` / `--font-inter` are set by next/font in src/lib/fonts.ts */
-  --font-serif: var(--font-fraunces), Georgia, "Times New Roman", serif;
-  --font-sans: var(--font-inter), system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  /* Fonts — `--font-cormorant` / `--font-karla` are set by next/font in src/lib/fonts.ts */
+  --font-serif: var(--font-cormorant), Georgia, "Times New Roman", serif;
+  --font-sans: var(--font-karla), system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
 
   /* Fluid type scale → text-xs … text-6xl */
   --text-xs: var(--font-size-xs);
@@ -453,6 +452,49 @@
   .prose figure figcaption {
     @apply mt-2 text-sm text-muted-foreground;
   }
+
+  /* ----------------------------------------------------------------------------------------
+   * Glass — a frosted plate over the night sky.
+   *
+   * Two lips make it read as a physical sheet rather than a translucent rectangle: a specular
+   * highlight along the top edge and a shade along the bottom, plus a diagonal sweep across
+   * the upper third. It only works over moving content, which is why <Sky /> sits behind the
+   * whole document; on a flat fill the blur has nothing to refract.
+   * -------------------------------------------------------------------------------------- */
+  .glass {
+    position: relative;
+    background: var(--glass-fill);
+    border: 1px solid var(--glass-edge);
+    border-radius: var(--radius-xl);
+    box-shadow:
+      inset 0 1px 0 var(--glass-spec),
+      inset 0 -1px 0 var(--glass-shade),
+      var(--glass-shadow);
+    backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+    -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+  }
+  .glass::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    pointer-events: none;
+    background: linear-gradient(
+      168deg,
+      var(--glass-spec) 0%,
+      color-mix(in srgb, var(--glass-spec) 22%, transparent) 34%,
+      transparent 58%
+    );
+    opacity: 0.55;
+  }
+
+  /* The vastu purusha mandala: a 9x9 pada grid drawn with gradients, not path data. */
+  .mandala-grid {
+    background-image:
+      repeating-linear-gradient(to right, var(--mandala) 0 1px, transparent 1px calc(100% / 9)),
+      repeating-linear-gradient(to bottom, var(--mandala) 0 1px, transparent 1px calc(100% / 9));
+    border: 1px solid var(--mandala);
+  }
 }
 
 @keyframes reveal-up {
@@ -463,5 +505,53 @@
   to {
     opacity: 1;
     transform: none;
+  }
+}
+
+/* ------------------------------------------------------------------------------------------
+ * Celestial motion. Every one of these rests in its FINISHED state, so the page is complete
+ * and readable before a single frame runs — which is what keeps the server-rendered text the
+ * thing crawlers and reduced-motion visitors get. Motion is additive, never load-bearing.
+ * ---------------------------------------------------------------------------------------- */
+@keyframes draw-in {
+  from {
+    stroke-dashoffset: var(--draw-length, 1400);
+  }
+}
+@keyframes turn {
+  to {
+    transform: rotate(360deg);
+  }
+}
+@keyframes breathe {
+  0%,
+  100% {
+    opacity: 0.75;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+@keyframes drift {
+  to {
+    transform: translate3d(-3rem, -2rem, 0);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  [data-draw] {
+    stroke-dasharray: var(--draw-length, 1400);
+    animation: draw-in 2.2s cubic-bezier(0.22, 0.68, 0.24, 1) backwards;
+    animation-delay: var(--draw-delay, 0s);
+  }
+  [data-turn] {
+    transform-origin: 50% 50%;
+    animation: turn var(--turn-duration, 240s) linear infinite;
+  }
+  [data-breathe] {
+    animation: breathe 11s ease-in-out infinite;
+  }
+  [data-drift] {
+    animation: drift 150s linear infinite alternate;
   }
 }

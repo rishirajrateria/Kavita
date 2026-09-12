@@ -40,8 +40,10 @@
   },
   "dependencies": {
     "@date-fns/tz": "^1.5.0",
+    "@fontsource-variable/cormorant": "^5.3.0",
     "@fontsource-variable/fraunces": "^5.3.0",
     "@fontsource-variable/inter": "^5.3.0",
+    "@fontsource-variable/karla": "^5.3.0",
     "@react-email/components": "^1.0.12",
     "@react-email/render": "^2.1.0",
     "@supabase/ssr": "^0.12.7",
