@@ -91,30 +91,61 @@ Each service page must state whether it is astrology-led, vastu-led, or integrat
 - Core Web Vitals targets (mobile 4G): **LCP < 2.0s, INP < 200ms, CLS < 0.05**.
 - Total JS on a geo landing page: **under 100KB gzipped**.
 
-## 4. Design direction
+## 4. Design direction — "Midnight Observatory"
 
-Premium and calm, not mystical-kitsch. Must look like a practice a Dubai finance professional
-and a Delhi homemaker would both trust.
+> **Superseded (2026-09-12).** The original brief asked for a light, premium-calm, explicitly
+> *non*-mystical look. The client reviewed the built site and rejected it: *"i dont like the
+> website design at all its astrology and vastu service it needs to be mystical with animations
+> and all and very minimalistic also apple glass like feel and effect."* That is the direction
+> now. What follows replaces the old ivory-editorial section entirely. The one thing carried
+> forward unchanged is the standard it must still meet: a practice a Dubai finance professional
+> and a Delhi homemaker would both trust.
 
-| Avoid                                                                                                                                  | Aim for                                                                                                                                                                                                                                                                                                                                                                        |
-| -------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| Purple gradients, glowing crystal balls, animated stars, neon zodiac wheels, stock galaxy photos, Comic-Sans-adjacent "mystical" fonts | Warm ivory/parchment backgrounds; deep indigo/midnight text; restrained antique-gold accent; generous whitespace; refined serif headings (Fraunces, Cormorant or Marcellus) + clean humanist sans body (Inter or Source Sans 3); fine line-art inline-SVG motifs (subtle chart square, vastu compass rose, thin astronomical linework) as quiet accents, never loud decoration |
+**Mystical, but the restrained kind.** The register is a night observatory, not a fairground
+fortune teller. Deep indigo, antique gold linework, enormous silence between elements, and motion
+so slow it reads as atmosphere. The old "avoid" list still holds in full — it is what separates
+this from kitsch.
 
-- **Client mandate (Phase 1 feedback): the site must look stunning and be very easy to use; aesthetics are
-  non-negotiable.** Within the palette above, that means visual rhythm (alternating ivory / parchment /
-  deep-indigo sections), a cinematic but quiet hero, large low-opacity gold line-art motifs as backdrops,
-  solid antique-gold primary CTAs, editorial typography (Fraunces display sizes, balanced headings),
-  hairline gold rules and ornaments, hover micro-interactions, and an indigo footer. Every new page must
-  be screenshot-reviewed at 1440px and 390px, light and dark, before it is reported done. Never let a page
-  read as a plain document.
-- Build a proper design system first: CSS custom properties for the full colour scale, type
-  scale, spacing scale, radii, shadows. Every component reads from tokens.
-- Full dark mode via CSS variables: light palette on `:root`, overrides under
-  `@media (prefers-color-scheme: dark)` and under an explicit `[data-theme]` attribute so a
-  manual toggle works in both directions.
-- Accessibility is not optional: WCAG 2.2 AA contrast, visible focus rings, real semantic
-  landmarks, skip link, all interactive elements keyboard-reachable, `prefers-reduced-motion`
-  respected.
+| Still avoid                                                                                                                                     | Now aim for                                                                                                                                                                                                        |
+| ----------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Purple gradients, glowing crystal balls, neon zodiac wheels, stock galaxy photos, Comic-Sans-adjacent "mystical" fonts, anything that twinkles fast | Near-black indigo ground, antique-gold hairlines, frosted glass panes, one continuous starfield, a kundli-over-mandala centrepiece, vast negative space, Cormorant at 300 weight against Karla |
+
+### The four decisions that define it
+
+1. **Midnight is an identity, not a preference.** `:root` is midnight and
+   `prefers-color-scheme` does **not** switch it off — a mystical site that turns into a white
+   document on a light laptop is not a mystical site. Parchment stays a complete, WCAG-AA palette
+   reachable only through the explicit theme toggle (persisted by `<ThemeScript />`). This is a
+   deliberate reversal of the old "light palette on `:root`" rule.
+2. **Glass over sky.** `.glass` (globals.css) is a frosted plate: specular top lip, shaded bottom
+   lip, diagonal sweep, `backdrop-filter` blur + saturate. It only reads as glass when something
+   moves behind it, so `<Sky />` — the fixed starfield in the root layout — is half the contract,
+   not decoration. Section tones are therefore **translucent panes over one continuous sky**, never
+   opaque bands.
+3. **The Instrument is the thesis.** `<Instrument />` draws a North Indian kundli (square,
+   diagonals, inscribed diamond) over the vastu purusha mandala (9×9 padas, brahmasthan open at
+   centre), ringed by twelve house ticks. It is the one graphic no other practitioner could use,
+   because no one else reads both together. It leads the home page in place of a portrait; the
+   photograph carries E-E-A-T on `/about`, where a reader has asked who she is.
+4. **Motion is additive, never load-bearing.** Every animation is CSS, and every element **rests
+   in its finished state** — `stroke-dashoffset: 0`, full opacity. The page is complete before a
+   single frame runs, so crawlers, `prefers-reduced-motion` visitors and anyone with JS disabled
+   get the whole thing. **No animation may add JavaScript to a page.** The ring turns once every
+   four minutes; the starfield drifts over 150s. If motion is noticeable as motion, it is too fast.
+
+### Standing rules (unchanged)
+
+- **Aesthetics are non-negotiable** (client mandate, restated). Every new page is
+  screenshot-reviewed at 1440px and 390px, in **both** midnight and parchment, before it is
+  reported done. Never let a page read as a plain document.
+- Build from tokens: CSS custom properties for the full colour scale, type scale, spacing scale,
+  radii, shadows, motion. Every component reads semantic tokens, never a primitive ramp — which is
+  why retargeting `src/styles/tokens.css` re-themes the whole site at once.
+- Accessibility is not optional: WCAG 2.2 AA contrast in **both** themes, visible focus rings, real
+  semantic landmarks, skip link, everything keyboard-reachable, `prefers-reduced-motion` respected.
+- Typography: `--font-cormorant` → `font-serif` (display/headings, 300 weight at display sizes),
+  `--font-karla` → `font-sans` (body). Self-hosted from `@fontsource-variable`; never a Google
+  Fonts request.
 
 ## 5. Site map and URL structure
 
