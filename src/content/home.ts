@@ -309,3 +309,127 @@ export const CITABLE = [
   "Astrologer Kavita consults online by video or phone with clients in India, the United States, the United Kingdom, the United Arab Emirates, Canada, Australia and Singapore.",
   "Every consultation with Astrologer Kavita ends with a written summary of the chart themes, the vastu observations and the suggested steps.",
 ] as const;
+
+// ---------------------------------------------------------------------------------------------
+// The visual-first home page (2026-09-12 redesign). The chart is the door: its twelve houses
+// carry the site's sections using what the houses already mean in Vedic astrology. Copy is
+// deliberately short; the AEO answer blocks live in QUESTIONS at the foot of the page.
+// ---------------------------------------------------------------------------------------------
+export const HUB = {
+  eyebrow: "Astrologer Kavita · Vedic astrology and vastu",
+  /** The H1. Spoken to the visitor's real question, not the practice's category. */
+  h1: "Know what is coming — in your life, and in your home.",
+  /** First paragraph; carries the primary keywords the H1 gives up. */
+  lede: "Vedic astrology reads the timing of a life. Vastu reads the home it is lived in. Astrologer Kavita reads both in one sitting. Choose a house of the chart to begin.",
+  centre: {
+    label: "Book a reading",
+    title: "Book a consultation with Astrologer Kavita",
+    href: "/book",
+  },
+  /** House → section, by the house's traditional signification. */
+  houses: [
+    {
+      n: 1,
+      label: "Your kundli",
+      title: "1st house — the self. Your birth chart, read in full.",
+      href: "/services/kundli-analysis",
+    },
+    {
+      n: 2,
+      label: "Life reading",
+      title:
+        "2nd house — family and what you hold. The integrated life reading: chart and home together.",
+      href: "/services/integrated-life-reading",
+    },
+    {
+      n: 3,
+      label: "Learn",
+      title: "3rd house — communication and learning. Articles and the glossary.",
+      href: "/learn",
+    },
+    {
+      n: 4,
+      label: "Home vastu",
+      title: "4th house — home and property. Vastu for the place you live.",
+      href: "/services/vastu-for-home",
+    },
+    {
+      n: 5,
+      label: "Muhurat",
+      title: "5th house — what you begin. Auspicious timing for a start.",
+      href: "/services/muhurat-selection",
+    },
+    {
+      n: 6,
+      label: "Remedies",
+      title: "6th house — obstacles and health. Gemstone and remedial guidance.",
+      href: "/services/gemstone-and-remedial-guidance",
+    },
+    {
+      n: 7,
+      label: "Match making",
+      title: "7th house — partnership. Kundli milan for marriage.",
+      href: "/services/kundli-milan",
+    },
+    {
+      n: 8,
+      label: "Follow-up",
+      title: "8th house — turning points. A follow-up session when life changes.",
+      href: "/services/follow-up-session",
+    },
+    {
+      n: 9,
+      label: "About Kavita",
+      title: "9th house — the teacher. Who Astrologer Kavita is and how she works.",
+      href: "/about",
+    },
+    {
+      n: 10,
+      label: "Career",
+      title: "10th house — career and public life. Career and business consultation.",
+      href: "/services/career-and-business-consultation",
+    },
+    {
+      n: 11,
+      label: "Office vastu",
+      title: "11th house — gains and enterprise. Vastu for offices, shops and factories.",
+      href: "/services/vastu-for-commercial",
+    },
+    {
+      n: 12,
+      label: "From abroad",
+      title: "12th house — distant lands. Consult online from anywhere in the world.",
+      href: "/contact",
+    },
+  ],
+  hint: "Hover or tap a house to see what it opens.",
+} as const;
+
+export const INSTRUMENTS = {
+  id: "instruments",
+  eyebrow: "Two instruments, one reading",
+  question: "How does Astrologer Kavita read a birth chart and a home together?",
+  answer:
+    "Astrologer Kavita reads the kundli — the Vedic birth chart — for what is unfolding and when, and the vastu of the home for what in the building is helping or blocking it. Both are read in the same session, so the guidance is one picture and one short list of remedies, not two separate reports.",
+  captions: {
+    chart: "The chart: what, and when",
+    home: "The home: where",
+    together: "Read as one",
+  },
+} as const;
+
+export const TIMING = {
+  id: "timing",
+  eyebrow: "When, not only what",
+  question: "How does Vedic astrology say when something will happen?",
+  answer:
+    "Vedic astrology divides a life into planetary periods called dashas, each lasting a set number of years. Astrologer Kavita reads which period is active now and when it turns, so a consultation gives timing as well as themes — what this stretch of life is for, and roughly how long it lasts.",
+  caption: "One life, nine planetary periods. The reading tells you which one you are in.",
+} as const;
+
+export const PRACTITIONER_CARD = {
+  id: "kavita",
+  eyebrow: "The astrologer",
+  cta: { label: "Book a reading", href: "/book" },
+  secondary: { label: "Ask a question first", href: "/contact" },
+} as const;

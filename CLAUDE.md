@@ -91,73 +91,71 @@ Each service page must state whether it is astrology-led, vastu-led, or integrat
 - Core Web Vitals targets (mobile 4G): **LCP < 2.0s, INP < 200ms, CLS < 0.05**.
 - Total JS on a geo landing page: **under 100KB gzipped**.
 
-## 4. Design direction — "Vermilion on Black"
+## 4. Design direction — "The chart is the door"
 
-> **Superseded twice (2026-09-12).** The original brief asked for light premium-calm. The client
-> rejected that and asked for mystical/midnight, which was built. The client then asked for
-> _"the entire website to be red and white - glass like feel and gradient and minimal design"_.
-> That was first built on a white ground; the client's verdict was _"doesnt feel mystical feels
-> corporate"_, which was correct — a bright, crisp, high-contrast page is structurally a landing
-> page whatever colour its accent is. The palette stayed red and white; the GROUND inverted. The
-> standard carried through every revision is unchanged: a practice a Dubai finance professional
-> and a Delhi homemaker would both trust.
+> **The current direction (2026-09-12, fourth revision).** The client's brief, after rejecting
+> three palette-and-motion passes on the same layout: _"change the layout… less of text text text
+> and more of pictures with limited self-explanatory text… I really like the kundli that is
+> moving and how it's being created — that can be in a bigger form in the middle of the landing
+> page and the sections can be inside that kundli, where the person can click… I want to talk
+> to this astrologer and know what's going to happen in my life."_ Plus a reference photograph:
+> a violet-and-rose Milky Way over a gold horizon. **Home page only for now**; the other pages
+> are redesigned to match once the home page is approved. Older layouts are gone; what survives
+> from earlier passes is the token architecture, the glass, and the motion system.
 
-**Red and white, with white as the LIGHT rather than the ground.** The ground is oxblood-black,
-the text is warm white, and the vermilion glows out of the dark rather than sitting on a page.
-**Mysticism comes from darkness and luminosity, not from hue** — that is the lesson the white
-version taught, and it is the single most important sentence in this section.
+### The concept
 
-Red is the auspicious colour in Indian ritual — sindoor, temple red, wedding red — so it belongs
-to this practice rather than being decoration. It is also fatiguing in quantity and reads as an
-alert state when over-used, so **red never sits as a field behind body text.** It is spent on one
-gradient CTA, the hairlines, the linework, and blurred washes bedded into the ground.
+**The kundli is the navigation.** A North Indian birth chart draws itself large in the middle
+of the landing page and its twelve houses are the site's doors, using what the houses already
+mean in Vedic astrology: 1st (self) → your kundli; 2nd → the integrated life reading; 3rd
+(learning) → Learn; **4th (home, property) → home vastu**; 5th (beginnings) → muhurat; 6th
+(obstacles) → remedies; **7th (partnership) → match making**; 8th (turning points) → follow-up;
+9th (the teacher) → About; **10th (career) → career reading**; 11th (gains, enterprise) → office
+vastu; **12th (distant lands) → consult from abroad**. The centre, where every line meets, is
+_Book a reading_. `src/components/motifs/kundli-nav.tsx`; mapping in `HUB` in
+`src/content/home.ts`. Twelve real `<a>` links inside one SVG — crawlable, keyboard-reachable,
+no JavaScript.
 
-| Avoid                                                                                                                      | Aim for                                                                                                                                       |
-| -------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
-| Saturated red panels behind paragraphs, red-on-red, pure #FF0000, crystal balls, neon zodiac wheels, anything that flashes | Warm near-white ground, vermilion hairlines and linework, frosted white glass, blurred gradient washes, one gradient CTA, vast negative space |
+**Pictures first, one line under each.** After the hub: the Convergence figure (chart and floor
+plan carried into one point), the Vimshottari dasha timeline ("when, not only what" — the
+promise that makes someone book), and one glass card for the practitioner. Every question-form
+H2 and its 40–60-word answer (§9.2) survives, gathered into a quiet ruled list at the foot of
+the page (`questions.tsx`) with the FAQs as native `<details>`. **Reducing visual density never
+means reducing what is in the HTML** — the served page still carries every answer block, the
+entity sentence and all twelve links; verify with `curl` when you touch it.
 
-### The five decisions that define it
+### Palette — "Night Sky" (`src/styles/tokens.css`)
 
-1. **The dark ground is the identity.** `:root` is oxblood-black and `prefers-color-scheme` does
-   **not** switch it off. The white ground survives complete and WCAG-AA as the toggle's
-   alternate (persisted by `<ThemeScript />`). Note the trap this fixes: the `dark:` variant in
-   globals.css matches `:root:not([data-theme="light"])`, so **whichever palette is the bare
-   `:root` default must be the dark one**, or `dark:` utilities fire on the light theme.
-2. **Red is an accent, never a field.** `--accent-strong` (red-600) is red text on white at
-   5.60:1. Full-bleed inverse bands invert to **ink**, not to red — a red field behind copy is the
-   fatigue this palette exists to avoid.
-3. **The gradient is real but disciplined.** `--cta-gradient` runs red-600 → red-700, because
-   white on red-500 measures only **3.99:1**; at this ramp the gradient's lightest point still
-   carries text at 5.60:1. `<Sky />` supplies two more washes at 14–30% alpha, blurred across
-   hundreds of pixels — that is where the page's warmth comes from.
-4. **Glass over the lit darkness.** `.glass` is a dark plate on the black ground and a bright
-   frosted sheet on white. It only reads as glass when something sits behind it, so `<Sky />` is
-   half the contract. Section tones stay translucent panes, never opaque bands.
+Built to the reference photograph. Ground `--ink-1000` indigo-black; text warm `--bone`; the one
+accent is `--brass` (the gold horizon and the CTA); `--violet` and `--rose` live almost entirely
+in the moving sky, not in the type. Dark is the bare-root default and is **not** switched off by
+`prefers-color-scheme`; warm daylight is the toggle's alternate. **The bare-root default must be
+the dark palette** — the `dark:` variant matches `:root:not([data-theme="light"])`, so a light
+default makes every `dark:` utility fire on the light theme (this bit us once). Nothing
+saturated ever sits behind body copy.
 
-   `<Sky />` is three layers and the order is the design: two deep washes bedded into the ground,
-   a drifting field of **warm-white embers** (this is the "white" doing its real job — light
-   emerging from dark; a flat dark ground reads as a dark UI, embers read as night), and a
-   vignette so the page reads as depth rather than a flat panel. `--glow` is the bloom the accent
-   glows into; **glow is what separates mystical from merely dark.**
+### Motion (`src/app/globals.css`, `sky.tsx`)
 
-5. **The Instrument and the motion are unchanged.** `<Instrument />` (kundli over vastu purusha
-   mandala) still leads the home page and simply re-inks to vermilion, because it is line art
-   reading semantic tokens. Motion is still CSS-only, still additive, still resting in its
-   finished state; **no animation may add JavaScript to a page.**
+Magic is movement, so the page is never entirely still: three sky washes on 64/92/128s clocks
+(periods that don't divide, so it never visibly loops), two star fields drifting at different
+speeds, the chart drawing itself, a rim turning once in four minutes, a point orbiting it, the
+centre breathing, sheen crossing glass, levitation and scroll parallax. Rules that outrank taste:
+**transform and opacity only** (GPU-composited); **everything rests in its finished state**
+(nothing parked at `opacity: 0` — `.reveal` once hid every heading below the fold); **no
+animation may add JavaScript to a page**; slow enough that a loop is never noticed as a loop.
 
 ### Standing rules (unchanged)
 
-- **Aesthetics are non-negotiable** (client mandate). Every new page is screenshot-reviewed at
-  1440px and 390px, in **both** themes, before it is reported done. Never a plain document.
-- Build from tokens. Components read semantic tokens, never a primitive ramp — which is why this
-  palette change touched `src/styles/tokens.css` and only two component files.
-- Accessibility is not optional: WCAG 2.2 AA in **both** themes, visible focus rings, semantic
-  landmarks, skip link, keyboard reachable, `prefers-reduced-motion` respected.
-- Typography: `--font-cormorant` → `font-serif`, `--font-karla` → `font-sans`. Self-hosted from
-  `@fontsource-variable`; never a Google Fonts request.
-- Ramp names are `--white-*`, `--red-*`, `--ink-*`. The old `--ivory/--indigo/--gold` ramps are
-  gone; `--shadow-gold` is now `--shadow-accent`. The `variant="gold"` button keeps its name only
-  because every call site uses it — the colour is a token, not the variant name.
+- Aesthetics are non-negotiable. Screenshot-review at 1440 and 390 in **both** themes before
+  reporting done. Never a plain document — and never a corporate one.
+- Semantic tokens only; never a primitive ramp in a component. Ramps: `--ink-*`, `--bone-*`,
+  `--brass-*`, `--violet-*`, `--rose-*`.
+- WCAG 2.2 AA in both themes, focus rings, landmarks, skip link, `prefers-reduced-motion`.
+- Typography: Cormorant (`font-serif`) + Karla (`font-sans`), self-hosted; no Google Fonts.
+- The old home sections (`comparison`, `services-overview`, `how-it-works`, `serving`,
+  `testimonials-strip`, `method`, `key-facts`, `faq`, `final-cta`) are no longer rendered but
+  stay on disk because `question-heading` is shared with the geo pages; remove them when the
+  other pages are redesigned.
 
 ## 5. Site map and URL structure
 

@@ -1,11 +1,11 @@
 /*
- * Design tokens — INK & EMBER.
+ * Design tokens — NIGHT SKY.
  *
- * Believable magic: a dark petrol-ink ground lit by brass, with an aqua counterlight and an
- * ember note kept from the previous palette. The references are real objects from this
- * practice's world — brass astrolabes, oil-lamp light on dark stone, the green-blue of a night
- * sky away from cities — rather than the purple-gradient shorthand that every "mystical" site
- * reaches for. That is what keeps it believable while the motion makes it magical.
+ * Built to the client's reference photograph: a deep indigo-black sky, the Milky Way in violet
+ * and rose, and a warm gold horizon where the land's lights meet it. Ground and text are the
+ * dark and the starlight; brass is the horizon and the one accent; violet and rose live only in
+ * the moving sky behind the glass. Kept believable by discipline — the colours move, the type
+ * does not, and nothing saturated ever sits behind body copy.
  *
  *   1. bare `:root`                → petrol ink (the default, whatever the OS prefers)
  *   2. `:root[data-theme="light"]` → warm daylight, chosen in the toggle and persisted
@@ -26,12 +26,12 @@
   /* Primitive ramps                                                     */
   /* ------------------------------------------------------------------ */
 
-  /* Petrol ink — near-black with a teal bias, so the dark is a colour not an absence */
-  --ink-1000: #060b0e;
-  --ink-950: #0a1216;
-  --ink-900: #132027;
-  --ink-800: #1d2f38;
-  --ink-700: #2b4450;
+  /* Night — indigo-black, the top of the reference sky; a colour, not an absence */
+  --ink-1000: #07081a;
+  --ink-950: #0d0f26;
+  --ink-900: #161a3a;
+  --ink-800: #23284f;
+  --ink-700: #343b70;
 
   /* Bone — warm whites; the light in the room */
   --bone-50: #fbf7f0;
@@ -52,16 +52,16 @@
   --brass-600: #b0742a;
   --brass-700: #8a591f;
 
-  /* Aqua — the cool counterlight that keeps the brass from reading as sepia */
-  --aqua-300: #7fd4c8;
-  --aqua-400: #4fb8ac;
-  --aqua-500: #2e9488;
-  --aqua-700: #1b5f58;
+  /* Violet — the Milky Way's core in the reference; lives in the sky, rarely in the type */
+  --violet-300: #c9b3ff;
+  --violet-400: #a98cf5;
+  --violet-500: #8a66e0;
+  --violet-700: #55368f;
 
-  /* Ember — kept from the vermilion palette as the warm third note */
-  --ember-300: #f6a189;
-  --ember-400: #f07a5a;
-  --ember-500: #dd5638;
+  /* Rose — the aurora's pink edge in the reference */
+  --rose-300: #f7a6d6;
+  --rose-400: #ec7fc0;
+  --rose-500: #d95aa5;
 
   /* Status hues, warm-leaning so they belong to the same world */
   --green-400: #6bbf88;
@@ -182,7 +182,7 @@
   --accent-strong: var(--brass-300); /* 13.44:1 */
   --accent-border: var(--brass-500);
 
-  --destructive: var(--ember-400);
+  --destructive: var(--rose-400);
   --destructive-foreground: var(--ink-1000);
 
   --border: var(--ink-800);
@@ -195,12 +195,12 @@
   --warning: var(--amber-400);
   --warning-foreground: var(--ink-1000);
   --warning-soft: #2a2110;
-  --error: var(--ember-400);
+  --error: var(--rose-400);
   --error-foreground: var(--ink-1000);
-  --error-soft: #2d1512;
-  --info: var(--aqua-400);
+  --error-soft: #2d1226;
+  --info: var(--violet-400);
   --info-foreground: var(--ink-1000);
-  --info-soft: #0d2422;
+  --info-soft: #1a1636;
 
   /* The one loud thing on the page — lamp light, and it glows (see --shadow-cta). */
   --cta: var(--brass-400);
@@ -210,10 +210,10 @@
   --cta-gradient-hover: linear-gradient(135deg, var(--brass-200) 0%, var(--brass-400) 100%);
 
   --surface-muted: var(--ink-950);
-  --surface-gold: #17201c;
+  --surface-gold: #1a1730;
 
-  --surface-inverse: #040809;
-  --surface-inverse-deep: #020506;
+  --surface-inverse: #050614;
+  --surface-inverse-deep: #03040d;
   --surface-inverse-foreground: var(--bone-100);
   --surface-inverse-muted-foreground: var(--bone-400);
   --surface-inverse-border: rgb(245 208 138 / 0.24);
@@ -237,14 +237,15 @@
 
   --mandala: rgb(245 208 138 / 0.2);
   --mandala-strong: rgb(245 208 138 / 0.42);
-  --star: rgb(251 247 240 / 0.62);
+  --star: rgb(251 247 240 / 0.7);
+  --star-faint: rgb(201 179 255 / 0.4);
 
-  /* Three aurora washes, each drifting on its own clock (see <Sky />). */
-  --aurora-1: rgb(79 184 172 / 0.28);
-  --aurora-2: rgb(232 180 94 / 0.24);
-  --aurora-3: rgb(240 122 90 / 0.18);
+  /* The reference sky: violet Milky Way, rose aurora, gold horizon — each on its own clock. */
+  --aurora-1: rgb(138 102 224 / 0.34);
+  --aurora-2: rgb(217 90 165 / 0.26);
+  --aurora-3: rgb(232 180 94 / 0.34);
   --glow: rgb(245 208 138 / 0.3);
-  --vignette: rgb(0 0 0 / 0.6);
+  --vignette: rgb(0 0 0 / 0.55);
 }
 
 /* ---------------------------------------------------------------------- */
@@ -295,7 +296,7 @@
   --error: #b23a1c;
   --error-foreground: var(--bone-50);
   --error-soft: #fbe8e2;
-  --info: var(--aqua-700);
+  --info: var(--violet-700);
   --info-foreground: var(--bone-50);
   --info-soft: #e2f0ee;
 
@@ -331,10 +332,11 @@
   --mandala: rgb(138 89 31 / 0.16);
   --mandala-strong: rgb(138 89 31 / 0.34);
   --star: rgb(138 89 31 / 0.2);
+  --star-faint: rgb(85 54 143 / 0.14);
 
-  --aurora-1: rgb(79 184 172 / 0.14);
-  --aurora-2: rgb(232 180 94 / 0.18);
-  --aurora-3: rgb(240 122 90 / 0.1);
+  --aurora-1: rgb(138 102 224 / 0.12);
+  --aurora-2: rgb(217 90 165 / 0.1);
+  --aurora-3: rgb(232 180 94 / 0.18);
   --glow: rgb(212 149 58 / 0.14);
   --vignette: rgb(70 55 25 / 0.06);
 

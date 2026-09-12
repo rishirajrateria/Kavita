@@ -44,14 +44,14 @@
   --color-brass-600: var(--brass-600);
   --color-brass-700: var(--brass-700);
 
-  --color-aqua-300: var(--aqua-300);
-  --color-aqua-400: var(--aqua-400);
-  --color-aqua-500: var(--aqua-500);
-  --color-aqua-700: var(--aqua-700);
+  --color-violet-300: var(--violet-300);
+  --color-violet-400: var(--violet-400);
+  --color-violet-500: var(--violet-500);
+  --color-violet-700: var(--violet-700);
 
-  --color-ember-300: var(--ember-300);
-  --color-ember-400: var(--ember-400);
-  --color-ember-500: var(--ember-500);
+  --color-rose-300: var(--rose-300);
+  --color-rose-400: var(--rose-400);
+  --color-rose-500: var(--rose-500);
 
   /* Semantic (shadcn contract) */
   --color-background: var(--background);
@@ -731,4 +731,61 @@
   to {
     transform: translateY(var(--parallax-depth, 40px));
   }
+}
+
+/* ==============================================================================================
+ * THE KUNDLI HUB — the landing page's navigation (src/components/motifs/kundli-nav.tsx).
+ * Hover and focus are CSS only; every house is a real link in the served HTML.
+ * ============================================================================================ */
+.kundli-nav .kundli-house {
+  cursor: pointer;
+  outline: none;
+}
+.kundli-nav .kundli-house-fill {
+  fill: var(--glass-fill);
+  stroke: none;
+  transition: fill var(--duration-base) var(--ease-standard);
+}
+.kundli-nav .kundli-house-label {
+  fill: var(--foreground);
+  font-family: var(--font-sans);
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  pointer-events: none;
+  transition: fill var(--duration-base) var(--ease-standard);
+}
+.kundli-nav .kundli-house-number {
+  fill: var(--muted-foreground);
+  font-family: var(--font-serif);
+  pointer-events: none;
+}
+.kundli-nav .kundli-house:hover .kundli-house-fill,
+.kundli-nav .kundli-house:focus-visible .kundli-house-fill {
+  fill: var(--surface-inverse-accent);
+}
+.kundli-nav .kundli-house:hover .kundli-house-label,
+.kundli-nav .kundli-house:focus-visible .kundli-house-label {
+  fill: var(--accent-strong);
+}
+.kundli-nav .kundli-house:focus-visible .kundli-house-fill {
+  stroke: var(--ring);
+  stroke-width: 1.5;
+}
+.kundli-nav .kundli-centre {
+  background: var(--cta-gradient);
+  color: var(--cta-foreground);
+  box-shadow: var(--shadow-cta);
+  transition:
+    transform var(--duration-base) var(--ease-standard),
+    box-shadow var(--duration-base) var(--ease-standard);
+}
+.kundli-nav .kundli-centre:hover,
+.kundli-nav .kundli-centre:focus-visible {
+  transform: translate(-50%, -50%) scale(1.04);
+  box-shadow: var(--shadow-cta-hover);
+}
+.kundli-nav .kundli-centre-glow {
+  background: radial-gradient(closest-side, var(--glow), transparent 75%);
+  transform: scale(1.6);
+  pointer-events: none;
 }

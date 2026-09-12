@@ -1,27 +1,9 @@
 import type { Metadata } from "next";
 import { applyPageSeo } from "@/lib/seo/page-seo";
-import {
-  Comparison,
-  FaqSection,
-  FinalCta,
-  Hero,
-  HowItWorks,
-  KeyFacts,
-  Method,
-  Serving,
-  ServicesOverview,
-  TestimonialsStrip,
-} from "@/components/home";
+import { Hero, Instruments, Practitioner, Questions, Timing } from "@/components/home";
 import { JsonLd } from "@/components/seo/json-ld";
 import { HOME_META } from "@/content/home";
-import {
-  getCountries,
-  getFaqsForRoute,
-  getFeaturedCities,
-  getPublishedTestimonials,
-  getServices,
-  getSiteSettings,
-} from "@/lib/data";
+import { getFaqsForRoute, getSiteSettings } from "@/lib/data";
 import { faqPageSchema, withSpeakable } from "@/lib/seo/schema";
 
 const BASE_METADATA: Metadata = {
@@ -43,19 +25,13 @@ export function generateMetadata(): Promise<Metadata> {
 }
 
 /**
- * Home: the combined astrology-and-vastu story (CLAUDE.md §1). A Server Component; every word
- * of copy is in the HTML with JavaScript disabled. Data comes from the cached data layer, which
- * reads the seed when no database is configured, so the page is fully static.
+ * Home: the chart is the door (CLAUDE.md §4). Pictures first, one line under each; the kundli in
+ * the middle is the navigation. A Server Component — every word, every house link and every
+ * answer block is in the HTML with JavaScript disabled. Data comes from the cached data layer,
+ * which reads the seed when no database is configured, so the page is fully static.
  */
 export default async function HomePage() {
-  const [settings, services, countries, cities, faqs, testimonials] = await Promise.all([
-    getSiteSettings(),
-    getServices(),
-    getCountries(),
-    getFeaturedCities(),
-    getFaqsForRoute("/"),
-    getPublishedTestimonials(),
-  ]);
+  const [settings, faqs] = await Promise.all([getSiteSettings(), getFaqsForRoute("/")]);
 
   const faqSchema = withSpeakable(
     faqPageSchema(faqs.map(({ question, answer }) => ({ question, answer }))),
@@ -66,15 +42,10 @@ export default async function HomePage() {
     <>
       <JsonLd data={faqSchema} />
       <Hero settings={settings} />
-      <KeyFacts settings={settings} services={services} countries={countries} />
-      <Method />
-      <Comparison />
-      <ServicesOverview services={services} />
-      <HowItWorks />
-      <TestimonialsStrip testimonials={testimonials} />
-      <Serving countries={countries} cities={cities} />
-      <FaqSection faqs={faqs} />
-      <FinalCta />
+      <Instruments />
+      <Timing />
+      <Practitioner settings={settings} />
+      <Questions faqs={faqs} />
     </>
   );
 }
