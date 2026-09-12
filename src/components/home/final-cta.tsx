@@ -26,7 +26,7 @@ export function FinalCta() {
       {/* Large, faint South Indian chart grid as backdrop. */}
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute top-1/2 left-1/2 w-[52rem] -translate-x-1/2 -translate-y-1/2 text-accent-border/15 sm:w-[68rem]"
+        className="pointer-events-none absolute top-1/2 left-1/2 w-[21rem] -translate-x-1/2 -translate-y-1/2 text-accent-border/12 sm:w-[40rem] lg:w-[64rem]"
       >
         <SouthIndianChart decorative strokeWidth={0.6} />
       </div>

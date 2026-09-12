@@ -61,7 +61,7 @@ export function GeoTradition({
                 <dt className="text-[0.68rem] font-semibold tracking-[0.12em] text-accent-strong uppercase">
                   {label}
                 </dt>
-                <dd className="mt-2 font-serif text-xl leading-snug">{value}</dd>
+                <dd className="mt-2 font-serif text-lg leading-snug sm:text-xl">{value}</dd>
               </div>
             ))}
           </dl>

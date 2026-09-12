@@ -1,10 +1,9 @@
 import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { cardVariants } from "@/components/ui/card";
+import { Card } from "@/components/ui/card";
 import { Heading } from "@/components/ui/heading";
 import type { Service, ServiceLead } from "@/lib/data/types";
-import { cn } from "@/lib/utils";
 
 const LEAD_LABEL: Record<ServiceLead, string> = {
   astrology: "Astrology-led",
@@ -31,12 +30,12 @@ export function ServiceList({
     <div className="space-y-8">
       <ul className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
         {services.map((s) => (
-          <li
+          <Card
             key={s.slug}
-            className={cn(
-              cardVariants({ variant: "quiet", interactive: true }),
-              "group/card gap-4 has-[a:focus-visible]:ring-[3px] has-[a:focus-visible]:ring-ring/50",
-            )}
+            as="li"
+            variant="quiet"
+            interactive
+            className="group/card gap-4 has-[a:focus-visible]:ring-[3px] has-[a:focus-visible]:ring-ring/50"
           >
             <div className="flex items-center justify-between gap-3">
               <Badge variant="caps">{LEAD_LABEL[s.lead]}</Badge>
@@ -59,7 +58,7 @@ export function ServiceList({
             >
               →
             </span>
-          </li>
+          </Card>
         ))}
       </ul>
       {allLink ? (

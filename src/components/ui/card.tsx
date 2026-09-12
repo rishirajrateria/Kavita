@@ -60,11 +60,23 @@ const cardVariants = cva(
   },
 );
 
-export interface CardProps extends React.ComponentProps<"div">, VariantProps<typeof cardVariants> {}
+export interface CardProps extends React.ComponentProps<"div">, VariantProps<typeof cardVariants> {
+  /**
+   * Semantic element (defaults to div), following the same `as` convention as Section,
+   * Container, Prose and Heading. The right tag is usually not a div: a testimonial is a
+   * `<figure>`, a service or an article summary is an `<article>`, a grid item inside a
+   * `<ul>` is an `<li>`. Reach for this rather than calling `cardVariants()` by hand — the
+   * panel and the outline should not have to be chosen separately.
+   */
+  as?: "div" | "article" | "section" | "aside" | "figure" | "li" | "blockquote";
+}
 
-function Card({ className, variant, padding, interactive, ...props }: CardProps) {
+function Card({ className, variant, padding, interactive, as = "div", ...props }: CardProps) {
+  // All accepted tags share HTMLElement props; typing via "div" keeps ref types consistent
+  // (the same cast Section uses for exactly this reason).
+  const Comp = as as "div";
   return (
-    <div
+    <Comp
       data-slot="card"
       data-variant={variant ?? "quiet"}
       className={cn(cardVariants({ variant, padding, interactive }), className)}

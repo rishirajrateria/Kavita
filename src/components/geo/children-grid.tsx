@@ -50,6 +50,8 @@ export function GeoChildrenGrid({
             <li key={child.path} className="flex">
               <Link
                 href={href(child)}
+                // The card here IS the anchor, which Card's `as` union cannot express, so the
+                // panel classes are applied directly rather than wrapping a link in a div.
                 className={cn(
                   cardVariants({ variant: "quiet", padding: "sm", interactive: true }),
                   "group w-full gap-3 no-underline",

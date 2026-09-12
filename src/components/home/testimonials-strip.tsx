@@ -1,11 +1,10 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Callout } from "@/components/ui/callout";
-import { cardVariants } from "@/components/ui/card";
+import { Card } from "@/components/ui/card";
 import { Container } from "@/components/ui/container";
 import { Rating } from "@/components/ui/rating";
 import { Section } from "@/components/ui/section";
-import { cn } from "@/lib/utils";
 import { TESTIMONIALS_STRIP } from "@/content/home";
 import type { Testimonial } from "@/lib/data";
 import { QuestionHeading } from "./question-heading";
@@ -19,8 +18,7 @@ import { QuestionHeading } from "./question-heading";
  * These are the one boxed thing on a page that is otherwise ruled: a quotation is an object
  * someone said, and giving it an edge is what stops three of them running together. Nothing
  * decorates them — no oversized quotation glyph, no fill — because a stand-in that looks
- * designed is harder to notice as a stand-in. They use `cardVariants` rather than <Card>
- * because the correct element here is <figure>, not a div; the contract is still the shared one.
+ * designed is harder to notice as a stand-in.
  */
 export function TestimonialsStrip({ testimonials }: { testimonials: Testimonial[] }) {
   if (testimonials.length === 0) return null;
@@ -46,9 +44,7 @@ export function TestimonialsStrip({ testimonials }: { testimonials: Testimonial[
         <ul className="grid gap-6 md:grid-cols-3">
           {testimonials.map((t) => (
             <li key={t.id} className="flex">
-              <figure
-                className={cn(cardVariants({ variant: "quiet", padding: "lg" }), "w-full gap-5")}
-              >
+              <Card as="figure" variant="quiet" padding="lg" className="w-full gap-5">
                 {t.rating != null ? <Rating value={t.rating} size="sm" /> : null}
                 <blockquote className="flex-1 leading-relaxed">
                   <p>{t.quote}</p>
@@ -64,7 +60,7 @@ export function TestimonialsStrip({ testimonials }: { testimonials: Testimonial[
                     </>
                   ) : null}
                 </figcaption>
-              </figure>
+              </Card>
             </li>
           ))}
         </ul>

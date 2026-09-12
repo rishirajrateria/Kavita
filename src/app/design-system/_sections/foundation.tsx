@@ -1,3 +1,4 @@
+import { Container } from "@/components/ui/container";
 import { Callout } from "@/components/ui/callout";
 import { Heading } from "@/components/ui/heading";
 import { Section } from "@/components/ui/section";
@@ -95,31 +96,30 @@ export function FoundationSection() {
           density over one continuous night, never from opaque blocks painted over it.{" "}
           <code>tone=&quot;default&quot;</code> adds no fill at all.
         </p>
-        <div className="space-y-4">
+        {/*
+         * Stacked with no gaps, because a single tone in isolation is nearly invisible — the
+         * differences between these fills are meant to be felt as one band giving way to the
+         * next, which is the only way they are ever encountered on a real page. The copy sits
+         * inside each band on purpose: that is what proves the token remapping works.
+         */}
+        <div className="overflow-hidden rounded-xl border">
           {(
             [
-              ["default", "No fill. The sky, straight through."],
+              ["default", "No fill at all. The sky, straight through."],
               ["muted", "bg-surface-muted/60 — a slightly denser pane."],
               ["gold", "bg-surface-gold/55 — warmed, for a single feature band."],
-              ["inverse", "bg-background/92 — deep; re-points every semantic token."],
+              [
+                "inverse",
+                "bg-background/92 — deep; re-points every semantic token, text included.",
+              ],
             ] as const
           ).map(([tone, note]) => (
-            <figure key={tone}>
-              {/*
-               * The swatch is empty and the caption sits on the page ground beneath it: text on a
-               * translucent band is the thing to measure per palette rather than assume, and the
-               * callout under this list is what that measurement cost once already.
-               */}
-              <Section
-                spacing="none"
-                tone={tone}
-                aria-hidden="true"
-                className="h-16 rounded-lg border border-dashed border-border"
-              />
-              <figcaption className="mt-2 text-sm text-muted-foreground">
-                <code className="text-xs">tone=&quot;{tone}&quot;</code> — {note}
-              </figcaption>
-            </figure>
+            <Section key={tone} spacing="none" tone={tone} className="py-7">
+              <Container size="wide" className="flex flex-wrap items-baseline gap-x-4 gap-y-1">
+                <code className="text-xs">tone=&quot;{tone}&quot;</code>
+                <span className="text-sm text-muted-foreground">{note}</span>
+              </Container>
+            </Section>
           ))}
         </div>
 

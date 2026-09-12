@@ -105,6 +105,9 @@
   --color-surface-inverse-muted-foreground: var(--surface-inverse-muted-foreground);
   --color-surface-gold: var(--surface-gold);
 
+  --color-selection: var(--selection);
+  --color-selection-foreground: var(--selection-foreground);
+
   /* Fonts — `--font-cormorant` / `--font-karla` are set by next/font in src/lib/fonts.ts */
   --font-serif: var(--font-cormorant), Georgia, "Times New Roman", serif;
   --font-sans: var(--font-karla), system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
@@ -366,7 +369,12 @@
   }
 
   /* Scroll-driven entrance for section headings: CSS only, no observers, off under
-     reduced motion, and never applied to the hero (the LCP element must not fade in). */
+     reduced motion, and never applied to the hero (the LCP element must not fade in).
+     It animates TRANSFORM ONLY and never opacity. `animation-fill-mode: both` holds the
+     first keyframe before the range begins, so fading from 0 left every heading below the
+     fold genuinely invisible until scrolled to — which breaks the project's first rule
+     (everything readable without scrolling, for crawlers and AI answer engines) and left
+     blank gaps in any full-page render. A 10px rise reads the same and costs nothing. */
   .reveal {
     animation: none;
   }
@@ -520,11 +528,9 @@
 
 @keyframes reveal-up {
   from {
-    opacity: 0;
-    transform: translateY(12px);
+    transform: translateY(10px);
   }
   to {
-    opacity: 1;
     transform: none;
   }
 }

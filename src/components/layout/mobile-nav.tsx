@@ -76,7 +76,7 @@ export function MobileNav({ items, bookHref, children }: MobileNavProps) {
         }}
         className={cn(
           "fixed inset-0 m-0 h-dvh max-h-none w-screen max-w-none bg-transparent p-0",
-          "backdrop:bg-surface-inverse-deep/80 backdrop:backdrop-blur-[3px]",
+          "backdrop:bg-surface-inverse-deep/70 backdrop:backdrop-blur-[3px]",
           "justify-end open:flex md:hidden",
         )}
       >
@@ -84,9 +84,10 @@ export function MobileNav({ items, bookHref, children }: MobileNavProps) {
           className={cn(
             // `.glass` for the blur, the specular lips and the shadow, but with a near-opaque
             // fill: a drawer is read, not admired, and a <dialog> in the top layer sits over
-            // running body copy that must not compete with the links on top of it.
+            // running body copy that must not compete with the links on top of it. The scrim
+            // and fill match `ui/sheet` so the native drawer and the Radix one are one object.
             "glass flex h-full w-[min(21rem,88vw)] flex-col rounded-none border-y-0 border-r-0",
-            "border-l-accent-border/35 bg-background/94 text-foreground",
+            "border-l-accent-border/35 bg-popover/90 text-foreground",
             "motion-safe:animate-in motion-safe:duration-(--duration-base) motion-safe:slide-in-from-right",
           )}
         >

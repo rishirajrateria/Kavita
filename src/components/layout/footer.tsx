@@ -3,6 +3,7 @@ import type * as React from "react";
 import { VastuCompass } from "@/components/motifs";
 import { Card } from "@/components/ui/card";
 import { Section } from "@/components/ui/section";
+import { Separator } from "@/components/ui/separator";
 import {
   getCountries,
   getFeaturedCities,
@@ -251,7 +252,8 @@ export async function Footer() {
         </div>
 
         {/* Legal ------------------------------------------------------------------------- */}
-        <div className="mt-14 flex flex-col gap-5 border-t border-accent-border/25 pt-7 text-xs text-muted-foreground">
+        <Separator tone="fade" className="mt-14" />
+        <div className="flex flex-col gap-5 pt-7 text-xs text-muted-foreground">
           <p className="max-w-prose leading-relaxed">
             Astrology and vastu are traditional practices offered for guidance and reflection. They
             are not a substitute for medical, legal or financial advice.

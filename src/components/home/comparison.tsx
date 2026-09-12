@@ -3,7 +3,6 @@ import { Section } from "@/components/ui/section";
 import {
   Table,
   TableBody,
-  TableCaption,
   TableCell,
   TableHead,
   TableHeader,
@@ -28,9 +27,6 @@ export function Comparison() {
         <QuestionHeading block={COMPARISON} route="/" id={COMPARISON.id} layout="split" />
 
         <Table containerClassName="border-t border-accent-border" className="text-base">
-          <TableCaption className="pt-6 text-left text-muted-foreground">
-            {COMPARISON.caption}
-          </TableCaption>
           <TableHeader>
             <TableRow className="border-b border-accent-border/40 hover:bg-transparent">
               <TableHead scope="col" className="h-auto w-[20%] px-0 py-6 whitespace-normal">
@@ -72,6 +68,10 @@ export function Comparison() {
             ))}
           </TableBody>
         </Table>
+
+        {/* The note sits outside the scroll container: inside it, a <caption> takes the
+            table's full scroll width and is clipped off-screen on a phone. */}
+        <p className="-mt-8 text-sm text-muted-foreground">{COMPARISON.caption}</p>
       </Container>
     </Section>
   );

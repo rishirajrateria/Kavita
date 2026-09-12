@@ -1,13 +1,12 @@
 import { QuestionHeading } from "@/components/home/question-heading";
 import { NorthIndianChart, Ornament, VastuCompass } from "@/components/motifs";
-import { cardVariants } from "@/components/ui/card";
+import { Card } from "@/components/ui/card";
 import { Container } from "@/components/ui/container";
 import { Heading } from "@/components/ui/heading";
 import { Section } from "@/components/ui/section";
 import type { LocationRecord } from "@/content/locations/schema";
 import type { GeoService } from "@/lib/data/types";
 import { CHART_STYLE_LABEL } from "@/lib/geo/tables";
-import { cn } from "@/lib/utils";
 import type { Question } from "./answers";
 
 /**
@@ -73,12 +72,12 @@ export function GeoCombinedMethod({
           {order.map((key) => {
             const panel = panels[key];
             return (
-              <article
+              <Card
                 key={key}
-                className={cn(
-                  cardVariants({ variant: "quiet", padding: "lg" }),
-                  "gap-6 overflow-hidden pt-24 sm:pt-28",
-                )}
+                as="article"
+                variant="quiet"
+                padding="lg"
+                className="gap-6 overflow-hidden pt-24 sm:pt-28"
               >
                 <div
                   aria-hidden="true"
@@ -101,7 +100,7 @@ export function GeoCombinedMethod({
                     </li>
                   ))}
                 </ul>
-              </article>
+              </Card>
             );
           })}
         </div>

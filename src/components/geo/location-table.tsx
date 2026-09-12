@@ -4,7 +4,6 @@ import { Section } from "@/components/ui/section";
 import {
   Table,
   TableBody,
-  TableCaption,
   TableCell,
   TableHead,
   TableHeader,
@@ -14,10 +13,10 @@ import type { GeoTable } from "@/lib/geo/tables";
 import type { Question } from "./answers";
 
 /**
- * The page's specification table (CLAUDE.md §9.4) in the home-page comparison style: a gold top
- * rule, serif column heads, first column as a row header. Deliberately unfilled — a table is
- * type on a grid, not an object, so the night shows through it and only the hairlines separate.
- * Rows come from `src/lib/geo/tables`.
+ * The page's specification table (CLAUDE.md §9.4) in the site's editorial table voice: small-caps
+ * column heads over a gold hairline, the first column a serif row header, hairline row rules and
+ * no fill at all — a table is type on a grid, not an object, so the night shows through it.
+ * Cells wrap, so a three-column table still fits a phone. Rows come from `src/lib/geo/tables`.
  */
 export function GeoLocationTable({
   table,
@@ -36,53 +35,44 @@ export function GeoLocationTable({
       <Container size="wide" className="space-y-12">
         <QuestionHeading block={question} route={route} id={table.id} layout="split" />
 
-        <Table
-          containerClassName="rounded-2xl border border-border/70 border-t-2 border-t-accent-border/80"
-          className="text-base"
-        >
-          <TableCaption className="px-4 pb-4 text-left">{table.caption}</TableCaption>
-          <TableHeader>
-            <TableRow className="border-b-2 hover:bg-transparent">
-              {table.columns.map((col, i) => (
-                <TableHead
-                  key={col}
-                  scope="col"
-                  className={
-                    i === 0
-                      ? "h-auto w-[22%] px-5 py-5 font-serif text-lg font-medium whitespace-normal text-foreground"
-                      : "h-auto px-5 py-5 font-serif text-lg font-medium whitespace-normal text-foreground"
-                  }
-                >
-                  {col}
-                </TableHead>
-              ))}
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {table.rows.map((row) => (
-              <TableRow key={row[0]} className="even:bg-accent/20 hover:bg-transparent">
-                {row.map((cell, i) =>
-                  i === 0 ? (
-                    <th
-                      key={i}
-                      scope="row"
-                      className="px-5 py-4 text-left align-top text-sm font-medium text-foreground"
-                    >
-                      {cell}
-                    </th>
-                  ) : (
-                    <TableCell
-                      key={i}
-                      className="min-w-[12rem] px-5 py-4 align-top leading-relaxed whitespace-normal"
-                    >
-                      {cell}
-                    </TableCell>
-                  ),
-                )}
+        <div>
+          <Table className="text-base" aria-label={table.caption}>
+            <TableHeader>
+              {/* The head row's gold hairline comes from TableHeader; no fill, no box. */}
+              <TableRow className="hover:bg-transparent">
+                {table.columns.map((col, i) => (
+                  <TableHead key={col} scope="col" className={i === 0 ? "w-[22%]" : undefined}>
+                    {col}
+                  </TableHead>
+                ))}
               </TableRow>
-            ))}
-          </TableBody>
-        </Table>
+            </TableHeader>
+            <TableBody>
+              {table.rows.map((row) => (
+                <TableRow key={row[0]}>
+                  {row.map((cell, i) =>
+                    i === 0 ? (
+                      <th
+                        key={i}
+                        scope="row"
+                        className="py-3.5 pr-6 text-left align-top font-serif text-lg leading-snug font-normal text-foreground"
+                      >
+                        {cell}
+                      </th>
+                    ) : (
+                      <TableCell key={i} className="py-3.5">
+                        {cell}
+                      </TableCell>
+                    ),
+                  )}
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+          {/* Outside the scroll container: a wide table scrolls sideways and would carry its own
+          <caption> off-screen with it on a phone. */}
+          <p className="mt-4 text-sm text-muted-foreground">{table.caption}</p>
+        </div>
       </Container>
     </Section>
   );
