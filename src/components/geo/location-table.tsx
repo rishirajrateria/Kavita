@@ -14,8 +14,10 @@ import type { GeoTable } from "@/lib/geo/tables";
 import type { Question } from "./answers";
 
 /**
- * The page's specification table (CLAUDE.md §9.4) in the home-page comparison style: gold top
- * rule, serif column heads, first column as a row header. Rows come from `src/lib/geo/tables`.
+ * The page's specification table (CLAUDE.md §9.4) in the home-page comparison style: a gold top
+ * rule, serif column heads, first column as a row header. Deliberately unfilled — a table is
+ * type on a grid, not an object, so the night shows through it and only the hairlines separate.
+ * Rows come from `src/lib/geo/tables`.
  */
 export function GeoLocationTable({
   table,
@@ -30,12 +32,12 @@ export function GeoLocationTable({
   tone?: "default" | "muted";
 }) {
   return (
-    <Section id={table.id} spacing="lg" tone={tone} bordered={tone === "muted"}>
-      <Container size="wide" className="space-y-10">
+    <Section id={table.id} spacing="lg" tone={tone}>
+      <Container size="wide" className="space-y-12">
         <QuestionHeading block={question} route={route} id={table.id} layout="split" />
 
         <Table
-          containerClassName="rounded-xl border border-t-2 border-t-accent-border bg-background shadow-sm"
+          containerClassName="rounded-2xl border border-border/70 border-t-2 border-t-accent-border/80"
           className="text-base"
         >
           <TableCaption className="px-4 pb-4 text-left">{table.caption}</TableCaption>
@@ -58,7 +60,7 @@ export function GeoLocationTable({
           </TableHeader>
           <TableBody>
             {table.rows.map((row) => (
-              <TableRow key={row[0]} className="even:bg-surface-muted/40 hover:bg-transparent">
+              <TableRow key={row[0]} className="even:bg-accent/20 hover:bg-transparent">
                 {row.map((cell, i) =>
                   i === 0 ? (
                     <th

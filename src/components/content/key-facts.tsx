@@ -1,3 +1,4 @@
+import { Card } from "@/components/ui/card";
 import { Container } from "@/components/ui/container";
 import { Heading } from "@/components/ui/heading";
 import { Section } from "@/components/ui/section";
@@ -28,15 +29,17 @@ export interface KeyFactsProps {
 }
 
 const COLS: Record<NonNullable<KeyFactsProps["columns"]>, string> = {
-  2: "lg:grid-cols-2",
-  3: "lg:grid-cols-3",
-  4: "lg:grid-cols-4",
+  2: "sm:grid-cols-2",
+  3: "sm:grid-cols-2 lg:grid-cols-3",
+  4: "sm:grid-cols-2 lg:grid-cols-4",
 };
 
 /**
- * Ruled key-facts band (CLAUDE.md §9.3): a compact `<dl>` on parchment with gold hairlines
- * between items, identical to the home and geo bands. Every value is passed in by the page,
- * or overridden per route from `/admin/aeo`.
+ * Key-facts slab (CLAUDE.md §9.3): a compact `<dl>` on a frosted plate, ruled by gold
+ * hairlines rather than divided into filled cells — identical to the home and geo slabs. This
+ * is one of the two blocks a content page spends `.glass` on, because it is the block an answer
+ * engine lifts almost verbatim. Every value is passed in by the page, or overridden per route
+ * from `/admin/aeo`.
  */
 export async function KeyFacts({
   heading = "At a glance",
@@ -49,44 +52,40 @@ export async function KeyFacts({
 }: KeyFactsProps) {
   const items = mergeKeyFacts(ownItems, route ? await getKeyFactsOverride(route) : []);
   if (items.length === 0) return null;
-  const odd = items.length % 2 === 1;
 
   return (
     <Section
       id={id}
-      spacing="none"
-      tone="muted"
-      className={cn("scroll-mt-20 border-y border-accent-border/40", className)}
+      spacing="sm"
+      className={cn("scroll-mt-20", className)}
       aria-labelledby={`${id}-heading`}
     >
-      <Container size="wide" className="py-8 sm:py-10">
-        <Heading
-          as="h2"
-          level={6}
-          id={`${id}-heading`}
-          className="mb-6 text-center font-sans text-xs font-semibold tracking-[0.16em] text-accent-strong uppercase"
-        >
-          {heading}
-        </Heading>
-        <dl
-          className={cn(
-            "grid grid-cols-2 gap-px overflow-hidden rounded-lg border border-accent-border/30 bg-accent-border/30",
-            COLS[columns],
-            odd && "[&>div:last-child]:col-span-2 lg:[&>div:last-child]:col-span-1",
-          )}
-        >
-          {items.map(({ label, value }) => (
-            <div key={label} className="bg-surface-muted px-4 py-4 sm:px-5 sm:py-5">
-              <dt className="text-[0.65rem] font-semibold tracking-[0.1em] text-accent-strong uppercase sm:text-[0.68rem] sm:tracking-[0.12em]">
-                {label}
-              </dt>
-              <dd className="mt-1.5 font-serif text-[0.95rem] leading-snug text-foreground sm:text-lg">
-                {value}
-              </dd>
-            </div>
-          ))}
-        </dl>
-        {note ? <p className="mt-4 text-sm text-muted-foreground">{note}</p> : null}
+      <Container size="wide">
+        <Card variant="glass" padding="lg">
+          <Heading
+            as="h2"
+            level={6}
+            id={`${id}-heading`}
+            className="flex items-center gap-4 font-sans text-xs font-semibold tracking-[0.16em] text-accent-strong uppercase after:h-px after:flex-1 after:bg-accent-border/40"
+          >
+            {heading}
+          </Heading>
+          <dl className={cn("mt-2 grid gap-x-10", COLS[columns])}>
+            {items.map(({ label, value }) => (
+              <div key={label} className="border-t border-accent-border/25 py-4 sm:py-5">
+                <dt className="text-[0.65rem] font-semibold tracking-[0.12em] text-accent-strong uppercase">
+                  {label}
+                </dt>
+                <dd className="mt-2 font-serif text-lg leading-snug text-foreground">{value}</dd>
+              </div>
+            ))}
+          </dl>
+          {note ? (
+            <p className="border-t border-accent-border/25 pt-4 text-sm text-muted-foreground">
+              {note}
+            </p>
+          ) : null}
+        </Card>
       </Container>
     </Section>
   );

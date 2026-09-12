@@ -16,6 +16,7 @@ const SEMANTIC: ReadonlyArray<{ token: string; fg: string; note: string }> = [
   { token: "--accent", fg: "--accent-foreground", note: "Gold tint hover / highlight" },
   { token: "--surface-gold", fg: "--accent-strong", note: "Gold-tinted section" },
   { token: "--surface-inverse", fg: "--surface-inverse-foreground", note: "Inverse section" },
+  { token: "--cta", fg: "--cta-foreground", note: "Solid antique gold — the primary CTA" },
   { token: "--destructive", fg: "--destructive-foreground", note: "Destructive action" },
   { token: "--success-soft", fg: "--success", note: "Success notice" },
   { token: "--warning-soft", fg: "--warning", note: "Warning notice" },
@@ -43,16 +44,18 @@ export function ColorsSection() {
           Colour
         </Heading>
         <p className="max-w-prose text-muted-foreground">
-          Three primitive ramps and a semantic layer on top. Components only use semantic tokens;
-          the ramps exist so the semantic layer can be tuned without touching components. All
-          body-text pairs meet WCAG 2.2 AA (see the ratio table in
-          <code> src/styles/tokens.css</code>).
+          Three primitive ramps and a semantic layer on top. Components read semantic tokens only —
+          a primitive ramp or a raw hex in a component is a bug, because it is a colour that works
+          in one palette and breaks in the other. The ramps exist so the semantic layer can be
+          retuned without touching a single component. Every pair below is rendered live in the
+          palette you are currently in; switch the toggle above to check the other. All body-text
+          pairs meet WCAG 2.2 AA in both.
         </p>
       </div>
 
       {RAMPS.map((ramp) => (
         <div key={ramp.name} className="space-y-3">
-          <Heading as="h3" level={5}>
+          <Heading as="h3" level={4}>
             {ramp.label}
           </Heading>
           <div className="grid grid-cols-4 gap-3 sm:grid-cols-6 lg:grid-cols-11">
@@ -68,7 +71,7 @@ export function ColorsSection() {
       ))}
 
       <div className="space-y-3">
-        <Heading as="h3" level={5}>
+        <Heading as="h3" level={4}>
           Semantic pairs
         </Heading>
         <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">

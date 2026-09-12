@@ -31,7 +31,7 @@ export function Breadcrumbs({ items, className, withoutHome = false }: Breadcrum
 
   return (
     <>
-      <Breadcrumb className={cn("py-3", className)}>
+      <Breadcrumb className={cn("py-4 sm:py-5", className)}>
         <BreadcrumbList>
           {trail.map((crumb, index) => (
             <BreadcrumbItemGroup

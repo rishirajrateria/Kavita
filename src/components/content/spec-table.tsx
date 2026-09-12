@@ -16,9 +16,10 @@ export interface SpecTableData {
 }
 
 /**
- * Specification / comparison table in the home-page style (CLAUDE.md §9.4): gold top rule,
- * serif column heads, zebra rows, first column as a row header. Plain server HTML; wide tables
- * scroll sideways inside their own container, never the page.
+ * Specification / comparison table in the home-page style (CLAUDE.md §9.4): a gold top rule,
+ * serif column heads, zebra rows, first column as a row header. Deliberately unfilled — a table
+ * is type on a grid, not an object. Plain server HTML; wide tables scroll sideways inside their
+ * own container, never the page.
  */
 export function SpecTable({
   table,
@@ -30,7 +31,7 @@ export function SpecTable({
   const [corner, ...rest] = table.columns;
   const captionId = useId();
   return (
-    <div className="rounded-xl border border-t-2 border-t-accent-border bg-background shadow-sm">
+    <div className="rounded-2xl border border-t-2 border-border/70 border-t-accent-border/80">
       <Table className="text-base" aria-describedby={captionId}>
         <TableHeader>
           <TableRow className="border-b-2 hover:bg-transparent">
@@ -54,7 +55,7 @@ export function SpecTable({
         </TableHeader>
         <TableBody>
           {table.rows.map((row) => (
-            <TableRow key={row[0]} className="even:bg-surface-muted/40 hover:bg-transparent">
+            <TableRow key={row[0]} className="even:bg-accent/20 hover:bg-transparent">
               {row.map((cell, i) =>
                 i === 0 ? (
                   <th
@@ -78,7 +79,10 @@ export function SpecTable({
         </TableBody>
       </Table>
       {/* Outside the scroll container so it never clips on narrow screens. */}
-      <p id={captionId} className="border-t px-4 py-4 text-sm text-muted-foreground">
+      <p
+        id={captionId}
+        className="border-t border-border/70 px-5 py-4 text-sm text-muted-foreground"
+      >
         {table.caption}
       </p>
     </div>

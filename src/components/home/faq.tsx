@@ -20,36 +20,45 @@ export async function FaqSection({ faqs }: { faqs: Faq[] }) {
 
   return (
     <Section id={FAQ_SECTION.id} spacing="lg">
-      <Container size="wide" className="space-y-10">
-        <div className="reveal grid gap-6 lg:grid-cols-[1.1fr_1fr] lg:items-end lg:gap-12">
-          <Heading as="h2" level={2} eyebrow={FAQ_SECTION.eyebrow} className="max-w-[26ch]">
+      <Container size="wide" className="space-y-14">
+        <div className="reveal grid gap-8 lg:grid-cols-[1.05fr_1fr] lg:items-end lg:gap-16">
+          <Heading
+            as="h2"
+            level={2}
+            eyebrow={FAQ_SECTION.eyebrow}
+            className="max-w-[22ch] text-4xl leading-[1.08]"
+          >
             {FAQ_SECTION.heading}
           </Heading>
           <p className="answer">{answer}</p>
         </div>
 
-        <div className="divide-y divide-accent-border/40 border-y border-accent-border/40">
+        <div className="divide-y divide-border/60 border-t border-b border-t-accent-border/40 border-b-border/60">
           {faqs.map((faq) => (
             <details key={faq.id} className="faq-item group">
-              <summary className="flex min-h-14 items-center justify-between gap-6 py-4 pr-1 text-left [&::marker]:hidden">
-                <Heading as="h3" level={4} className="text-lg sm:text-xl">
+              <summary className="flex min-h-16 items-center justify-between gap-8 py-5 pr-1 text-left [&::marker]:hidden">
+                <Heading
+                  as="h3"
+                  level={4}
+                  className="max-w-[46ch] text-lg transition-colors duration-(--duration-base) group-hover:text-accent-strong sm:text-xl"
+                >
                   {faq.question}
                 </Heading>
                 <span
                   aria-hidden="true"
-                  className="faq-marker inline-flex size-9 shrink-0 items-center justify-center rounded-full border border-accent-border/60 font-serif text-2xl leading-none text-accent-strong"
+                  className="faq-marker inline-flex size-8 shrink-0 items-center justify-center font-serif text-3xl leading-none font-light text-accent-strong"
                 >
                   +
                 </span>
               </summary>
-              <div className="pb-6 lg:max-w-[70%]">
+              <div className="pb-8 lg:max-w-[68%]">
                 <p className="answer text-base">{faq.answer}</p>
               </div>
             </details>
           ))}
         </div>
 
-        <Button asChild variant="link" className="px-0">
+        <Button asChild variant="link">
           <Link href={FAQ_SECTION.allLink.href}>{FAQ_SECTION.allLink.label} →</Link>
         </Button>
       </Container>

@@ -43,34 +43,29 @@ export function GeoTradition({
   facts.push(["Birth records", t.birthRecordsNote]);
 
   return (
-    <Section
-      id="tradition"
-      spacing="lg"
-      tone={tone}
-      bordered={tone === "muted"}
-      className="overflow-hidden"
-    >
+    <Section id="tradition" spacing="lg" tone={tone} className="overflow-hidden">
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute -bottom-24 -left-24 w-72 text-gold-500/15 sm:w-96 dark:text-gold-300/10"
+        data-breathe
+        className="pointer-events-none absolute -bottom-24 -left-24 w-72 text-accent-strong/12 sm:w-96"
       >
         <Motif decorative strokeWidth={0.6} />
       </div>
-      <Container size="wide" className="relative space-y-10">
+      <Container size="wide" className="relative space-y-12">
         <QuestionHeading block={question} route={route} id="tradition" layout="split" />
 
         <div className="grid gap-10 lg:grid-cols-[1fr_1.4fr] lg:gap-16">
-          <dl className="divide-y divide-accent-border/40 self-start border-y border-accent-border/40">
+          <dl className="self-start">
             {facts.map(([label, value]) => (
-              <div key={label} className="py-4">
+              <div key={label} className="border-t border-accent-border/30 py-5">
                 <dt className="text-[0.68rem] font-semibold tracking-[0.12em] text-accent-strong uppercase">
                   {label}
                 </dt>
-                <dd className="mt-1.5 font-serif text-lg leading-snug">{value}</dd>
+                <dd className="mt-2 font-serif text-xl leading-snug">{value}</dd>
               </div>
             ))}
           </dl>
-          <div className="space-y-5 text-lg leading-relaxed">
+          <div className="max-w-prose space-y-6 text-lg leading-relaxed text-muted-foreground">
             {paragraphs(t.narrative).map((p) => (
               <p key={p.slice(0, 40)}>{p}</p>
             ))}

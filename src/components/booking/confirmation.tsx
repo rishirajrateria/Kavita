@@ -33,15 +33,21 @@ export function Confirmation(props: ConfirmationProps) {
     token: receipt.token,
   });
 
+  /*
+   * The receipt fills the glass panel it sits inside — the negative margins cancel that panel's
+   * padding — with the deepest surface on the site, because this is the one screen that should
+   * feel like a different room. Held at 90% rather than opaque so the pane's rim and the sky
+   * still read at its edges; ivory on near-black stays far above AA either way.
+   */
   return (
     <div
       data-tone="inverse"
       data-depth="deep"
-      className="grain relative -m-6 overflow-hidden rounded-2xl bg-background p-6 text-foreground sm:-m-10 sm:p-10"
+      className="grain relative -m-6 overflow-hidden rounded-xl bg-background/90 p-6 text-foreground backdrop-blur-sm sm:-m-10 sm:p-10"
     >
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute -top-24 -right-24 w-[26rem] text-gold-300/10 sm:w-[32rem]"
+        className="pointer-events-none absolute -top-24 -right-24 w-[26rem] text-accent-strong/10 sm:w-[32rem]"
       >
         <SouthIndianChart decorative strokeWidth={0.6} />
       </div>

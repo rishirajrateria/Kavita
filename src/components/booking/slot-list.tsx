@@ -58,7 +58,7 @@ export function SlotList({
                   "focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50",
                   isSelected
                     ? "border-cta bg-cta text-cta-foreground shadow-cta"
-                    : "border-border bg-background hover:border-accent-border hover:bg-accent/40",
+                    : "border-border bg-background/85 hover:border-accent-border hover:bg-accent/40",
                 )}
               >
                 <span className="flex flex-col">

@@ -433,9 +433,12 @@ export function BookingFlow(props: BookingFlowProps & { maxMonth: string; brandN
           locked={state.receipt !== null}
         />
       </div>
-      <div className="double-rule relative min-h-[36rem] rounded-2xl border border-accent-border/40 bg-background p-6 shadow-sm sm:p-10">
-        {screen}
-      </div>
+      {/*
+        The one glass object on the page. A booking flow is a tool, so the pane stops here: every
+        control inside it sits on a solid, high-contrast surface rather than a second sheet of
+        glass. Nested translucency is where forms stop being legible.
+      */}
+      <div className="glass relative min-h-[36rem] p-6 sm:p-10">{screen}</div>
     </div>
   );
 }

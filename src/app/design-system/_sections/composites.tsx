@@ -71,7 +71,7 @@ export function CompositesSection() {
       </div>
 
       <div className="space-y-3">
-        <Heading as="h3" level={5}>
+        <Heading as="h3" level={4}>
           Breadcrumb
         </Heading>
         <Breadcrumb>
@@ -92,7 +92,7 @@ export function CompositesSection() {
       </div>
 
       <div className="space-y-3">
-        <Heading as="h3" level={5}>
+        <Heading as="h3" level={4}>
           Tabs
         </Heading>
         <Tabs defaultValue="one" className="max-w-xl">
@@ -114,7 +114,7 @@ export function CompositesSection() {
       </div>
 
       <div className="space-y-3">
-        <Heading as="h3" level={5}>
+        <Heading as="h3" level={4}>
           Accordion (FAQ pattern)
         </Heading>
         <Accordion type="single" collapsible className="max-w-xl">
@@ -130,7 +130,7 @@ export function CompositesSection() {
       </div>
 
       <div className="space-y-3">
-        <Heading as="h3" level={5}>
+        <Heading as="h3" level={4}>
           Select, Dialog, Sheet
         </Heading>
         <div className="flex flex-wrap items-center gap-3">
@@ -176,7 +176,7 @@ export function CompositesSection() {
       </div>
 
       <div className="space-y-3">
-        <Heading as="h3" level={5}>
+        <Heading as="h3" level={4}>
           Table
         </Heading>
         <Table>
@@ -204,7 +204,7 @@ export function CompositesSection() {
       </div>
 
       <div className="space-y-3">
-        <Heading as="h3" level={5}>
+        <Heading as="h3" level={4}>
           Pagination
         </Heading>
         <Pagination>

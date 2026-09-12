@@ -1,4 +1,6 @@
 import type * as React from "react";
+import { AlertCircleIcon, ChevronDownIcon } from "lucide-react";
+import { fieldClassName } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 
 export interface FieldProps {
@@ -16,8 +18,12 @@ export function Field({ id, label, hint, errors, required, children, className }
   const hintId = hint ? `${id}-hint` : undefined;
   const errorId = errors?.length ? `${id}-error` : undefined;
   return (
-    <div className={cn("space-y-1.5", className)} data-field={id}>
-      <label htmlFor={id} className="flex items-center gap-2 text-sm font-medium">
+    <div
+      className={cn("space-y-2", className)}
+      data-field={id}
+      data-invalid={errorId ? "" : undefined}
+    >
+      <label htmlFor={id} className="flex items-center gap-1.5 text-sm font-medium text-foreground">
         {label}
         {required ? (
           <span aria-hidden="true" className="text-accent-strong">
@@ -31,9 +37,18 @@ export function Field({ id, label, hint, errors, required, children, className }
           {hint}
         </p>
       ) : null}
+      {/*
+       * An error has to survive both palettes and a quick scan: the icon carries it when colour
+       * alone would not, and `--error` is a token pair that is legible on either ground.
+       */}
       {errorId ? (
-        <p id={errorId} role="alert" className="text-xs font-medium text-error">
-          {errors?.join(" ")}
+        <p
+          id={errorId}
+          role="alert"
+          className="flex items-start gap-1.5 text-sm leading-snug font-medium text-error"
+        >
+          <AlertCircleIcon aria-hidden="true" className="mt-0.5 size-4 shrink-0" />
+          <span>{errors?.join(" ")}</span>
         </p>
       ) : null}
     </div>
@@ -46,18 +61,31 @@ export function describedBy(id: string, hint?: string, errors?: string[]): strin
   return ids.length ? ids.join(" ") : undefined;
 }
 
-/** Native `<select>` styled like the Input primitive; works without JavaScript. */
+/**
+ * Native `<select>` — works without JavaScript, which the Radix Select cannot.
+ *
+ * It inherits `fieldClassName` from the Input primitive rather than restating it, so the two
+ * controls can never drift apart; only the things a select needs on top (the chevron, the
+ * cursor, the option colours a dark UA would otherwise get wrong) are added here.
+ */
 export function NativeSelect({ className, ...props }: React.ComponentProps<"select">) {
   return (
-    <select
-      data-slot="native-select"
-      className={cn(
-        "h-9 w-full min-w-0 rounded-md border border-input bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none md:text-sm dark:bg-input/30",
-        "focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50",
-        "aria-invalid:border-destructive aria-invalid:ring-destructive/20",
-        className,
-      )}
-      {...props}
-    />
+    <div className="relative">
+      <select
+        data-slot="native-select"
+        className={cn(
+          fieldClassName,
+          "h-11 cursor-pointer appearance-none pr-10",
+          "[&>option]:bg-popover [&>option]:text-popover-foreground",
+          className,
+        )}
+        {...props}
+      />
+      {/* A real element rather than a data-URI chevron, so the arrow reads a theme token. */}
+      <ChevronDownIcon
+        aria-hidden="true"
+        className="pointer-events-none absolute top-1/2 right-3.5 size-4 -translate-y-1/2 text-accent-strong"
+      />
+    </div>
   );
 }

@@ -60,7 +60,7 @@ export async function Byline({
     <div
       data-slot="byline"
       className={cn(
-        "flex flex-wrap items-center gap-x-8 gap-y-3 border-y border-accent-border/40 py-4 text-sm",
+        "flex flex-wrap items-center gap-x-10 gap-y-3 border-t border-accent-border/40 py-5 text-sm",
         className,
       )}
     >
@@ -72,7 +72,7 @@ export async function Byline({
             height={40}
             alt=""
             aria-hidden="true"
-            className="size-10 shrink-0 rounded-full border border-accent-border/60 object-cover"
+            className="size-10 shrink-0 rounded-full border border-accent-border/50 object-cover"
           />
         )}
         <span>

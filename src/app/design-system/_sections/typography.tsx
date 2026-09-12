@@ -46,9 +46,12 @@ export function TypographySection() {
           Typography
         </Heading>
         <p className="max-w-prose text-muted-foreground">
-          Fraunces (variable, self-hosted) for headings via <code>font-serif</code>; Inter
-          (variable, self-hosted) for body via <code>font-sans</code>. Sizes are fluid{" "}
-          <code>clamp()</code> steps between 360px and 1280px viewports.
+          Cormorant (variable, self-hosted) for headings via <code>font-serif</code>; Karla
+          (variable, self-hosted) for body via <code>font-sans</code>. Only the upright faces are
+          shipped and preloaded — italics are synthesized, because the italic files cost ~97KB of
+          render-critical bytes. Sizes are fluid <code>clamp()</code> steps between 360px and 1280px
+          viewports. Cormorant is high-contrast, so the display steps run at{" "}
+          <code>font-normal</code> with tighter tracking and only pick up weight at the small end.
         </p>
       </div>
 
@@ -65,7 +68,7 @@ export function TypographySection() {
       </div>
 
       <div className="space-y-3">
-        <Heading as="h3" level={5}>
+        <Heading as="h3" level={4}>
           Heading component
         </Heading>
         <div className="space-y-4 rounded-lg border p-6">
@@ -94,7 +97,7 @@ export function TypographySection() {
       </div>
 
       <div className="space-y-3">
-        <Heading as="h3" level={5}>
+        <Heading as="h3" level={4}>
           Prose and the answer block
         </Heading>
         <Prose>
@@ -135,7 +138,7 @@ export function TypographySection() {
       </div>
 
       <div className="space-y-3">
-        <Heading as="h3" level={5} id="spacing">
+        <Heading as="h3" level={4} id="spacing">
           Spacing, radii, shadows
         </Heading>
         <div className="grid gap-6 lg:grid-cols-3">

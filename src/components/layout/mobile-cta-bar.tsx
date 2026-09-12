@@ -39,6 +39,10 @@ function subscribeDismissed(onChange: () => void) {
  * Fixed bottom call-to-action bar for small screens. Appears once the visitor has scrolled 40%
  * of the page, can be dismissed for the session, and is `aria-hidden` + `inert` while hidden so
  * it never captures focus off-screen.
+ *
+ * Visually the mirror of the header: the same frosted rail, gold hairline on the edge facing
+ * the page. The fill stays near-opaque rather than true glass — this bar sits over running body
+ * copy, and a tool you tap must not compete with the text it is covering.
  */
 export function MobileCtaBar({ bookHref, whatsappHref }: MobileCtaBarProps) {
   const pathname = usePathname();
@@ -93,13 +97,14 @@ export function MobileCtaBar({ bookHref, whatsappHref }: MobileCtaBarProps) {
       inert={!shown}
       data-state={shown ? "open" : "closed"}
       className={cn(
-        "fixed inset-x-0 bottom-0 z-30 border-t bg-background/95 backdrop-blur transition-transform duration-(--duration-fast) ease-standard motion-reduce:transition-none md:hidden",
+        "glass fixed inset-x-0 bottom-0 z-30 rounded-none border-x-0 border-b-0 border-t-accent-border/30",
+        "bg-background/88 transition-transform duration-(--duration-base) ease-standard motion-reduce:transition-none md:hidden",
         "pb-[env(safe-area-inset-bottom)]",
         shown ? "translate-y-0" : "translate-y-full",
       )}
     >
-      <div className="flex items-center gap-2 px-gutter py-2">
-        <Button asChild variant="primary" size="default" className="flex-1">
+      <div className="flex items-center gap-2 px-gutter py-2.5">
+        <Button asChild variant="gold" size="default" className="flex-1">
           <Link href={bookHref}>Book a consultation</Link>
         </Button>
         {whatsappHref ? (
@@ -114,6 +119,7 @@ export function MobileCtaBar({ bookHref, whatsappHref }: MobileCtaBarProps) {
           type="button"
           variant="ghost"
           size="icon-sm"
+          className="size-10 shrink-0"
           onClick={dismiss}
           aria-label="Dismiss quick actions"
         >

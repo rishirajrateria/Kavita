@@ -17,8 +17,9 @@ export interface TocProps {
 }
 
 /**
- * "On this page" — a server-rendered list of in-page anchors, no JavaScript. Rendered as a
- * slim band that sticks below the site header; on phones it scrolls sideways in one line.
+ * "On this page" — a server-rendered list of in-page anchors, no JavaScript. A slim frosted
+ * rail that sticks below the site header and reads as a continuation of it; on phones it
+ * scrolls sideways in one line.
  */
 export function Toc({ items, label = "On this page", sticky = true, className }: TocProps) {
   if (items.length === 0) return null;
@@ -28,12 +29,12 @@ export function Toc({ items, label = "On this page", sticky = true, className }:
       aria-label={label}
       data-slot="toc"
       className={cn(
-        "z-30 border-b border-accent-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/85",
+        "z-30 border-b border-accent-border/30 bg-background/80 backdrop-blur-xl backdrop-saturate-150",
         sticky && "sticky top-16",
         className,
       )}
     >
-      <Container size="wide" className="flex items-center gap-4 overflow-x-auto py-2.5">
+      <Container size="wide" className="flex items-center gap-5 overflow-x-auto py-3">
         <span className="shrink-0 font-sans text-[0.65rem] font-semibold tracking-[0.14em] text-accent-strong uppercase">
           {label}
         </span>

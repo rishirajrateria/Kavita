@@ -50,7 +50,8 @@ export function CtaBand({
     >
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute top-1/2 left-1/2 w-[38rem] -translate-x-1/2 -translate-y-1/2 text-gold-300/10 sm:w-[46rem]"
+        data-breathe
+        className="pointer-events-none absolute top-1/2 left-1/2 w-[38rem] -translate-x-1/2 -translate-y-1/2 text-accent-strong/12 sm:w-[46rem]"
       >
         {motif === "compass" ? (
           <VastuCompass decorative hideLabels description="" strokeWidth={0.6} />
@@ -59,25 +60,25 @@ export function CtaBand({
         )}
       </div>
 
-      <Container size="narrow" className="relative space-y-7 text-center">
+      <Container size="narrow" className="relative space-y-8 text-center">
         <Heading
           as="h2"
           level={2}
           eyebrow={eyebrow}
-          className="mx-auto max-w-[24ch] text-4xl [&>[data-slot=eyebrow]]:justify-center"
+          className="mx-auto max-w-[22ch] text-5xl leading-[1.06] [&>[data-slot=eyebrow]]:justify-center"
         >
           {title}
         </Heading>
         {asAnswer ? (
-          <p className="answer border-inline-start-0 mx-auto pl-0 text-left text-lg sm:text-center">
+          <p className="answer mx-auto max-w-[56ch] border-s-0 border-t border-accent-border/50 ps-0 pt-7 text-left sm:text-center">
             {body}
           </p>
         ) : (
-          <p className="mx-auto max-w-prose text-lg leading-relaxed text-muted-foreground">
+          <p className="mx-auto max-w-[56ch] border-t border-accent-border/50 pt-7 text-lg leading-relaxed text-muted-foreground">
             {body}
           </p>
         )}
-        <div className="flex flex-wrap justify-center gap-3">
+        <div className="flex flex-wrap justify-center gap-3 pt-2">
           <Button asChild variant="gold" size="xl">
             <Link href={primaryHref}>{primaryLabel}</Link>
           </Button>

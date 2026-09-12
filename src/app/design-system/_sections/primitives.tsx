@@ -45,7 +45,7 @@ export function PrimitivesSection() {
       </div>
 
       <div className="space-y-3">
-        <Heading as="h3" level={5}>
+        <Heading as="h3" level={4}>
           Button — variants and sizes
         </Heading>
         <div className="flex flex-wrap items-center gap-3">
@@ -71,7 +71,7 @@ export function PrimitivesSection() {
       </div>
 
       <div className="space-y-3">
-        <Heading as="h3" level={5}>
+        <Heading as="h3" level={4}>
           Badge
         </Heading>
         <div className="flex flex-wrap gap-2">
@@ -84,7 +84,7 @@ export function PrimitivesSection() {
       </div>
 
       <div className="space-y-3">
-        <Heading as="h3" level={5}>
+        <Heading as="h3" level={4}>
           Form fields
         </Heading>
         <div className="grid max-w-xl gap-4">
@@ -104,7 +104,7 @@ export function PrimitivesSection() {
       </div>
 
       <div className="space-y-3">
-        <Heading as="h3" level={5}>
+        <Heading as="h3" level={4}>
           Card, Avatar, Separator
         </Heading>
         <div className="grid gap-4 md:grid-cols-2">
@@ -145,7 +145,7 @@ export function PrimitivesSection() {
       </div>
 
       <div className="space-y-3">
-        <Heading as="h3" level={5}>
+        <Heading as="h3" level={4}>
           Callout
         </Heading>
         <div className="grid gap-3 md:grid-cols-2">
@@ -165,7 +165,7 @@ export function PrimitivesSection() {
       </div>
 
       <div className="space-y-3">
-        <Heading as="h3" level={5}>
+        <Heading as="h3" level={4}>
           Rating (display only)
         </Heading>
         <p className="max-w-prose text-sm text-muted-foreground">
@@ -180,7 +180,7 @@ export function PrimitivesSection() {
       </div>
 
       <div className="space-y-3">
-        <Heading as="h3" level={5}>
+        <Heading as="h3" level={4}>
           Section and Container
         </Heading>
         <div className="overflow-hidden rounded-lg border">

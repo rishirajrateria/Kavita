@@ -40,18 +40,18 @@ export function GeoOpening({
   const concerns = r.clientConcerns;
 
   return (
-    <Section id="opening" spacing="lg" tone={tone} bordered={tone === "muted"}>
-      <Container size="wide" className="space-y-10">
+    <Section id="opening" spacing="lg" tone={tone}>
+      <Container size="wide" className="space-y-12">
         <QuestionHeading block={question} route={route} id="opening" layout="split" />
 
         <div className="grid gap-10 lg:grid-cols-[1.4fr_1fr] lg:gap-16">
-          <div className="space-y-5 text-lg leading-relaxed">
+          <div className="max-w-prose space-y-6 text-lg leading-relaxed text-muted-foreground">
             {paragraphs(opening).map((p) => (
               <p key={p.slice(0, 40)}>{p}</p>
             ))}
           </div>
 
-          <aside className="space-y-8 border-t border-accent-border/50 pt-6 lg:border-t-0 lg:border-l lg:pt-0 lg:pl-8">
+          <aside className="space-y-10 border-t border-accent-border/50 pt-7 lg:border-t-0 lg:border-l lg:border-accent-border/30 lg:pt-0 lg:pl-10">
             <div>
               <Heading
                 as="h3"
@@ -60,7 +60,7 @@ export function GeoOpening({
               >
                 Around {loc.name}
               </Heading>
-              <ul className="mt-4 space-y-3">
+              <ul className="mt-5 space-y-4">
                 {r.landmarks.map((l) => (
                   <li key={l.name} className="flex gap-3">
                     <Ornament className="mt-1.5 size-3.5 shrink-0 text-accent-strong" />
@@ -89,7 +89,7 @@ export function GeoOpening({
                 >
                   What clients from {loc.name} most often bring
                 </Heading>
-                <ul className="mt-4 space-y-2 border-l-2 border-accent-border pl-4 font-serif text-lg leading-snug">
+                <ul className="mt-5 space-y-3 border-l-2 border-accent-border pl-5 font-serif text-xl leading-snug">
                   {concerns.map((c) => (
                     <li key={c}>{c}</li>
                   ))}

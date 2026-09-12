@@ -12,6 +12,10 @@ export interface SocialLinksProps {
 /**
  * Server component. Reads `social_links` (visible rows, sorted by `sort_order`) and renders
  * accessible icon links. Renders nothing when no link is enabled for the placement.
+ *
+ * Footer icons sit in hairline circles — small instruments in a row — and warm to gold with a
+ * 2px lift on hover. Header icons drop the ring so the frosted rail stays uncluttered next to
+ * the theme toggle, which is also a bare ghost control.
  */
 export async function SocialLinks({ placement, className, iconSize = 20 }: SocialLinksProps) {
   const links = (await getSocialLinks())
@@ -34,8 +38,12 @@ export async function SocialLinks({ placement, className, iconSize = 20 }: Socia
             aria-label={link.label || link.platform}
             title={link.label || link.platform}
             className={cn(
-              "inline-flex items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-accent hover:text-accent-strong",
-              placement === "footer" ? "size-11" : "size-9",
+              "inline-flex items-center justify-center rounded-full text-muted-foreground",
+              "transition-[color,border-color,translate] duration-(--duration-base) ease-standard",
+              "hover:-translate-y-0.5 hover:text-accent-strong motion-reduce:hover:translate-y-0",
+              placement === "footer"
+                ? "size-11 border border-border/70 hover:border-accent-border/70"
+                : "size-9",
             )}
           >
             <SocialIcon name={resolveSocialIcon(link.icon, link.platform)} size={iconSize} />

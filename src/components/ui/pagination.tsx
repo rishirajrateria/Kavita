@@ -20,7 +20,7 @@ function PaginationContent({ className, ...props }: React.ComponentProps<"ul">) 
   return (
     <ul
       data-slot="pagination-content"
-      className={cn("flex flex-row items-center gap-1", className)}
+      className={cn("flex flex-row items-center gap-1.5", className)}
       {...props}
     />
   );
@@ -43,7 +43,7 @@ function PaginationLink({ className, isActive, size = "icon", ...props }: Pagina
       data-active={isActive}
       className={cn(
         buttonVariants({
-          variant: isActive ? "outline" : "ghost",
+          variant: isActive ? "gold-outline" : "ghost",
           size,
         }),
         className,
@@ -86,7 +86,7 @@ function PaginationEllipsis({ className, ...props }: React.ComponentProps<"span"
     <span
       aria-hidden
       data-slot="pagination-ellipsis"
-      className={cn("flex size-9 items-center justify-center", className)}
+      className={cn("flex size-10 items-center justify-center text-muted-foreground", className)}
       {...props}
     >
       <MoreHorizontalIcon className="size-4" />

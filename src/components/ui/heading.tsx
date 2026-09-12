@@ -2,15 +2,21 @@ import * as React from "react";
 import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 
-const headingVariants = cva("font-serif font-medium tracking-tight text-balance", {
+/*
+ * Cormorant is a high-contrast display serif: at large sizes its thin strokes are the point, so
+ * the big steps run at `font-normal` with tighter tracking, and weight is only added back at the
+ * small end where a serif at 400 would stop reading as a heading. This is deliberately lighter
+ * than the base `h1..h6` rule in globals.css, which these utilities override.
+ */
+const headingVariants = cva("font-serif tracking-tight text-balance", {
   variants: {
     level: {
-      display: "text-6xl leading-none",
-      1: "text-5xl",
-      2: "text-3xl",
-      3: "text-2xl",
-      4: "text-xl",
-      5: "text-lg",
+      display: "text-6xl leading-none font-normal tracking-[-0.02em]",
+      1: "text-5xl font-normal tracking-[-0.018em]",
+      2: "text-3xl font-normal",
+      3: "text-2xl font-normal",
+      4: "text-xl font-medium",
+      5: "text-lg font-medium",
       6: "text-base font-semibold",
     },
     tone: {
@@ -65,7 +71,7 @@ function Heading({
       {eyebrow ? (
         <span
           data-slot="eyebrow"
-          className="mb-4 flex items-center gap-3 font-sans text-xs font-semibold tracking-[0.14em] text-accent-strong uppercase before:h-px before:w-8 before:shrink-0 before:bg-accent-border"
+          className="mb-5 flex items-center gap-3 font-sans text-xs font-medium tracking-[0.18em] text-accent-strong uppercase before:h-px before:w-10 before:shrink-0 before:bg-accent-border/70"
         >
           {eyebrow}
         </span>

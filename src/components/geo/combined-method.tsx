@@ -1,17 +1,22 @@
 import { QuestionHeading } from "@/components/home/question-heading";
 import { NorthIndianChart, Ornament, VastuCompass } from "@/components/motifs";
+import { cardVariants } from "@/components/ui/card";
 import { Container } from "@/components/ui/container";
 import { Heading } from "@/components/ui/heading";
 import { Section } from "@/components/ui/section";
 import type { LocationRecord } from "@/content/locations/schema";
 import type { GeoService } from "@/lib/data/types";
 import { CHART_STYLE_LABEL } from "@/lib/geo/tables";
+import { cn } from "@/lib/utils";
 import type { Question } from "./answers";
 
 /**
  * The combined method angled to this place (CLAUDE.md §1): two instrument panels — what the
  * chart reads for a client here, what the home's plan reads for this housing — and one line on
- * how they meet. On state pages this sits on parchment; on city pages on deep indigo.
+ * how they meet. On state pages this sits on the muted pane; on city pages on deep indigo.
+ *
+ * Two panels, so they take the `quiet` card — a hairline and air, with the motif bleeding off
+ * the corner. Glass is reserved for the key-facts slab and the FAQ.
  */
 export function GeoCombinedMethod({
   loc,
@@ -59,10 +64,9 @@ export function GeoCombinedMethod({
       id="combined-method"
       spacing="lg"
       tone={tone}
-      bordered={tone === "muted"}
       className={tone === "inverse" ? "grain overflow-hidden" : undefined}
     >
-      <Container size="wide" className="relative space-y-12">
+      <Container size="wide" className="relative space-y-14">
         <QuestionHeading block={question} route={route} id="combined-method" layout="split" />
 
         <div className="grid gap-6 lg:grid-cols-2 lg:gap-8">
@@ -71,15 +75,22 @@ export function GeoCombinedMethod({
             return (
               <article
                 key={key}
-                className="relative flex flex-col gap-5 overflow-hidden rounded-2xl border border-accent-border/25 bg-card p-6 pt-28 text-card-foreground sm:p-8 sm:pt-36"
+                className={cn(
+                  cardVariants({ variant: "quiet", padding: "lg" }),
+                  "gap-6 overflow-hidden pt-24 sm:pt-28",
+                )}
               >
-                <div className="pointer-events-none absolute -top-8 -right-8 w-40 text-accent-strong/60 sm:-top-10 sm:-right-10 sm:w-52">
+                <div
+                  aria-hidden="true"
+                  data-breathe
+                  className="pointer-events-none absolute -top-10 -right-10 w-44 text-accent-strong/40 sm:-top-12 sm:-right-12 sm:w-60"
+                >
                   {panel.motif}
                 </div>
                 <Heading as="h3" level={3} tone="accent" className="max-w-[18ch]">
                   {panel.heading}
                 </Heading>
-                <ul className="space-y-3 border-t border-accent-border/30 pt-5 leading-relaxed text-muted-foreground">
+                <ul className="space-y-4 border-t border-accent-border/25 pt-6 leading-relaxed text-muted-foreground">
                   {panel.points.map((point) => (
                     <li key={point.slice(0, 24)} className="flex gap-3">
                       <span
@@ -95,8 +106,8 @@ export function GeoCombinedMethod({
           })}
         </div>
 
-        <p className="mx-auto flex max-w-prose items-start gap-4 border-t border-accent-border/40 pt-6 font-serif text-xl leading-relaxed text-accent-strong italic">
-          <Ornament className="mt-1.5 size-5 shrink-0" strokeWidth={1.1} />
+        <p className="mx-auto flex max-w-prose items-start gap-4 border-t border-accent-border/40 pt-7 font-serif text-2xl leading-relaxed text-accent-strong italic">
+          <Ornament className="mt-2.5 size-5 shrink-0" strokeWidth={1.1} />
           <span>
             The chart tells Astrologer Kavita where to look in a {loc.name} home; the home tells her
             which chart remedies matter most right now. One diagnosis, one list.

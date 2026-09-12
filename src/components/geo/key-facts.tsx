@@ -1,3 +1,4 @@
+import { Card } from "@/components/ui/card";
 import { Container } from "@/components/ui/container";
 import { Heading } from "@/components/ui/heading";
 import { Section } from "@/components/ui/section";
@@ -9,9 +10,14 @@ import { realValue } from "@/lib/site";
 import type { WindowInfo } from "./types";
 
 /**
- * Ruled key-facts band (CLAUDE.md §9.3) for a geo page: service, practitioner, area served,
- * modes, languages, session length, time zone with today's offset, live-session window in both
- * zones, response time. Every value is data; the visual matches the home-page band exactly.
+ * Key-facts slab (CLAUDE.md §9.3) for a geo page: service, practitioner, area served, modes,
+ * languages, session length, time zone with today's offset, live-session window in both zones,
+ * response time. Every value is data; the visual matches the home-page band exactly.
+ *
+ * This is one of the two places on a geo page that spends `.glass`: the facts are the block an
+ * answer engine lifts almost verbatim, so it is the block that should read as a physical
+ * instrument plate lifting off the night rather than another ruled paragraph. The rules inside
+ * are hairlines on the plate, not cell fills — a grid of filled boxes reads as flat as a table.
  */
 export async function GeoKeyFacts({
   loc,
@@ -75,34 +81,33 @@ export async function GeoKeyFacts({
   const facts = mergeKeyFacts(ownFacts, route ? await getKeyFactsOverride(route) : []);
 
   return (
-    <Section
-      spacing="none"
-      tone="muted"
-      className="border-y border-accent-border/40"
-      aria-labelledby="geo-key-facts"
-    >
-      <Container size="wide" className="py-8 sm:py-10">
-        <Heading
-          as="h2"
-          level={6}
-          id="geo-key-facts"
-          className="mb-6 text-center font-sans text-xs font-semibold tracking-[0.16em] text-accent-strong uppercase"
-        >
-          {GEO_SERVICE_META[service].label} in {loc.name} at a glance
-        </Heading>
-        <dl className="grid grid-cols-2 gap-px overflow-hidden rounded-lg border border-accent-border/30 bg-accent-border/30 lg:grid-cols-3 [&>div:last-child]:col-span-2 lg:[&>div:last-child]:col-span-1">
-          {facts.map(({ label, value }) => (
-            <div key={label} className="bg-surface-muted px-4 py-4 sm:px-5 sm:py-5">
-              <dt className="text-[0.65rem] font-semibold tracking-[0.1em] text-accent-strong uppercase sm:text-[0.68rem] sm:tracking-[0.12em]">
-                {label}
-              </dt>
-              <dd className="mt-1.5 font-serif text-[0.95rem] leading-snug text-foreground sm:text-lg">
-                {value}
-              </dd>
-            </div>
-          ))}
-        </dl>
-        {window.note ? <p className="mt-4 text-sm text-muted-foreground">{window.note}</p> : null}
+    <Section spacing="sm" aria-labelledby="geo-key-facts">
+      <Container size="wide">
+        <Card variant="glass" padding="lg">
+          <Heading
+            as="h2"
+            level={6}
+            id="geo-key-facts"
+            className="flex items-center gap-4 font-sans text-xs font-semibold tracking-[0.16em] text-accent-strong uppercase after:h-px after:flex-1 after:bg-accent-border/40"
+          >
+            {GEO_SERVICE_META[service].label} in {loc.name} at a glance
+          </Heading>
+          <dl className="mt-2 grid gap-x-10 sm:grid-cols-2 lg:grid-cols-3">
+            {facts.map(({ label, value }) => (
+              <div key={label} className="border-t border-accent-border/25 py-4 sm:py-5">
+                <dt className="text-[0.65rem] font-semibold tracking-[0.12em] text-accent-strong uppercase">
+                  {label}
+                </dt>
+                <dd className="mt-2 font-serif text-lg leading-snug text-foreground">{value}</dd>
+              </div>
+            ))}
+          </dl>
+          {window.note ? (
+            <p className="border-t border-accent-border/25 pt-4 text-sm text-muted-foreground">
+              {window.note}
+            </p>
+          ) : null}
+        </Card>
       </Container>
     </Section>
   );

@@ -33,27 +33,30 @@ export function GeoLinks({
   const meta = GEO_SERVICE_META[service];
 
   return (
-    <Section id="nearby" spacing="lg" tone={tone} bordered={tone === "muted"}>
-      <Container size="wide" className="space-y-10">
+    <Section id="nearby" spacing="lg" tone={tone}>
+      <Container size="wide" className="space-y-12">
         <QuestionHeading block={question} route={route} id="nearby" layout="split" />
 
-        <div className="grid gap-8 border-t border-accent-border/40 pt-8 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="grid gap-10 border-t border-accent-border/40 pt-10 sm:grid-cols-2 lg:grid-cols-3">
           {graph.siblings.length > 0 ? (
             <div>
               <Heading as="h3" level={5} className="text-accent-strong">
                 {siblingLabel}
               </Heading>
-              <ul className="mt-4 divide-y divide-border border-y border-border">
+              <ul className="mt-5">
                 {graph.siblings.map((s) => (
                   <li key={s.path}>
                     <Link
                       href={graph.href(s)}
-                      className="flex min-h-11 items-center justify-between gap-4 py-2 no-underline hover:text-accent-strong"
+                      className="group flex min-h-12 items-center justify-between gap-4 border-t border-border py-2 no-underline transition-colors duration-(--duration-base) hover:border-accent-border/60 hover:text-accent-strong"
                     >
                       <span className="font-medium">
                         {meta.label} in {s.name}
                       </span>
-                      <span aria-hidden="true" className="text-accent-strong">
+                      <span
+                        aria-hidden="true"
+                        className="text-accent-strong transition-transform duration-(--duration-base) ease-emphasized group-hover:translate-x-1 motion-reduce:transition-none"
+                      >
                         →
                       </span>
                     </Link>
@@ -67,15 +70,18 @@ export function GeoLinks({
             <Heading as="h3" level={5} className="text-accent-strong">
               The other half of the method
             </Heading>
-            <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
+            <p className="mt-5 text-sm leading-relaxed text-muted-foreground">
               The same place, read from the {service === "astrologer" ? "home" : "chart"} side.
             </p>
             <Link
               href={graph.counterpart.href}
-              className="mt-3 inline-flex min-h-11 items-center gap-2 font-serif text-xl text-foreground no-underline hover:text-accent-strong"
+              className="group mt-3 inline-flex min-h-11 items-center gap-2 font-serif text-xl text-foreground no-underline transition-colors duration-(--duration-base) hover:text-accent-strong"
             >
               {graph.counterpart.label}
-              <span aria-hidden="true" className="text-accent-strong">
+              <span
+                aria-hidden="true"
+                className="text-accent-strong transition-transform duration-(--duration-base) ease-emphasized group-hover:translate-x-1 motion-reduce:transition-none"
+              >
                 →
               </span>
             </Link>
@@ -91,10 +97,13 @@ export function GeoLinks({
               </p>
               <Link
                 href={graph.href(graph.parent)}
-                className="mt-3 inline-flex min-h-11 items-center gap-2 font-serif text-xl text-foreground no-underline hover:text-accent-strong"
+                className="group mt-3 inline-flex min-h-11 items-center gap-2 font-serif text-xl text-foreground no-underline transition-colors duration-(--duration-base) hover:text-accent-strong"
               >
                 {meta.label} in {graph.parent.name}
-                <span aria-hidden="true" className="text-accent-strong">
+                <span
+                  aria-hidden="true"
+                  className="text-accent-strong transition-transform duration-(--duration-base) ease-emphasized group-hover:translate-x-1 motion-reduce:transition-none"
+                >
                   →
                 </span>
               </Link>

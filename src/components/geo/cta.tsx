@@ -28,7 +28,7 @@ export async function GeoCta({
   route?: string;
   whatsappHref: string | null;
 }) {
-  const Motif = GEO_SERVICE_META[service].motif === "compass" ? VastuCompass : SouthIndianChart;
+  const compass = GEO_SERVICE_META[service].motif === "compass";
   const overrides = route ? await getAnswerOverridesForRoute(route) : {};
   const answer = pickAnswer(overrides, "book", question.answer);
 
@@ -42,24 +42,29 @@ export async function GeoCta({
     >
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute top-1/2 left-1/2 w-[38rem] -translate-x-1/2 -translate-y-1/2 text-gold-300/10 sm:w-[46rem]"
+        data-breathe
+        className="pointer-events-none absolute top-1/2 left-1/2 w-[38rem] -translate-x-1/2 -translate-y-1/2 text-accent-strong/12 sm:w-[46rem]"
       >
-        <Motif decorative hideLabels description="" strokeWidth={0.6} />
+        {compass ? (
+          <VastuCompass decorative hideLabels description="" strokeWidth={0.6} />
+        ) : (
+          <SouthIndianChart decorative strokeWidth={0.6} />
+        )}
       </div>
 
-      <Container size="narrow" className="relative space-y-7 text-center">
+      <Container size="narrow" className="relative space-y-8 text-center">
         <Heading
           as="h2"
           level={2}
           eyebrow={question.eyebrow}
-          className="mx-auto max-w-[24ch] text-4xl [&>[data-slot=eyebrow]]:justify-center"
+          className="mx-auto max-w-[22ch] text-5xl leading-[1.06] [&>[data-slot=eyebrow]]:justify-center"
         >
           {question.question}
         </Heading>
-        <p className="answer border-inline-start-0 mx-auto pl-0 text-left text-lg sm:text-center">
+        <p className="answer mx-auto max-w-[56ch] border-s-0 border-t border-accent-border/50 ps-0 pt-7 text-left sm:text-center">
           {answer}
         </p>
-        <div className="flex flex-wrap justify-center gap-3">
+        <div className="flex flex-wrap justify-center gap-3 pt-2">
           <Button asChild variant="gold" size="xl">
             <Link href={geoBookHref(loc)}>Book from {loc.shortName ?? loc.name}</Link>
           </Button>

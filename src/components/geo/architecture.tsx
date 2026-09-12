@@ -49,30 +49,25 @@ export function GeoArchitecture({
   if (!ca) return null;
 
   return (
-    <Section
-      id="architecture"
-      spacing="lg"
-      tone={tone}
-      bordered={tone === "muted"}
-      className="overflow-hidden"
-    >
+    <Section id="architecture" spacing="lg" tone={tone} className="overflow-hidden">
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute -right-28 -bottom-28 w-80 text-gold-500/15 sm:w-[28rem] dark:text-gold-300/10"
+        data-breathe
+        className="pointer-events-none absolute -right-28 -bottom-28 w-80 text-accent-strong/12 sm:w-[28rem]"
       >
         <VastuCompass decorative hideLabels description="" strokeWidth={0.6} />
       </div>
-      <Container size="wide" className="relative space-y-10">
+      <Container size="wide" className="relative space-y-12">
         <QuestionHeading block={question} route={route} id="architecture" layout="split" />
 
         <div className="grid gap-10 lg:grid-cols-[1.4fr_1fr] lg:gap-16">
-          <div className="space-y-5 text-lg leading-relaxed">
+          <div className="max-w-prose space-y-6 text-lg leading-relaxed text-muted-foreground">
             {paragraphs(ca.narrative).map((p) => (
               <p key={p.slice(0, 40)}>{p}</p>
             ))}
           </div>
 
-          <aside className="self-start border-t border-accent-border/50 pt-6 lg:border-t-0 lg:border-l lg:pt-0 lg:pl-8">
+          <aside className="self-start border-t border-accent-border/50 pt-7 lg:border-t-0 lg:border-l lg:border-accent-border/30 lg:pt-0 lg:pl-10">
             <Heading
               as="h3"
               level={6}
@@ -80,7 +75,7 @@ export function GeoArchitecture({
             >
               Site conditions that shape the advice in {loc.name}
             </Heading>
-            <ul className="mt-4 space-y-3 leading-relaxed text-muted-foreground">
+            <ul className="mt-5 space-y-4 leading-relaxed text-muted-foreground">
               {ca.facts.map((fact) => (
                 <li key={fact.slice(0, 32)} className="flex gap-3">
                   <span
@@ -91,7 +86,7 @@ export function GeoArchitecture({
                 </li>
               ))}
             </ul>
-            <dl className="mt-6 space-y-3 border-t border-accent-border/40 pt-5 text-sm">
+            <dl className="mt-8 space-y-4 border-t border-accent-border/30 pt-6 text-sm">
               <div>
                 <dt className="font-semibold text-foreground">Housing stock</dt>
                 <dd className="text-muted-foreground">{ca.housingStock}</dd>
@@ -107,7 +102,7 @@ export function GeoArchitecture({
         </div>
 
         {showRemoteProcess ? (
-          <div className="border-t border-accent-border/40 pt-10">
+          <div className="border-t border-accent-border/30 pt-12">
             <Heading as="h3" level={3} className="max-w-[28ch]">
               How a remote vastu review of a {loc.name} home works
             </Heading>

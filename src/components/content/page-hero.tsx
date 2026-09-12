@@ -38,12 +38,12 @@ export interface PageHeroProps {
 
 const MOTIF_CLASS: Record<PageHeroMotif, string> = {
   compass:
-    "pointer-events-none absolute top-[-26vw] right-[-40vw] w-[80vw] text-gold-500/20 lg:top-[-16vw] lg:right-[-14vw] lg:w-[54vw] dark:text-gold-300/12",
+    "pointer-events-none absolute top-[-26vw] right-[-40vw] w-[80vw] text-accent-strong/15 lg:top-[-16vw] lg:right-[-14vw] lg:w-[54vw]",
   "north-chart":
-    "pointer-events-none absolute top-[-14vw] right-[-30vw] w-[70vw] rotate-6 text-gold-500/20 lg:top-[-10vw] lg:right-[-10vw] lg:w-[46vw] dark:text-gold-300/12",
+    "pointer-events-none absolute top-[-14vw] right-[-30vw] w-[70vw] rotate-6 text-accent-strong/15 lg:top-[-10vw] lg:right-[-10vw] lg:w-[46vw]",
   "south-chart":
-    "pointer-events-none absolute top-[-12vw] right-[-28vw] w-[66vw] -rotate-3 text-gold-500/20 lg:top-[-8vw] lg:right-[-8vw] lg:w-[42vw] dark:text-gold-300/12",
-  lines: "pointer-events-none absolute inset-x-0 -top-[6vw] text-gold-500/20 dark:text-gold-300/14",
+    "pointer-events-none absolute top-[-12vw] right-[-28vw] w-[66vw] -rotate-3 text-accent-strong/15 lg:top-[-8vw] lg:right-[-8vw] lg:w-[42vw]",
+  lines: "pointer-events-none absolute inset-x-0 -top-[6vw] text-accent-strong/16",
 };
 
 function Motif({ motif }: { motif: PageHeroMotif }) {
@@ -90,7 +90,7 @@ export function PageHero({
       )}
       aria-labelledby={`${id}-title`}
     >
-      <div aria-hidden="true" className={MOTIF_CLASS[motif]}>
+      <div aria-hidden="true" data-breathe className={MOTIF_CLASS[motif]}>
         <Motif motif={motif} />
       </div>
 
@@ -109,21 +109,21 @@ export function PageHero({
               level="display"
               id={`${id}-title`}
               eyebrow={eyebrow}
-              className="text-[clamp(2.4rem,1.4rem+3.6vw,4.4rem)] leading-[1.04] tracking-[-0.02em]"
+              className="text-[clamp(2.4rem,1.4rem+3.6vw,4.4rem)] leading-[1.04] tracking-[-0.02em] text-balance"
             >
               {title}
             </Heading>
 
-            <p className="mt-6 max-w-[36rem] text-lg leading-relaxed text-muted-foreground">
+            <p className="mt-7 max-w-[38rem] text-lg leading-relaxed text-muted-foreground">
               {lede}
             </p>
 
             {actions ? (
-              <div className="mt-8 flex flex-wrap items-center gap-3">{actions}</div>
+              <div className="mt-9 flex flex-wrap items-center gap-3">{actions}</div>
             ) : null}
 
             {entity ? (
-              <p className="mt-8 max-w-[36rem] border-t border-accent-border/40 pt-5 text-sm leading-relaxed text-muted-foreground">
+              <p className="mt-10 max-w-[38rem] border-t border-accent-border/40 pt-6 text-sm leading-relaxed text-muted-foreground">
                 {entity}
               </p>
             ) : null}

@@ -143,7 +143,7 @@ export function ManageBooking(props: ManageBookingProps) {
                 {MANAGE_PAGE.reschedule.button}
               </Button>
             ) : (
-              <div className="space-y-6 rounded-2xl border border-accent-border/40 bg-background p-5 sm:p-8">
+              <div className="glass space-y-6 p-5 sm:p-8">
                 {availability.status === "error" ? (
                   <Callout variant="error" title={BOOK_TIME_STEP.loadFailed}>
                     <Button
@@ -237,7 +237,10 @@ export function ManageBooking(props: ManageBookingProps) {
             <dialog
               ref={dialog}
               aria-labelledby="cancel-dialog-title"
-              className="m-auto w-[min(92vw,28rem)] rounded-2xl border border-accent-border/40 bg-background p-6 text-foreground shadow-xl backdrop:bg-indigo-950/60 sm:p-8"
+              /* Opaque popover, not glass: a confirmation you cannot misread beats atmosphere.
+                 The scrim reads --surface-inverse-deep so it stays a dark veil in both palettes
+                 (bg-indigo-950/60 was a primitive ramp and only happened to work). */
+              className="m-auto w-[min(92vw,28rem)] rounded-xl border border-accent-border/40 bg-popover p-6 text-popover-foreground shadow-xl backdrop:bg-surface-inverse-deep/70 sm:p-8"
             >
               <Heading as="h3" level={3} id="cancel-dialog-title">
                 {MANAGE_PAGE.cancel.confirmTitle}

@@ -12,7 +12,7 @@ function BreadcrumbList({ className, ...props }: React.ComponentProps<"ol">) {
     <ol
       data-slot="breadcrumb-list"
       className={cn(
-        "flex flex-wrap items-center gap-1.5 text-sm break-words text-muted-foreground sm:gap-2.5",
+        "flex flex-wrap items-center gap-2 text-xs tracking-[0.04em] break-words text-muted-foreground sm:gap-2.5",
         className,
       )}
       {...props}
@@ -42,7 +42,10 @@ function BreadcrumbLink({
   return (
     <Comp
       data-slot="breadcrumb-link"
-      className={cn("transition-colors hover:text-foreground", className)}
+      className={cn(
+        "underline-offset-4 transition-colors duration-(--duration-base) ease-standard hover:text-accent-strong hover:underline hover:decoration-accent-border/60",
+        className,
+      )}
       {...props}
     />
   );
@@ -55,7 +58,7 @@ function BreadcrumbPage({ className, ...props }: React.ComponentProps<"span">) {
       role="link"
       aria-disabled="true"
       aria-current="page"
-      className={cn("font-normal text-foreground", className)}
+      className={cn("font-medium text-foreground", className)}
       {...props}
     />
   );
@@ -67,7 +70,7 @@ function BreadcrumbSeparator({ children, className, ...props }: React.ComponentP
       data-slot="breadcrumb-separator"
       role="presentation"
       aria-hidden="true"
-      className={cn("[&>svg]:size-3.5", className)}
+      className={cn("text-accent-border/60 [&>svg]:size-3", className)}
       {...props}
     >
       {children ?? <ChevronRight />}

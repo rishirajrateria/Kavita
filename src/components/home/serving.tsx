@@ -9,35 +9,43 @@ import { QuestionHeading } from "./question-heading";
 /**
  * Country and featured-city links to both geo families (CLAUDE.md §5): the home page is the
  * root of the geo link graph, so every published country and featured city is reachable from
- * here in one click for both `/astrologer/…` and `/vastu-consultant/…`. Countries are
- * segmented ivory pills on indigo; cities a compact two-column list.
+ * here in one click for both `/astrologer/…` and `/vastu-consultant/…`.
+ *
+ * Both lists use one idiom at two scales — a name on the left, its two service links on the
+ * right, hairline between rows — so the whole index reads as a single ruled register rather
+ * than a cluster of pills above a table. The rows are the page's densest link block; keeping
+ * them unboxed is what stops that density turning into noise.
  */
 export function Serving({ countries, cities }: { countries: Location[]; cities: Location[] }) {
   return (
     <Section id={SERVING.id} spacing="lg" tone="inverse" className="grain overflow-hidden">
-      <Container size="wide" className="relative space-y-12">
+      <Container size="wide" className="relative space-y-16">
         <QuestionHeading block={SERVING} route="/" id={SERVING.id} layout="split" />
 
         {countries.length > 0 ? (
           <div>
-            <Heading as="h3" level={5} className="mb-5 text-accent-strong">
+            <Heading
+              as="h3"
+              level={6}
+              className="font-sans text-xs font-semibold tracking-[0.14em] text-accent-strong uppercase"
+            >
               {SERVING.countriesHeading}
             </Heading>
-            <ul className="flex flex-wrap gap-3">
+            <ul className="mt-6 border-t border-accent-border/40">
               {countries.map((location) => (
                 <li
                   key={location.path}
-                  className="flex min-h-11 w-full items-stretch overflow-hidden rounded-full border border-ivory-100/25 bg-ivory-50/5 text-sm sm:w-auto"
+                  className="flex flex-wrap items-baseline justify-between gap-x-8 gap-y-1 border-b border-accent-border/20 py-4"
                 >
-                  <span className="inline-flex flex-1 items-center pr-3 pl-5 font-serif text-base text-foreground sm:flex-none">
-                    {location.name}
+                  <span className="font-serif text-2xl leading-snug">{location.name}</span>
+                  <span className="flex items-center gap-5 text-sm">
+                    <GeoLink href={locationHref(location, "astrologer")} name={location.name}>
+                      {SERVING.astrologerLabel}
+                    </GeoLink>
+                    <GeoLink href={locationHref(location, "vastu-consultant")} name={location.name}>
+                      {SERVING.vastuLabel}
+                    </GeoLink>
                   </span>
-                  <PillLink href={locationHref(location, "astrologer")} name={location.name}>
-                    {SERVING.astrologerLabel}
-                  </PillLink>
-                  <PillLink href={locationHref(location, "vastu-consultant")} name={location.name}>
-                    {SERVING.vastuLabel}
-                  </PillLink>
                 </li>
               ))}
             </ul>
@@ -46,26 +54,27 @@ export function Serving({ countries, cities }: { countries: Location[]; cities: 
 
         {cities.length > 0 ? (
           <div>
-            <Heading as="h3" level={5} className="mb-4 text-accent-strong">
+            <Heading
+              as="h3"
+              level={6}
+              className="font-sans text-xs font-semibold tracking-[0.14em] text-accent-strong uppercase"
+            >
               {SERVING.citiesHeading}
             </Heading>
-            <ul className="grid gap-x-10 border-t border-border sm:grid-cols-2">
+            <ul className="mt-6 grid gap-x-16 border-t border-border/60 sm:grid-cols-2">
               {cities.map((location) => (
                 <li
                   key={location.path}
-                  className="flex flex-wrap items-center justify-between gap-x-4 border-b border-border py-1.5"
+                  className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1 border-b border-border/60 py-3"
                 >
-                  <span className="font-medium">{location.name}</span>
-                  <span className="flex gap-1 text-sm">
-                    <CityLink href={locationHref(location, "astrologer")} name={location.name}>
+                  <span className="font-serif text-lg">{location.name}</span>
+                  <span className="flex items-center gap-5 text-sm">
+                    <GeoLink href={locationHref(location, "astrologer")} name={location.name}>
                       {SERVING.astrologerLabel}
-                    </CityLink>
-                    <CityLink
-                      href={locationHref(location, "vastu-consultant")}
-                      name={location.name}
-                    >
+                    </GeoLink>
+                    <GeoLink href={locationHref(location, "vastu-consultant")} name={location.name}>
                       {SERVING.vastuLabel}
-                    </CityLink>
+                    </GeoLink>
                   </span>
                 </li>
               ))}
@@ -94,7 +103,12 @@ export function Serving({ countries, cities }: { countries: Location[]; cities: 
   );
 }
 
-function PillLink({
+/**
+ * A geo link in either register. The underline is a gold hairline that only appears on hover
+ * or focus, so a list of twenty of them is quiet until it is used; `min-h-11` keeps the tap
+ * target honest on a phone without adding a visible box.
+ */
+function GeoLink({
   href,
   name,
   children,
@@ -106,27 +120,7 @@ function PillLink({
   return (
     <Link
       href={href}
-      className="inline-flex items-center border-l border-ivory-100/20 px-3.5 text-foreground no-underline transition-colors hover:bg-cta hover:text-cta-foreground focus-visible:bg-cta focus-visible:text-cta-foreground focus-visible:outline-none"
-    >
-      {children}
-      <span className="sr-only"> in {name}</span>
-    </Link>
-  );
-}
-
-function CityLink({
-  href,
-  name,
-  children,
-}: {
-  href: string;
-  name: string;
-  children: React.ReactNode;
-}) {
-  return (
-    <Link
-      href={href}
-      className="inline-flex min-h-11 items-center rounded-md px-2 text-accent-strong no-underline underline-offset-[3px] hover:underline"
+      className="inline-flex min-h-11 items-center text-accent-strong no-underline decoration-accent-border/70 underline-offset-[5px] hover:underline focus-visible:underline"
     >
       {children}
       <span className="sr-only"> in {name}</span>

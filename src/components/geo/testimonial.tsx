@@ -10,6 +10,9 @@ import type { Question } from "./answers";
  * block only when the record's `testimonialId` resolves to a published, consented,
  * non-placeholder row; otherwise the block is omitted entirely. No Review/AggregateRating
  * schema is ever emitted from here.
+ *
+ * A pull quote, not a card: an oversized gold quotation mark, a gold rule down the side and
+ * nothing else, so a real voice reads as speech on the page rather than as another panel.
  */
 export function GeoTestimonial({
   testimonial,
@@ -23,21 +26,21 @@ export function GeoTestimonial({
 }) {
   const t = testimonial;
   return (
-    <Section id="client-experience" spacing="lg" tone="muted" bordered>
-      <Container size="wide" className="space-y-10">
+    <Section id="client-experience" spacing="lg" tone="muted">
+      <Container size="wide" className="space-y-12">
         <QuestionHeading block={question} route={route} id="client-experience" layout="split" />
-        <figure className="relative mx-auto max-w-[52rem] overflow-hidden rounded-xl border bg-background p-8 pt-16 shadow-xs sm:p-10 sm:pt-20">
+        <figure className="relative mx-auto max-w-[52rem] border-l-2 border-accent-border/60 pt-10 pl-7 sm:pl-10">
           <span
             aria-hidden="true"
-            className="pointer-events-none absolute top-2 left-7 font-serif text-[5rem] leading-none text-accent-strong/25 select-none"
+            className="pointer-events-none absolute top-0 left-5 font-serif text-[6rem] leading-none text-accent-strong/25 select-none sm:left-8"
           >
             &ldquo;
           </span>
           {t.rating != null ? <Rating value={t.rating} size="sm" /> : null}
-          <blockquote className="mt-4 font-serif text-xl leading-relaxed sm:text-2xl">
+          <blockquote className="mt-4 font-serif text-2xl leading-relaxed sm:text-3xl">
             <p>{t.quote}</p>
           </blockquote>
-          <figcaption className="mt-6 border-t border-accent-border/30 pt-4 text-sm text-muted-foreground">
+          <figcaption className="mt-8 border-t border-accent-border/30 pt-4 text-sm text-muted-foreground">
             <span className="font-sans text-base text-foreground">{t.clientName}</span>
             {t.date ? (
               <>

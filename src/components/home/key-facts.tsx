@@ -7,7 +7,7 @@ import { getKeyFactsOverride, mergeKeyFacts } from "@/lib/seo/aeo-data";
 
 /**
  * Compact definition list of the facts an answer engine lifts verbatim (CLAUDE.md §9.3), set
- * as a parchment band ruled with gold hairlines. Every value comes from settings, services or
+ * as a band ruled with gold hairlines. Every value comes from settings, services or
  * the location tree — nothing is typed in here.
  */
 export async function KeyFacts({
@@ -51,29 +51,27 @@ export async function KeyFacts({
   return (
     <Section
       spacing="none"
-      tone="muted"
+      tone="gold"
       className="border-y border-accent-border/40"
       aria-labelledby="key-facts-heading"
     >
-      <Container size="wide" className="py-8 sm:py-10">
+      <Container size="wide" className="py-12 sm:py-16">
         <Heading
           as="h2"
           level={6}
           id="key-facts-heading"
-          className="mb-6 text-center font-sans text-xs font-semibold tracking-[0.16em] text-accent-strong uppercase"
+          className="font-sans text-xs font-semibold tracking-[0.16em] text-accent-strong uppercase"
         >
           {KEY_FACTS.heading}
         </Heading>
-        {/* 1px gaps over a gold-tinted ground draw the hairline grid between items. */}
-        <dl className="grid grid-cols-2 gap-px overflow-hidden rounded-lg border border-accent-border/30 bg-accent-border/30 lg:grid-cols-4">
+        {/* Each fact is ruled, not boxed: one gold hairline over it and air around it. */}
+        <dl className="mt-12 grid gap-x-12 gap-y-10 sm:grid-cols-2 lg:grid-cols-4">
           {facts.map(({ label, value }) => (
-            <div key={label} className="bg-surface-muted px-4 py-4 sm:px-5 sm:py-5">
-              <dt className="text-[0.65rem] font-semibold tracking-[0.1em] text-accent-strong uppercase sm:text-[0.68rem] sm:tracking-[0.12em]">
+            <div key={label} className="border-t border-accent-border/40 pt-5">
+              <dt className="text-[0.68rem] font-semibold tracking-[0.12em] text-accent-strong uppercase">
                 {label}
               </dt>
-              <dd className="mt-1.5 font-serif text-[0.95rem] leading-snug text-foreground sm:text-lg">
-                {value}
-              </dd>
+              <dd className="mt-2.5 font-serif text-lg leading-snug text-foreground">{value}</dd>
             </div>
           ))}
         </dl>

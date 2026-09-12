@@ -27,39 +27,56 @@ const ROUTES = [
 
 export default function GonePage() {
   return (
-    <Section spacing="lg">
-      <Container size="narrow" className="flex flex-col gap-8">
-        <AstronomicalLines decorative className="h-16 w-40 text-accent-strong" />
+    <Section spacing="lg" className="overflow-hidden">
+      {/* Setting orbits rather than the compass: this address is not lost, it has gone down. */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 -z-10 flex items-center justify-center opacity-[0.09]"
+      >
+        {/* `data-breathe` animates opacity, so the fade lives on the wrapper, not the svg. */}
+        <AstronomicalLines
+          decorative
+          data-breathe
+          className="w-[52rem] max-w-[150%] text-accent-strong"
+        />
+      </div>
+
+      <Container size="narrow" className="relative flex flex-col items-center gap-10 text-center">
         <div>
-          <Heading as="h1" level={1} eyebrow="Error 410">
+          <Heading
+            as="h1"
+            level={1}
+            eyebrow="Error 410"
+            className="[&>[data-slot=eyebrow]]:justify-center"
+          >
             This page has been removed
           </Heading>
-          <p className="mt-4 max-w-prose text-lg text-muted-foreground">
+          <p className="mx-auto mt-6 max-w-prose text-lg leading-relaxed text-muted-foreground">
             The page at this address was taken down on purpose and will not return. If you arrived
             from a search result or an old link, the sections below hold everything that is still
             current.
           </p>
         </div>
-        <ul className="grid gap-4 sm:grid-cols-2">
+
+        <ul className="grid w-full gap-4 text-left sm:grid-cols-2">
           {ROUTES.map((r) => (
             <li key={r.href}>
               <Link
                 href={r.href}
-                className="block h-full rounded-lg border bg-card p-4 no-underline transition-colors hover:border-accent-border hover:bg-accent"
+                className="glass block h-full p-5 no-underline transition-[transform,border-color,box-shadow] duration-300 ease-(--ease-standard) hover:-translate-y-0.5 hover:border-accent-border"
               >
-                <span className="block font-serif text-lg font-medium text-foreground">
-                  {r.label}
+                <span className="block font-serif text-xl text-foreground">{r.label}</span>
+                <span className="mt-1.5 block text-sm leading-relaxed text-muted-foreground">
+                  {r.note}
                 </span>
-                <span className="mt-1 block text-sm text-muted-foreground">{r.note}</span>
               </Link>
             </li>
           ))}
         </ul>
-        <div>
-          <Button asChild variant="primary" size="lg">
-            <Link href="/">Back to the home page</Link>
-          </Button>
-        </div>
+
+        <Button asChild variant="gold" size="lg">
+          <Link href="/">Back to the home page</Link>
+        </Button>
       </Container>
     </Section>
   );

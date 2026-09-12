@@ -4,14 +4,16 @@ import { CircleCheckIcon, CircleXIcon, InfoIcon, TriangleAlertIcon } from "lucid
 import { cn } from "@/lib/utils";
 
 const calloutVariants = cva(
-  "relative flex gap-3 rounded-lg border px-4 py-3 text-sm leading-relaxed [&_svg]:mt-0.5 [&_svg]:size-4 [&_svg]:shrink-0",
+  "relative flex gap-3.5 rounded-xl border px-4 py-3.5 text-sm leading-relaxed [&_svg]:mt-0.5 [&_svg]:size-4 [&_svg]:shrink-0",
   {
     variants: {
       variant: {
-        info: "border-info/30 bg-info-soft text-foreground [&_svg]:text-info",
-        warn: "border-warning/30 bg-warning-soft text-foreground [&_svg]:text-warning",
-        success: "border-success/30 bg-success-soft text-foreground [&_svg]:text-success",
-        error: "border-error/30 bg-error-soft text-foreground [&_svg]:text-error",
+        info: "border-info/25 bg-info-soft text-foreground [&_svg]:text-info",
+        warn: "border-warning/25 bg-warning-soft text-foreground [&_svg]:text-warning",
+        success: "border-success/25 bg-success-soft text-foreground [&_svg]:text-success",
+        error: "border-error/25 bg-error-soft text-foreground [&_svg]:text-error",
+        /** Not a status: a quiet aside in the brand's own gold, for context and caveats. */
+        note: "border-accent-border/30 bg-accent/35 text-foreground [&_svg]:text-accent-strong",
       },
     },
     defaultVariants: {
@@ -25,6 +27,7 @@ const ICONS = {
   warn: TriangleAlertIcon,
   success: CircleCheckIcon,
   error: CircleXIcon,
+  note: InfoIcon,
 } as const;
 
 export interface CalloutProps

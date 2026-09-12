@@ -36,11 +36,13 @@ export function ChoiceCard({
       disabled={disabled}
       onClick={onSelect}
       className={cn(
-        "group relative flex min-h-20 w-full flex-col gap-2 rounded-xl border bg-background p-5 text-left transition-[border-color,box-shadow,translate] duration-(--duration-base) ease-standard outline-none",
-        "hover:border-accent-border hover:shadow-sm focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50",
-        "disabled:cursor-not-allowed disabled:opacity-50 motion-safe:hover:-translate-y-px",
+        // Solid, not glass: this sits inside the booking flow's one glass panel, and a second
+        // sheet of translucency there would cost exactly the legibility a form cannot spare.
+        "group relative flex min-h-20 w-full flex-col gap-2 rounded-lg border bg-background/85 p-5 text-left transition-[border-color,background-color,box-shadow,translate] duration-(--duration-base) ease-standard outline-none",
+        "hover:border-accent-border hover:bg-background focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50",
+        "disabled:cursor-not-allowed disabled:opacity-50 motion-safe:hover:-translate-y-0.5",
         selected
-          ? "border-accent-border shadow-gold ring-1 ring-accent-border/60"
+          ? "border-accent-border bg-accent/40 shadow-gold ring-1 ring-accent-border/60"
           : "border-border",
         className,
       )}
