@@ -94,9 +94,9 @@ Each service page must state whether it is astrology-led, vastu-led, or integrat
 ## 4. Design direction — "Midnight Observatory"
 
 > **Superseded (2026-09-12).** The original brief asked for a light, premium-calm, explicitly
-> *non*-mystical look. The client reviewed the built site and rejected it: *"i dont like the
+> _non_-mystical look. The client reviewed the built site and rejected it: _"i dont like the
 > website design at all its astrology and vastu service it needs to be mystical with animations
-> and all and very minimalistic also apple glass like feel and effect."* That is the direction
+> and all and very minimalistic also apple glass like feel and effect."_ That is the direction
 > now. What follows replaces the old ivory-editorial section entirely. The one thing carried
 > forward unchanged is the standard it must still meet: a practice a Dubai finance professional
 > and a Delhi homemaker would both trust.
@@ -106,8 +106,8 @@ fortune teller. Deep indigo, antique gold linework, enormous silence between ele
 so slow it reads as atmosphere. The old "avoid" list still holds in full — it is what separates
 this from kitsch.
 
-| Still avoid                                                                                                                                     | Now aim for                                                                                                                                                                                                        |
-| ----------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Still avoid                                                                                                                                         | Now aim for                                                                                                                                                                                    |
+| --------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Purple gradients, glowing crystal balls, neon zodiac wheels, stock galaxy photos, Comic-Sans-adjacent "mystical" fonts, anything that twinkles fast | Near-black indigo ground, antique-gold hairlines, frosted glass panes, one continuous starfield, a kundli-over-mandala centrepiece, vast negative space, Cormorant at 300 weight against Karla |
 
 ### The four decisions that define it

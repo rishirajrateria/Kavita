@@ -237,6 +237,19 @@
    */
   [data-tone="inverse"] {
     color-scheme: dark;
+
+    /* An inverse band is midnight regardless of the page theme, so the glass and celestial
+       tokens must come with it. Without these a plate inside an inverse band keeps the
+       parchment values — a near-white sheet under ivory text, about 1.2:1. */
+    --glass-fill: rgb(255 255 255 / 0.045);
+    --glass-edge: rgb(255 255 255 / 0.1);
+    --glass-spec: rgb(255 255 255 / 0.2);
+    --glass-shade: rgb(0 0 0 / 0.35);
+    --glass-shadow: 0 24px 60px -20px rgb(0 0 0 / 0.75);
+    --mandala: rgb(203 168 79 / 0.16);
+    --mandala-strong: rgb(203 168 79 / 0.3);
+    --star: rgb(248 244 236 / 0.75);
+
     --background: var(--surface-inverse);
     --foreground: var(--surface-inverse-foreground);
     --card: var(--surface-inverse-card);
@@ -470,8 +483,13 @@
       inset 0 1px 0 var(--glass-spec),
       inset 0 -1px 0 var(--glass-shade),
       var(--glass-shadow);
+    /* Declared ONCE and unprefixed on purpose: Lightning CSS adds the -webkit- spelling per
+       browser targets. Hand-writing both makes it merge the pair down to the prefixed one
+       alone, and the panel then has no blur at all in Chrome. */
     backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
-    -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+    /* backdrop-filter already forms a stacking context; isolate makes that explicit so the
+       sweep below can sit at z-index -1 — above the panel fill, behind the content. */
+    isolation: isolate;
   }
   .glass::before {
     content: "";
@@ -486,6 +504,9 @@
       transparent 58%
     );
     opacity: 0.55;
+    /* Without this the sweep paints over plain text children, which are not positioned and so
+       are painted before any positioned descendant. Very visible on parchment. */
+    z-index: -1;
   }
 
   /* The vastu purusha mandala: a 9x9 pada grid drawn with gradients, not path data. */

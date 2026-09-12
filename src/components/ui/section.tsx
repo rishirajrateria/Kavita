@@ -21,7 +21,15 @@ const sectionVariants = cva("relative w-full", {
       muted: "bg-surface-muted/60 text-foreground backdrop-blur-[2px]",
       gold: "bg-surface-gold/55 text-foreground backdrop-blur-[2px]",
       /** Deeper pane. `data-tone="inverse"` re-points every semantic token (globals.css). */
-      inverse: "bg-surface-inverse/55 text-foreground backdrop-blur-[2px]",
+      /*
+       * Near-opaque, and painted from `--background` rather than `--surface-inverse`:
+       * `data-depth="deep"` works by re-pointing `--background`, so naming the surface
+       * token directly silently broke the deep variant. At 55% a 92%-indigo veil over
+       * parchment composited to mid-grey and ivory body text fell to 2.12:1 — an AA
+       * failure. At 92% the band is genuinely deep in both themes (7.33:1 muted) and
+       * glass inside it still refracts, because backdrop-filter blurs what is behind it.
+       */
+      inverse: "bg-background/92 text-foreground",
       transparent: "",
     },
     bordered: {
