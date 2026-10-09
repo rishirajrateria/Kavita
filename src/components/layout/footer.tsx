@@ -1,7 +1,6 @@
 import Link from "next/link";
 import type * as React from "react";
 import { VastuCompass } from "@/components/motifs";
-import { Card } from "@/components/ui/card";
 import { Section } from "@/components/ui/section";
 import { Separator } from "@/components/ui/separator";
 import {
@@ -54,7 +53,8 @@ const headingClass =
  * both themes while the fixed <Sky /> still shows through it. One compass rose turns behind it.
  *
  * Server component; everything comes from site_settings, social_links, services and locations.
- * The NAP block is the one object here allowed to lift off the pane, so it is the only glass.
+ * The NAP block is the one object here allowed to lift off the pane, so it is the only glass —
+ * the same `.glass sheen` plate as `KeyFacts`, its sheen phased last (9s).
  * The two location lists flow in CSS columns instead of one tall stack — with ~17 links each
  * they were what made the old footer three screens deep with a dead column beside them.
  */
@@ -118,10 +118,9 @@ export async function Footer() {
               </p>
             </div>
 
-            <Card
-              variant="solid"
-              padding="sm"
-              className="max-w-[26rem] border-accent-border/30 bg-card"
+            <div
+              className="glass sheen max-w-[26rem] p-4 sm:p-5"
+              style={{ ["--sheen-delay" as string]: "9s" }}
             >
               <address className="flex flex-col gap-2 text-sm not-italic">
                 <ContactLine label="Phone">
@@ -211,7 +210,7 @@ export async function Footer() {
                   </p>
                 </div>
               ) : null}
-            </Card>
+            </div>
 
             <SocialLinks placement="footer" className="gap-2.5" />
           </div>

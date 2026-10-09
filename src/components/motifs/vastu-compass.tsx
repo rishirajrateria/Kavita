@@ -2,7 +2,8 @@ import { useId } from "react";
 import { cn } from "@/lib/utils";
 import { a11yAttrs, type MotifProps } from "./motif-props";
 
-const DIRECTIONS = [
+/** The eight directions of the rose, clockwise from north, with their Sanskrit names. */
+export const DIRECTIONS = [
   { label: "N", angle: -90, sanskrit: "Uttara" },
   { label: "NE", angle: -45, sanskrit: "Ishanya" },
   { label: "E", angle: 0, sanskrit: "Purva" },
@@ -13,13 +14,15 @@ const DIRECTIONS = [
   { label: "NW", angle: 225, sanskrit: "Vayavya" },
 ] as const;
 
-const CX = 100;
-const CY = 100;
-const R_OUTER = 78;
-const R_INNER = 60;
+/** The rose's geometry in its 200×200 viewBox — shared with `CompassDoors`. */
+export const CX = 100;
+export const CY = 100;
+export const R_OUTER = 78;
+export const R_INNER = 60;
 const R_LABEL = 91;
 
-function polar(r: number, deg: number): [number, number] {
+/** A point at radius `r` and SVG angle `deg` (0 = east, clockwise) from the rose's centre. */
+export function polar(r: number, deg: number): [number, number] {
   const rad = (deg * Math.PI) / 180;
   return [CX + r * Math.cos(rad), CY + r * Math.sin(rad)];
 }

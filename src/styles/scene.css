@@ -1,0 +1,255 @@
+/*
+ * Scene — the shared rules of every page below the home hero (SPEC §2.2).
+ *
+ * This file begins with the parchment disc (`src/components/motifs/disc.tsx`): the hub's centre
+ * lifted out as a standalone call to action. The SVG box is the face itself (its viewBox is the
+ * 80-unit square around r 40), so the face is exactly `size` across; the halo and ticks outside
+ * the viewBox are ink overflow — visible, never scrollable. The link over it is the hit target
+ * and the words. The one hex below is the ink the hub already sets on its own centre
+ * (`.kundli-centre`).
+ */
+
+.disc {
+  line-height: 0;
+}
+.disc-svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  pointer-events: none;
+}
+.disc-halo {
+  transform-box: fill-box;
+  transform-origin: center;
+  pointer-events: none;
+}
+.disc-face {
+  transform-box: fill-box;
+  transform-origin: center;
+  filter: drop-shadow(0 0 1px rgb(255 255 255 / 0.5)) drop-shadow(0 0 14px rgb(245 208 138 / 0.45));
+  transition: scale var(--duration-base) var(--ease-standard);
+}
+.disc-link {
+  color: #1c1408;
+  line-height: var(--leading-snug);
+  text-shadow: 0 1px 0 rgb(255 255 255 / 0.35);
+  transition: transform var(--duration-base) var(--ease-standard);
+}
+.disc-link:hover,
+.disc-link:focus-visible {
+  color: #1c1408;
+  transform: scale(1.04);
+}
+.disc:has(.disc-link:hover) .disc-face,
+.disc:has(.disc-link:focus-visible) .disc-face {
+  scale: 1.04;
+}
+.disc-link:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 4px;
+}
+
+/* ----------------------------------------------------------------------------------------
+ * Rules — a line of Cinzel capitals between two hairlines (`Rule`). The hairlines draw once
+ * (a transform, since an HTML span has no stroke to dash); the tone sets the size and colour.
+ * -------------------------------------------------------------------------------------- */
+.rule {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  font-family: var(--font-display);
+  font-weight: 600;
+  text-transform: uppercase;
+  text-wrap: balance;
+}
+.rule[data-tone="accent"] {
+  font-size: clamp(0.62rem, 0.5rem + 0.5vw, 0.82rem);
+  letter-spacing: 0.34em;
+  color: var(--accent-strong);
+}
+.rule[data-tone="muted"] {
+  font-size: 0.72rem;
+  letter-spacing: 0.22em;
+  color: var(--muted-foreground);
+}
+@media (max-width: 24.4rem) {
+  .rule > [data-draw] {
+    width: 1.5rem;
+  }
+}
+
+/* The hero figure: capped by width, by the viewport height on laptops, by 46svh on phones. */
+.scene-figure {
+  max-width: min(94vw, var(--figure-size, 64rem));
+  aspect-ratio: var(--figure-ratio, 1.5);
+}
+@media (min-width: 64rem) {
+  .scene-figure {
+    max-width: min(
+      94vw,
+      var(--figure-size, 64rem),
+      calc((100svh - 22rem) * var(--figure-ratio, 1.5))
+    );
+  }
+}
+@media (max-width: 40rem) {
+  .scene-figure {
+    max-width: min(100%, calc(46svh * var(--figure-ratio, 1.5)));
+  }
+}
+
+/* Plate numerals and the quiet foot headings. */
+.plate-n {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 0.62rem;
+  letter-spacing: 0.34em;
+  text-transform: uppercase;
+  color: var(--accent-strong);
+}
+.note-q {
+  font-family: var(--font-serif);
+  font-weight: 400;
+  font-size: 1.25rem;
+  line-height: var(--leading-snug);
+  letter-spacing: normal;
+  color: var(--foreground);
+}
+
+/* `More` and `Ledger`: native <details>; the gold "+" turns 45° on open, as in the FAQ. */
+.more > summary,
+.ledger > summary {
+  list-style: none;
+  cursor: pointer;
+}
+.more > summary::-webkit-details-marker,
+.ledger > summary::-webkit-details-marker {
+  display: none;
+}
+.more .faq-marker,
+.ledger .faq-marker {
+  transition: transform var(--duration-base) var(--ease-emphasized);
+}
+.more[open] .faq-marker,
+.ledger[open] .faq-marker {
+  transform: rotate(45deg);
+}
+
+/* A table of more than three columns stacks its rows on a phone, each cell under its head. */
+@media (max-width: 40rem) {
+  .plate-stack thead {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+  }
+  .plate-stack tr {
+    display: block;
+    padding-block: 0.75rem;
+  }
+  .plate-stack td,
+  .plate-stack th[scope="row"] {
+    display: block;
+    padding-inline: 0;
+  }
+  .plate-stack td::before {
+    content: attr(data-label);
+    display: block;
+    font-family: var(--font-display);
+    font-size: 0.62rem;
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--accent-strong);
+  }
+}
+
+/*
+ * The sheen band (`.sheen::after`, globals.css) fades out at both of its own edges, so what
+ * crosses a plate is a soft light and never the band's box. The integration owner may fold
+ * this into the globals rule; it lives here because every sheened plate is a scene primitive.
+ */
+.sheen::after {
+  mask-image: linear-gradient(to right, transparent, black 30%, black 70%, transparent);
+}
+
+/* Tablets: the testimonial cards as levitating glass; the inner figure gives up its own box. */
+.tablet > figure {
+  background: transparent;
+  border: 0;
+  border-radius: inherit;
+  box-shadow: none;
+}
+@media (max-width: 47.9rem) {
+  .tablet[data-levitate] {
+    animation: none;
+  }
+  .tablet.sheen::after {
+    display: none;
+  }
+}
+
+/* Step line: titles sit under their segments of the rule from 640px; a numbered list below. */
+.step-line-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+/* The rule's viewBox carries air above and below the line; crop it so the steps sit tight. */
+.step-line-figure {
+  overflow: hidden;
+}
+.step-line-figure > svg {
+  margin-top: -3.25%;
+  margin-bottom: -2.75%;
+}
+@media (min-width: 40rem) {
+  .step-line-list {
+    display: flex;
+    align-items: flex-start;
+  }
+  .step-line-list > li {
+    flex: 0 0 calc(var(--w, 0.1) * 100%);
+    min-width: 0;
+    padding-inline: 0.35rem;
+    text-align: center;
+  }
+  .step-line-rule {
+    display: none;
+  }
+}
+@media (max-width: 39.9rem) {
+  .step-line-figure {
+    display: none;
+  }
+  .step-line-list > li {
+    display: grid;
+    grid-template-columns: 2.5rem 1fr;
+    gap: 0.75rem;
+    align-items: baseline;
+    padding-block: 0.6rem;
+    border-top: 1px solid color-mix(in srgb, var(--border) 60%, transparent);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  @keyframes rule-draw {
+    from {
+      transform: scaleX(0);
+    }
+  }
+  .rule > [data-draw] {
+    stroke-dasharray: none;
+    animation: rule-draw 2.2s cubic-bezier(0.22, 0.68, 0.24, 1) backwards;
+    animation-delay: var(--draw-delay, 0s);
+  }
+  .rule > [data-draw]:first-child {
+    transform-origin: right center;
+  }
+  .rule > [data-draw]:last-child {
+    transform-origin: left center;
+  }
+}

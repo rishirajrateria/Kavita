@@ -1,0 +1,281 @@
+/* Doors — every list is a door (SPEC §2.3). The `.door` contract shared by `DoorField`,
+ * `CompassDoors` and the houses of `KundliNav`: a shape that fills with its own glow under the
+ * hand, a glyph, a label, a hairline that widens, a visible focus ring. `--door-glow` is set
+ * inline per door from a token. Hover tints never fall below 4.5:1 for the label. */
+
+.door {
+  cursor: pointer;
+  outline: none;
+  text-decoration: none;
+  transition:
+    transform var(--duration-slow) var(--ease-emphasized),
+    color var(--duration-base) var(--ease-standard);
+}
+.door-fill {
+  fill: transparent;
+  stroke: none;
+  transition: fill var(--duration-base) var(--ease-standard);
+}
+.door-halo,
+.door-glyph {
+  pointer-events: none;
+}
+.door:hover .door-fill,
+.door:focus-visible .door-fill {
+  fill: color-mix(in srgb, var(--door-glow, var(--accent-strong)) 22%, transparent);
+}
+.door:focus-visible .door-fill {
+  stroke: var(--ring);
+  stroke-width: 1.5;
+}
+.door-glyph {
+  transform-box: fill-box;
+  transform-origin: center;
+  transition: scale var(--duration-slow) var(--ease-emphasized);
+}
+.door:hover .door-glyph,
+.door:focus-visible .door-glyph {
+  scale: 1.12;
+}
+.door-halo {
+  opacity: 0;
+  background: radial-gradient(
+    closest-side,
+    color-mix(in srgb, var(--door-glow, var(--accent-strong)) 28%, transparent),
+    transparent
+  );
+  transition: opacity var(--duration-slow) var(--ease-standard);
+}
+.door:hover .door-halo,
+.door:focus-visible .door-halo {
+  opacity: 1;
+}
+.door-label {
+  transition: color var(--duration-base) var(--ease-standard);
+}
+.door:hover .door-label,
+.door:focus-visible .door-label {
+  color: var(--door-glow, var(--accent-strong));
+}
+.door-number {
+  color: var(--accent-strong);
+}
+.door-rule {
+  display: block;
+  width: 22px;
+  height: 1px;
+  background: var(--brass-400);
+  opacity: 0.7;
+  transition: width var(--duration-slow) var(--ease-emphasized);
+}
+a.door:focus-visible,
+.door-field a:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 4px;
+}
+/* The lit house of the chart (`KundliNav lit={n}`): a service page holds its own house in the
+ * hover state at rest — a 14% glow and a gold label. A real hover still wins (globals.css later). */
+.kundli-nav .kundli-house[data-lit] .kundli-house-fill {
+  fill: color-mix(in srgb, var(--house-glow, var(--accent-strong)) 14%, transparent);
+}
+.kundli-nav .kundli-house[data-lit] .kundli-house-label {
+  fill: var(--accent-strong);
+}
+
+.kundli-nav[data-size="half"] .kundli-house-label {
+  font-size: 16px;
+}
+.kundli-nav[data-size="half"] .kundli-house-number {
+  font-size: 11px;
+}
+/* HTML doors (`DoorField`): a tile, a station row or a chip, each `<a class="door">` in reading
+ * order; a planet drawing or a sprite symbol for the glyph, a halo behind it, the label, rule. */
+.door-field {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+.door-field[data-variant="station"] {
+  grid-template-columns: minmax(0, 1fr);
+  gap: 0;
+}
+.door-field[data-variant="chip"] {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+@media (min-width: 48rem) {
+  .door-field[data-columns="3"] {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+  .door-field[data-columns="4"] {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+  .door-field[data-variant="station"][data-columns="2"] {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: 3rem;
+  }
+}
+.door--tile {
+  position: relative;
+  min-height: 3rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.45rem;
+  height: 100%;
+  padding: 1.25rem 0.75rem 1.35rem;
+  text-align: center;
+  border-radius: var(--radius-lg);
+  border: 1px solid color-mix(in srgb, var(--border) 70%, transparent);
+}
+.door--station {
+  min-height: 3rem;
+  display: grid;
+  grid-template-columns: 2.75rem minmax(0, 1fr);
+  column-gap: 1rem;
+  align-items: center;
+  padding: 0.85rem 0;
+  border-top: 1px solid color-mix(in srgb, var(--border) 60%, transparent);
+}
+.door--station > .door-glyph-wrap {
+  grid-row: span 3;
+}
+.door--chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-height: 2.75rem;
+  padding: 0.25rem 0.95rem;
+  border-radius: var(--radius-full);
+  border: 1px solid color-mix(in srgb, var(--accent-border) 40%, transparent);
+}
+.door-glyph-wrap {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 2.75rem;
+  height: 2.75rem;
+}
+.door-glyph-wrap > .door-glyph {
+  position: relative;
+  width: 2.5rem;
+  height: 2.5rem;
+  color: var(--accent-strong);
+}
+.door--chip .door-glyph-wrap,
+.door--chip .door-glyph {
+  width: 1.25rem;
+  height: 1.25rem;
+}
+.door-glyph-wrap > .door-halo {
+  position: absolute;
+  inset: -1.25rem;
+  border-radius: 50%;
+}
+.door--tile .door-rule {
+  margin-inline: auto;
+}
+.door--station .door-rule,
+.door--chip .door-rule,
+.door--chip .door-line,
+.door--chip .door-meta {
+  display: none;
+}
+.door--tile:hover,
+.door--tile:focus-visible {
+  transform: translateY(-2px);
+  border-color: color-mix(in srgb, var(--accent-border) 60%, transparent);
+}
+/* A lit door holds its hover state at rest (the current page, a service's own house). */
+.door[data-lit] .door-fill {
+  fill: color-mix(in srgb, var(--door-glow, var(--accent-strong)) 14%, transparent);
+}
+.door[data-lit] .door-halo {
+  opacity: 0.7;
+}
+.door[data-lit] .door-label {
+  color: var(--door-glow, var(--accent-strong));
+}
+.door[data-lit] .door-rule,
+.door:hover .door-rule,
+.door:focus-visible .door-rule {
+  width: 100%;
+}
+@media (hover: none) {
+  .door:hover,
+  .door--tile:hover {
+    transform: none;
+  }
+}
+
+/* A field over a figure: doors at `--x/--y` from 768px, the grid below it (lines hidden). */
+.door-stage {
+  position: relative;
+}
+@media (min-width: 48rem) {
+  .door-stage > .door-field[data-positioned] {
+    position: absolute;
+    inset: 0;
+    display: block;
+  }
+  .door-stage > .door-field[data-positioned] > li {
+    position: absolute;
+    left: var(--x);
+    top: var(--y);
+    translate: -50% -50%;
+  }
+}
+@media (max-width: 47.9rem) {
+  .door-stage > .door-lines {
+    display: none;
+  }
+}
+
+/* `CompassDoors`: four annular sectors in the rose, each an SVG <a class="door"> glowing in its
+ * element's colour; the labels sit outside the rim in HTML. */
+.compass-doors {
+  position: relative;
+  aspect-ratio: 1;
+}
+.compass-doors > svg {
+  position: absolute;
+  inset: 8%;
+  width: 84%;
+  height: 84%;
+  overflow: visible;
+}
+.compass-doors .door-fill {
+  fill: color-mix(in srgb, var(--door-glow, var(--accent-strong)) 8%, transparent);
+  stroke: var(--accent-strong);
+  stroke-opacity: 0.45;
+  stroke-width: 0.6;
+}
+.compass-doors .door:hover .door-fill,
+.compass-doors .door:focus-visible .door-fill {
+  fill: color-mix(in srgb, var(--door-glow, var(--accent-strong)) 22%, transparent);
+}
+.compass-label {
+  position: absolute;
+  left: var(--x);
+  top: var(--y);
+  translate: -50% -50%;
+}
+.compass-doors > .disc {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  translate: -50% -50%;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .door-rule[data-draw] {
+    stroke-dasharray: none;
+    transform-origin: left center;
+    animation: rule-draw 2.2s cubic-bezier(0.22, 0.68, 0.24, 1) backwards;
+    animation-delay: var(--draw-delay, 0s);
+  }
+}

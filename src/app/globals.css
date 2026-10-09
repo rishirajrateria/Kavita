@@ -1,6 +1,8 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 @import "../styles/tokens.css";
+@import "../styles/scene.css";
+@import "../styles/doors.css";
 
 /*
  * `dark:` means "the midnight palette is active" — which, since midnight is now the DEFAULT
@@ -756,10 +758,10 @@
 @keyframes sway {
   0%,
   100% {
-    rotate: -8deg;
+    rotate: calc(var(--sway-deg, 8deg) * -1);
   }
   50% {
-    rotate: 8deg;
+    rotate: var(--sway-deg, 8deg);
   }
 }
 @media (prefers-reduced-motion: no-preference) {
@@ -934,7 +936,7 @@
   }
   @supports (offset-path: path("M0 0L1 1")) {
     [data-travel] {
-      offset-path: path("M48 48H552V352H48Z");
+      offset-path: var(--travel-path, path("M48 48H552V352H48Z"));
       offset-rotate: 0deg;
       animation: travel var(--travel-duration, 38s) linear infinite;
     }

@@ -1,6 +1,7 @@
 import { useId } from "react";
 import { cn } from "@/lib/utils";
 import { a11yAttrs, type MotifProps } from "./motif-props";
+import type { PlanetKey } from "./planets";
 
 /**
  * A life measured in planetary periods.
@@ -16,6 +17,19 @@ import { a11yAttrs, type MotifProps } from "./motif-props";
 
 /** The nine mahadashas in their canonical order, in years. They total 120. */
 export const VIMSHOTTARI_YEARS = [7, 20, 6, 10, 7, 18, 16, 19, 17] as const;
+
+/** The graha of each mahadasha, in the same order as `VIMSHOTTARI_YEARS`. */
+export const VIMSHOTTARI_GRAHAS: readonly PlanetKey[] = [
+  "ketu",
+  "venus",
+  "sun",
+  "moon",
+  "mars",
+  "rahu",
+  "jupiter",
+  "saturn",
+  "mercury",
+] as const;
 
 export interface DashaSegmentFraction {
   /** Left edge as a fraction of the figure's width, 0–1. */
@@ -56,6 +70,18 @@ export interface DashaTimelineProps extends MotifProps {
    * asserts nothing about the reader until a caller says otherwise.
    */
   activeIndex?: number;
+  /**
+   * Draw a tick above the rule every this many segment units (years, for the default
+   * segments) — the figure then reads as a measured rule rather than a strip of boxes.
+   */
+  tickEvery?: number;
+  /**
+   * Send one point of light along the rule (SPEC §4: the dashas section). The point rides
+   * `--travel-path` over the whole rule once per `travelDuration`; it is hidden under
+   * `prefers-reduced-motion`.
+   */
+  travel?: boolean;
+  travelDuration?: string;
 }
 
 const WIDTH = 800;
@@ -66,6 +92,9 @@ export function DashaTimeline({
   description = "A horizontal rule divided into nine segments of noticeably different widths, the way the Vimshottari dasha system divides one hundred and twenty years into nine planetary periods.",
   segments = VIMSHOTTARI_YEARS,
   activeIndex,
+  tickEvery,
+  travel = false,
+  travelDuration = "90s",
   decorative = false,
   strokeWidth = 1.25,
   className,
@@ -76,6 +105,11 @@ export function DashaTimeline({
   const descId = description ? `${id}-desc` : undefined;
   const fractions = dashaSegmentFractions(segments);
   const active = activeIndex === undefined ? undefined : fractions[activeIndex];
+  const total = segments.reduce((sum, n) => (Number.isFinite(n) && n > 0 ? sum + n : sum), 0);
+  const ticks: number[] = [];
+  if (tickEvery && tickEvery > 0 && total > 0) {
+    for (let t = 0; t <= total; t += tickEvery) ticks.push((t / total) * WIDTH);
+  }
 
   return (
     <svg
@@ -97,6 +131,12 @@ export function DashaTimeline({
           style={{ "--draw-length": WIDTH } as React.CSSProperties}
         />
         <path d={`M1 30V94M${WIDTH - 1} 30V94`} />
+        {ticks.length > 0 ? (
+          <path
+            d={ticks.map((x, i) => `M${x.toFixed(1)} ${i % 5 === 0 ? 24 : 32}V40`).join("")}
+            style={{ strokeWidth: 0.8 }}
+          />
+        ) : null}
       </g>
 
       {fractions.map((f, i) => {
@@ -127,6 +167,23 @@ export function DashaTimeline({
           />
         );
       })}
+
+      {travel ? (
+        <g
+          data-travel
+          aria-hidden="true"
+          className="pointer-events-none"
+          style={
+            {
+              "--travel-path": `path("M0 ${RULE_Y}H${WIDTH}")`,
+              "--travel-duration": travelDuration,
+            } as React.CSSProperties
+          }
+        >
+          <circle r="7" style={{ fill: "var(--glow)" }} />
+          <circle r="3" style={{ fill: "var(--accent-strong)" }} />
+        </g>
+      ) : null}
 
       {active ? (
         <g style={{ stroke: "var(--accent-strong)" }}>

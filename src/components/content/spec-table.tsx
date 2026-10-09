@@ -6,6 +6,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { cn } from "@/lib/utils";
 
 export interface SpecTableData {
   readonly caption: string;
@@ -19,19 +20,23 @@ export interface SpecTableData {
  * small-caps column heads over a gold hairline, the first column a serif row header, hairline
  * row rules and no fill, no box and no shadow — a table is type on a grid, not an object.
  * Plain server HTML; cells wrap, and a table too wide to fit scrolls inside its own container,
- * never the page.
+ * never the page. Every `<td>` carries `data-label`; a table of more than three columns (or any
+ * table passed `stack`) takes `.plate-stack` and stacks its rows on a phone (src/styles/scene.css).
  */
 export function SpecTable({
   table,
   firstColumnWidth = "22%",
+  stack = table.columns.length > 3,
 }: {
   table: SpecTableData;
   firstColumnWidth?: string;
+  /** Stack rows on a phone, each cell under its head. Defaults to on for more than three columns. */
+  stack?: boolean;
 }) {
   const [corner, ...rest] = table.columns;
   return (
     <div>
-      <Table className="text-base" aria-label={table.caption}>
+      <Table className={cn("text-base", stack && "plate-stack")} aria-label={table.caption}>
         <TableHeader>
           <TableRow className="hover:bg-transparent">
             <TableHead scope="col" style={{ width: firstColumnWidth }}>
@@ -57,7 +62,7 @@ export function SpecTable({
                     {cell}
                   </th>
                 ) : (
-                  <TableCell key={i} className="py-3.5">
+                  <TableCell key={i} className="py-3.5" data-label={table.columns[i] ?? ""}>
                     {cell}
                   </TableCell>
                 ),
@@ -68,7 +73,7 @@ export function SpecTable({
       </Table>
       {/* Outside the scroll container: a wide table scrolls sideways and would carry its own
           <caption> off-screen with it on a phone. */}
-      <p className="mt-4 text-sm text-muted-foreground">{table.caption}</p>
+      <p className="mt-4 font-sans text-sm text-muted-foreground">{table.caption}</p>
     </div>
   );
 }

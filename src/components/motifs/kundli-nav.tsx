@@ -41,6 +41,16 @@ export interface KundliHouse {
 export interface KundliNavProps {
   houses: readonly KundliHouse[];
   centre: { label: string; title: string; href: string };
+  /**
+   * The house held in its hover state at rest — a 14% glow in its planet's colour and a gold
+   * label (`[data-lit]` in src/styles/doors.css). A service page lights its own house.
+   */
+  lit?: number;
+  /**
+   * `half` carries the phone-size labels (16 user units) at every width, for a chart drawn at
+   * half the page. The caller sets the width; this only sizes the type.
+   */
+  size?: "wide" | "half";
   className?: string;
 }
 
@@ -120,13 +130,14 @@ const PLANET_SIZE = 54;
 /** The Sun's drawing is mostly corona, so it reads small at the shared size; draw it larger. */
 const PLANET_SCALE: Partial<Record<PlanetKey, number>> = { sun: 1.3 };
 
-export function KundliNav({ houses, centre, className }: KundliNavProps) {
+export function KundliNav({ houses, centre, lit, size, className }: KundliNavProps) {
   const id = useId();
 
   return (
     <nav
       aria-label="Explore by house of the chart"
       className={cn("kundli-nav relative isolate aspect-[3/2] w-full", className)}
+      data-size={size}
     >
       {/* The vastu mandala grid beneath the chart, breathing. */}
       <div
@@ -271,6 +282,7 @@ export function KundliNav({ houses, centre, className }: KundliNavProps) {
               className="kundli-house"
               aria-labelledby={titleId}
               data-house={h.n}
+              data-lit={lit === h.n ? "" : undefined}
               style={
                 {
                   "--house-glow": planet.glow,

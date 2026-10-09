@@ -1,4 +1,3 @@
-import { Card } from "@/components/ui/card";
 import { Container } from "@/components/ui/container";
 import { Heading } from "@/components/ui/heading";
 import { Section } from "@/components/ui/section";
@@ -35,11 +34,11 @@ const COLS: Record<NonNullable<KeyFactsProps["columns"]>, string> = {
 };
 
 /**
- * Key-facts slab (CLAUDE.md §9.3): a compact `<dl>` on a frosted plate, ruled by gold
- * hairlines rather than divided into filled cells — identical to the home and geo slabs. This
- * is one of the two blocks a content page spends `.glass` on, because it is the block an answer
- * engine lifts almost verbatim. Every value is passed in by the page, or overridden per route
- * from `/admin/aeo`.
+ * Key-facts slab (CLAUDE.md §9.3): a compact `<dl>` on the page's one glass plate, ruled by
+ * gold hairlines — the block an answer engine lifts almost verbatim. It sits directly under
+ * the hero; the heading is Cinzel caption type with the hairline after it, labels Karla caps,
+ * values Cormorant. Every value is passed in by the page, or overridden per route from
+ * `/admin/aeo`. Export, props, `<dl>`, override merge and the counted `<h2>` are unchanged.
  */
 export async function KeyFacts({
   heading = "At a glance",
@@ -61,31 +60,33 @@ export async function KeyFacts({
       aria-labelledby={`${id}-heading`}
     >
       <Container size="wide">
-        <Card variant="glass" padding="lg">
+        <div className="glass sheen p-7 sm:p-9" style={{ ["--sheen-delay" as string]: "0s" }}>
           <Heading
             as="h2"
             level={6}
             id={`${id}-heading`}
-            className="flex items-center gap-4 font-sans text-xs font-semibold tracking-[0.16em] text-accent-strong uppercase after:h-px after:flex-1 after:bg-accent-border/40"
+            className="flex items-center gap-4 font-display text-[0.72rem] font-semibold tracking-[0.22em] text-accent-strong uppercase after:h-px after:flex-1 after:bg-accent-border/40"
           >
             {heading}
           </Heading>
           <dl className={cn("mt-2 grid gap-x-10", COLS[columns])}>
             {items.map(({ label, value }) => (
               <div key={label} className="border-t border-accent-border/25 py-4 sm:py-5">
-                <dt className="text-[0.65rem] font-semibold tracking-[0.12em] text-accent-strong uppercase">
+                <dt className="font-sans text-[0.65rem] font-semibold tracking-[0.12em] text-accent-strong uppercase">
                   {label}
                 </dt>
-                <dd className="mt-2 font-serif text-lg leading-snug text-foreground">{value}</dd>
+                <dd className="mt-2 font-serif text-[1.1rem] leading-snug text-foreground">
+                  {value}
+                </dd>
               </div>
             ))}
           </dl>
           {note ? (
-            <p className="border-t border-accent-border/25 pt-4 text-sm text-muted-foreground">
+            <p className="border-t border-accent-border/25 pt-4 font-sans text-sm text-muted-foreground">
               {note}
             </p>
           ) : null}
-        </Card>
+        </div>
       </Container>
     </Section>
   );

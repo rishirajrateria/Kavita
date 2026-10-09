@@ -1,12 +1,19 @@
 import Link from "next/link";
-import { Heading } from "@/components/ui/heading";
 import { locationHref, type Location } from "@/lib/data";
 import type { GeoService } from "@/lib/data/types";
+import { DoorField } from "./doors";
+import type { DoorMotif } from "./motif-sprite";
+
+const SERVICE_MOTIF: Record<GeoService, DoorMotif> = {
+  astrologer: "north-chart",
+  "vastu-consultant": "compass",
+};
 
 /**
- * Country pills and a two-column city list into one geo family (`/astrologer/…` or
+ * Country doors and a two-column city list into one geo family (`/astrologer/…` or
  * `/vastu-consultant/…`), so a hub page is one click from every published country and
- * featured city (CLAUDE.md §5). Pass only publishable locations — never a link to a 404.
+ * featured city (CLAUDE.md §5). Pass only publishable locations — never a link to a 404. The
+ * page renders `MotifSprite` once for the country glyphs.
  */
 export function GeoLinkLists({
   service,
@@ -22,40 +29,36 @@ export function GeoLinkLists({
   headings?: { countries: string; cities: string };
 }) {
   if (countries.length === 0 && cities.length === 0) return null;
+  const h3 =
+    "mb-5 font-display text-[0.72rem] font-semibold tracking-[0.22em] text-accent-strong uppercase";
   return (
-    <div className="grid gap-12 lg:grid-cols-[1fr_1.4fr] lg:gap-16">
+    <div className="grid gap-12 lg:grid-cols-[1.1fr_1fr] lg:gap-16">
       {countries.length > 0 ? (
         <div>
-          <Heading as="h3" level={5} className="mb-6 text-accent-strong">
-            {headings.countries}
-          </Heading>
-          <ul className="flex flex-wrap gap-3">
-            {countries.map((loc) => (
-              <li key={loc.path}>
-                <Link
-                  href={locationHref(loc, service)}
-                  className="inline-flex min-h-11 items-center rounded-full border border-accent-border/40 px-5 font-serif text-base text-foreground no-underline transition-[color,background-color,border-color,translate] duration-(--duration-base) ease-standard hover:-translate-y-px hover:border-accent-border hover:bg-accent/50 hover:text-accent-foreground motion-reduce:hover:translate-y-0"
-                >
-                  {linkLabel(loc.name)}
-                </Link>
-              </li>
-            ))}
-          </ul>
+          <h3 className={h3}>{headings.countries}</h3>
+          <DoorField
+            variant="tile"
+            columns={2}
+            doors={countries.map((loc) => ({
+              href: locationHref(loc, service),
+              label: loc.shortName ?? loc.name,
+              line: linkLabel(loc.name),
+              motif: SERVICE_MOTIF[service],
+            }))}
+          />
         </div>
       ) : null}
       {cities.length > 0 ? (
         <div>
-          <Heading as="h3" level={5} className="mb-5 text-accent-strong">
-            {headings.cities}
-          </Heading>
+          <h3 className={h3}>{headings.cities}</h3>
           <ul className="grid gap-x-12 sm:grid-cols-2">
             {cities.map((loc) => (
               <li key={loc.path}>
                 <Link
                   href={locationHref(loc, service)}
-                  className="group flex min-h-12 items-center justify-between gap-4 border-t border-border py-2 no-underline transition-colors duration-(--duration-base) hover:border-accent-border/60 hover:text-accent-strong"
+                  className="group flex min-h-12 items-center justify-between gap-4 border-t border-border py-2 font-serif text-base no-underline transition-colors duration-(--duration-base) hover:border-accent-border/60 hover:text-accent-strong"
                 >
-                  <span className="font-medium">{linkLabel(loc.shortName ?? loc.name)}</span>
+                  <span>{linkLabel(loc.shortName ?? loc.name)}</span>
                   <span
                     aria-hidden="true"
                     className="text-accent-strong transition-transform duration-(--duration-base) ease-emphasized group-hover:translate-x-1 motion-reduce:transition-none"
