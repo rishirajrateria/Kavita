@@ -18,7 +18,15 @@ import {
   type FootBlock,
   type TocItem,
 } from "@/components/content";
-import { Disc, EarthHorizon, Instrument, Ornament, type PlanetKey } from "@/components/motifs";
+import {
+  Disc,
+  EarthHorizon,
+  Instrument,
+  NorthIndianChart,
+  Ornament,
+  VastuCompass,
+  type PlanetKey,
+} from "@/components/motifs";
 import { JsonLd } from "@/components/seo/json-ld";
 import { Container } from "@/components/ui/container";
 import {
@@ -73,32 +81,45 @@ export function generateMetadata(): Promise<Metadata> {
 }
 
 /** The plates in DOM order, numbered; the foot's notes and the FAQ follow unnumbered. */
-const TOC: TocItem[] = (
-  [
-    ["training", "I"],
-    ["method", "II"],
-    ["session", "III"],
-    ["limits", "IV"],
-    ["not-claimed", "V"],
-    ["where", "VI"],
-    ["experience"],
-    ["languages"],
-    ["faq"],
-  ] as const
-).map(([id, n]) => ({ id, text: ABOUT_TOC_LABELS[id], n }));
+const TOC_IDS: readonly (keyof typeof ABOUT_TOC_LABELS)[] = [
+  "training",
+  "method",
+  "session",
+  "limits",
+  "not-claimed",
+  "where", // the plates, I–VI
+  "experience",
+  "languages",
+  "faq",
+];
+const NUMERALS = ["I", "II", "III", "IV", "V", "VI"];
+const TOC: TocItem[] = TOC_IDS.map((id, i) => ({ id, text: ABOUT_TOC_LABELS[id], n: NUMERALS[i] }));
+
+/** The disc's tick ring turns about its own box (the face's centre), not the viewBox's (40,40). */
+const DISC_TURN =
+  "[&_g[data-turn]]:[transform-box:fill-box] [&_g[data-turn]]:[transform-origin:center]";
+
+/** The tagline on one line where it fits; on a phone the portrait stands clear below it. */
+const HERO_FIT =
+  "lg:[&_.rule]:max-w-none lg:[&_.rule>span:nth-child(2)]:whitespace-nowrap max-sm:[&_.scene-figure]:mt-12";
+
+/** A fold's summary sits centred under the centred H2 and answer of its plate. */
+const CENTRED_FOLD = "[&>summary]:justify-center";
+
+const HUB_LINKS = [
+  ["/astrology", "Vedic astrology"],
+  ["/vastu", "Vastu shastra"],
+  ["/services", "Services"],
+] as const;
 
 const GHOST =
   "inline-flex min-h-11 items-center gap-2 border-b border-accent-border/50 pb-0.5 font-serif text-[1.05rem] text-foreground no-underline transition-colors duration-(--duration-base) hover:border-accent-strong hover:text-accent-strong [&_[data-arrow]]:transition-transform [&_[data-arrow]]:duration-(--duration-base) [&_[data-arrow]]:ease-emphasized hover:[&_[data-arrow]]:translate-x-1";
 
 /**
  * `/about` — the E-E-A-T anchor (CLAUDE.md §8, §9.9), set as plates in the voice of the home
- * page: the practitioner's portrait as the opening figure, her credentials as a ruled ledger,
- * the method on a step line, the Instrument, her view of the practice, the "not claimed" list
- * visible in full, the Earth
- * with a door to every country, then the notes to the plates and the parchment disc. A Server
- * Component; every word, link and answer is in the HTML. The entity sentence is the first
- * paragraph; credentials, years and counts stay the practitioner's placeholders until supplied;
- * Person JSON-LD carries only real values.
+ * page. A Server Component; every word, link and answer is in the HTML. Credentials, years and
+ * counts stay the practitioner's placeholders until supplied; Person JSON-LD carries only real
+ * values.
  */
 export default async function AboutPage() {
   const siteUrl = getSiteUrl();
@@ -123,8 +144,8 @@ export default async function AboutPage() {
   });
 
   const footBlocks: FootBlock[] = [
-    { ...ABOUT_EXPERIENCE, children: <Paragraphs section={ABOUT_EXPERIENCE} /> },
-    { ...ABOUT_LANGUAGES, children: <Paragraphs section={ABOUT_LANGUAGES} /> },
+    { ...ABOUT_EXPERIENCE, children: <Paragraphs section={ABOUT_EXPERIENCE} centred={false} /> },
+    { ...ABOUT_LANGUAGES, children: <Paragraphs section={ABOUT_LANGUAGES} centred={false} /> },
   ];
 
   return (
@@ -141,20 +162,21 @@ export default async function AboutPage() {
         figureSize="half"
         figureRatio="1/1"
         breadcrumbs={[{ name: "About", href: ROUTE }]}
+        className={HERO_FIT}
         figure={<Portrait name={name} planet={planet} />}
         actions={
           <>
-            {/* `md`, not `sm`: the twelve capitals of the label need the 8 rem face (tracked a
-                little tighter so they sit inside it). Its halo and tick ring overflow the box, so it
-                takes margin above and below, clear of the lede and the entity's rule, and the ghost
-                link stands off it. */}
+            {/* `md`: the label's capitals need the 8 rem face; the ring overflows it, hence my-6. */}
             <Disc
               size="md"
               href={ABOUT_HERO.primaryCta.href}
               label={ABOUT_HERO.primaryCta.label}
-              className="my-8 [&_.disc-link]:px-[10%] [&_.disc-link]:tracking-[0.12em]"
+              className={cn(
+                DISC_TURN,
+                "my-6 [&_.disc-link]:px-[10%] [&_.disc-link]:tracking-[0.12em]",
+              )}
             />
-            <Link href={ABOUT_HERO.secondaryCta.href} className={cn(GHOST, "sm:ms-10")}>
+            <Link href={ABOUT_HERO.secondaryCta.href} className={cn(GHOST, "sm:ms-6")}>
               {ABOUT_HERO.secondaryCta.label}
               <span aria-hidden="true" data-arrow className="inline-block">
                 →
@@ -172,17 +194,20 @@ export default async function AboutPage() {
         />
       </Container>
 
-      <Toc items={TOC} />
+      {/* Not sticky: a rail under the header would cover each plate's numeral on a jump. */}
+      <Toc items={TOC} sticky={false} />
 
-      {/* Plate I — the credentials, as supplied, set as a ruled ledger. */}
+      {/* Plate I — the two instruments she trained in; the credentials ledger under the answer. */}
       <FigureSection
         {...plate(ABOUT_TRAINING)}
         n="I"
         tone="muted"
         figureWidth="narrow"
-        figure={<Credentials />}
+        figureRatio="2/1"
+        figure={<TwoInstruments />}
         line={ABOUT_TRAINING.eyebrow}
       >
+        <Credentials />
         <Paragraphs section={ABOUT_TRAINING} closing />
       </FigureSection>
 
@@ -194,7 +219,7 @@ export default async function AboutPage() {
         figure={<StepLine steps={ABOUT_METHOD.steps?.map(({ title }) => ({ title })) ?? []} />}
         line={ABOUT_METHOD.eyebrow}
       >
-        <More summary="The steps in full">
+        <More summary="The steps in full" className={CENTRED_FOLD}>
           <ol>
             {ABOUT_METHOD.steps?.map((s) => (
               <li key={s.title}>
@@ -224,7 +249,7 @@ export default async function AboutPage() {
 
       {/* Plate IV — her view of the practice: the answer at rest, the paragraphs folded (SPEC §3). */}
       <FigureSection {...plate(ABOUT_LIMITS)} n="IV">
-        <Paragraphs section={ABOUT_LIMITS} />
+        <Paragraphs section={ABOUT_LIMITS} centred={false} />
       </FigureSection>
 
       {/* Plate V — plainly stated. The five items and the closing line stay visible. */}
@@ -254,23 +279,23 @@ export default async function AboutPage() {
         figureWidth="wide"
         figureRatio="2/1"
         figure={<Earth />}
-        line={ABOUT_WHERE_LINKS.heading}
+        line={ABOUT_WHERE.eyebrow}
       >
         <Paragraphs section={ABOUT_WHERE} />
+        <h3 className="pt-4 text-center font-display text-[0.62rem] font-semibold tracking-[0.3em] text-accent-strong uppercase">
+          {ABOUT_WHERE_LINKS.heading}
+        </h3>
         <CountryDoors countries={countries} />
-        <p className="text-sm text-muted-foreground">
+        <p className="text-center text-sm text-muted-foreground">
           Hubs:{" "}
-          <Link href="/astrology" className="text-accent-strong">
-            Vedic astrology
-          </Link>{" "}
-          ·{" "}
-          <Link href="/vastu" className="text-accent-strong">
-            Vastu shastra
-          </Link>{" "}
-          ·{" "}
-          <Link href="/services" className="text-accent-strong">
-            Services
-          </Link>
+          {HUB_LINKS.map(([href, text], i) => (
+            <span key={href}>
+              {i > 0 ? " · " : null}
+              <Link href={href} className="text-accent-strong">
+                {text}
+              </Link>
+            </span>
+          ))}
         </p>
       </FigureSection>
 
@@ -292,6 +317,7 @@ export default async function AboutPage() {
         primaryLabel={ABOUT_CTA.primary.label}
         secondaryHref={ABOUT_CTA.secondary.href}
         secondaryLabel={ABOUT_CTA.secondary.label}
+        className={DISC_TURN}
       />
     </>
   );
@@ -302,10 +328,19 @@ function plate(s: AboutSection) {
 }
 
 /** A section's paragraphs (and closing line) folded under its answer — in the HTML, off the eye. */
-function Paragraphs({ section, closing = false }: { section: AboutSection; closing?: boolean }) {
+function Paragraphs({
+  section,
+  closing = false,
+  centred = true,
+}: {
+  section: AboutSection;
+  closing?: boolean;
+  /** False under a left-aligned block (a figureless plate, a note in the foot). */
+  centred?: boolean;
+}) {
   if (!section.paragraphs?.length && !(closing && section.closing)) return null;
   return (
-    <More>
+    <More className={centred ? CENTRED_FOLD : undefined}>
       {section.paragraphs?.map((p) => (
         <p key={p.slice(0, 40)}>{p}</p>
       ))}
@@ -317,13 +352,9 @@ function Paragraphs({ section, closing = false }: { section: AboutSection; closi
 }
 
 /**
- * The portrait as the hero's figure. `SceneHero` draws its figure in a box of a fixed landscape
- * or square ratio and offers no portrait one, so the plate is fitted to the box's height with
- * container units (the image is 4:5; the glass, name, title and orb take ~10 rem beneath it),
- * capped at the 22 rem the plate is meant to be. A taller screen gives the full plate. On a
- * phone the square box is the column's width (~22 rem at 390 px), so the plate is set at
- * 12 rem, which fits image and caption at full type size — no scaling, so the job title
- * stays at its 0.8 rem.
+ * The portrait as the hero's figure, fitted to the square box's height with container units
+ * (the image is 4:5; glass and caption take ~10 rem), capped at 22 rem; 11 rem on a phone, so
+ * the caption keeps its full type size.
  */
 function Portrait({ name, planet }: { name: string; planet: PlanetKey | undefined }) {
   return (
@@ -332,16 +363,13 @@ function Portrait({ name, planet }: { name: string; planet: PlanetKey | undefine
         name={name}
         planet={planet}
         priority
-        className="w-[min(22rem,calc((100cqh_-_10rem)/1.25))] max-w-[22rem] max-sm:w-[12rem]"
+        className="w-[min(22rem,calc((100cqh_-_10rem)/1.25))] max-w-[22rem] max-sm:w-[11rem]"
       />
     </div>
   );
 }
 
-/**
- * The credentials ledger, the figure of plate I: each row exactly as the practitioner has
- * supplied it, a placeholder shown as a placeholder with the note of what it is awaiting.
- */
+/** Plate I's credentials, exactly as supplied; a placeholder shows what it awaits. Never folded. */
 function Credentials() {
   return (
     <div className="w-full">
@@ -372,23 +400,29 @@ function Credentials() {
   );
 }
 
-/** The Earth's frame fades on every side, so the dome curves through it with no hard edge. */
-const EARTH_MASK =
-  "linear-gradient(to right, transparent, #000 14%, #000 86%, transparent), linear-gradient(to bottom, transparent, #000 10%, #000 55%, transparent)";
+/** The two instruments she trained to read — the North Indian chart and the vastu compass. */
+function TwoInstruments() {
+  return (
+    <div className="grid w-full grid-cols-2 items-center gap-[8%] px-[6%] text-accent-strong">
+      <NorthIndianChart strokeWidth={0.9} />
+      <VastuCompass hideLabels strokeWidth={0.9} />
+    </div>
+  );
+}
+
+/** One elliptical fade, so no edge of the 2:1 frame survives on any side. */
+const EARTH_MASK = "radial-gradient(ellipse 52% 62% at 50% 38%, black 45%, transparent 100%)";
 
 /**
- * The figure of plate VI. By night, the Earth's lit horizon (the home hero's planet) raised so
- * its dome fills a 2:1 frame. `EarthHorizon` is drawn in night colours only, so by day the same
- * frame carries the horizon engraved instead: the planet's rim as a brass hairline arc, the
- * atmosphere a dashed arc above it, the city lights as brass points — never a dark slab on the
- * parchment page.
+ * Plate VI's figure: by night the home hero's Earth, its dome raised into the frame; by day
+ * (`EarthHorizon` is night-only) the same horizon engraved in brass hairlines and points.
  */
 function Earth() {
   return (
     <div
       aria-hidden="true"
       className="relative aspect-[2/1] w-full overflow-hidden"
-      style={{ maskImage: EARTH_MASK, maskComposite: "intersect", WebkitMaskImage: EARTH_MASK }}
+      style={{ maskImage: EARTH_MASK, WebkitMaskImage: EARTH_MASK }}
     >
       <div className="hidden dark:block">
         <EarthHorizon className="top-[16%] bottom-auto -left-[10%] w-[120%] max-w-none md:top-[16%] md:bottom-auto md:-left-[10%] md:w-[120%]" />
@@ -405,50 +439,54 @@ const RIM_LIGHTS = Array.from({ length: 23 }, (_, i) => {
   return { x: 500 + r * Math.cos(a), y: 696 + r * Math.sin(a), big: i % 4 === 0 };
 });
 
-/** The day version of the Earth figure, in the same geometry as the night one. */
+/** The day horizon. Rims in screen pixels (`non-scaling-stroke`), points larger on a phone. */
 function EngravedHorizon({ className }: { className?: string }) {
+  const ring = { cx: 500, cy: 696, vectorEffect: "non-scaling-stroke" } as const;
   return (
     <svg viewBox="0 0 1000 500" fill="none" stroke="currentColor" className={className}>
-      <circle cx="500" cy="696" r="626" strokeWidth="0.8" strokeDasharray="2 7" opacity="0.6" />
-      <g opacity="0.35">
-        <circle cx="500" cy="696" r="604" strokeWidth="0.6" data-breathe />
+      <circle {...ring} r="626" strokeWidth="1" strokeDasharray="2 6" opacity="0.6" />
+      <g opacity="0.4">
+        <circle {...ring} r="604" strokeWidth="1" data-breathe />
       </g>
-      <circle cx="500" cy="696" r="588" strokeWidth="1.25" pathLength={1400} data-draw />
-      <circle cx="500" cy="696" r="520" strokeWidth="0.6" opacity="0.3" />
-      <g fill="currentColor" stroke="none">
-        {RIM_LIGHTS.map((l) => (
-          <circle
-            key={`${l.x.toFixed(1)}-${l.y.toFixed(1)}`}
-            cx={l.x}
-            cy={l.y}
-            r={l.big ? 2.4 : 1.4}
-            opacity={l.big ? 0.8 : 0.5}
-          />
-        ))}
-      </g>
+      <circle {...ring} r="588" strokeWidth="1.25" pathLength={1400} data-draw />
+      <circle {...ring} r="520" strokeWidth="1" opacity="0.3" />
+      <RimLights scale={1} className="max-sm:hidden" />
+      <RimLights scale={2.6} className="sm:hidden" />
     </svg>
+  );
+}
+
+function RimLights({ scale, className }: { scale: number; className: string }) {
+  return (
+    <g fill="currentColor" stroke="none" className={className}>
+      {RIM_LIGHTS.map((l) => (
+        <circle
+          key={`${l.x.toFixed(1)}-${l.y.toFixed(1)}`}
+          cx={l.x}
+          cy={l.y}
+          r={(l.big ? 2.4 : 1.4) * scale}
+          opacity={l.big ? 0.8 : 0.5}
+        />
+      ))}
+    </g>
   );
 }
 
 /** A door for each country, twice: to her astrology page there and to her vastu page there. */
 function CountryDoors({ countries }: { countries: Location[] }) {
   if (countries.length === 0) return null;
-  const doors: Door[] = countries.flatMap((loc) => [
-    {
-      href: locationHref(loc, "astrologer"),
-      label: loc.name,
-      line: ABOUT_WHERE_LINKS.astrologerLabel,
-      motif: "north-chart",
-    },
-    {
-      href: locationHref(loc, "vastu-consultant"),
-      label: loc.name,
-      line: ABOUT_WHERE_LINKS.vastuLabel,
-      motif: "compass",
-    },
+  const door = (loc: Location, service: "astrologer" | "vastu-consultant"): Door => ({
+    href: locationHref(loc, service),
+    label: loc.name,
+    line:
+      service === "astrologer" ? ABOUT_WHERE_LINKS.astrologerLabel : ABOUT_WHERE_LINKS.vastuLabel,
+    motif: service === "astrologer" ? "north-chart" : "compass",
+  });
+  const doors = countries.flatMap((loc) => [
+    door(loc, "astrologer"),
+    door(loc, "vastu-consultant"),
   ]);
-  // One row per country at every width, its two doors side by side: the station field is a
-  // single column below 48 rem, so the two-column grid is held here (`!`, over the field's rule).
+  // One row per country at every width: the station field is one column below 48 rem.
   return (
     <DoorField
       doors={doors}
