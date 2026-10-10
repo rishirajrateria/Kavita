@@ -79,16 +79,16 @@ export function generateMetadata(): Promise<Metadata> {
   return applyPageSeo(BASE_METADATA, ROUTE);
 }
 
+/** From `lg`: a two-line H1, a one-line tagline and a figure capped so South clears the fold. */
+const HERO =
+  "lg:[&_h1]:max-w-[26ch] lg:[&_.rule]:max-w-[56rem] lg:[&_.scene-figure]:max-w-[min(94vw,36rem,calc(100svh_-_24rem))]!";
+
 const ROMAN = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX"] as const;
 
 const GHOST =
   "inline-flex min-h-11 items-center gap-2 border-b border-accent-border/50 pb-0.5 font-serif text-[1.05rem] text-foreground no-underline transition-colors duration-(--duration-base) hover:border-accent-strong hover:text-accent-strong [&_[data-arrow]]:transition-transform [&_[data-arrow]]:duration-(--duration-base) [&_[data-arrow]]:ease-emphasized hover:[&_[data-arrow]]:translate-x-1";
 
-/**
- * The four corners of the plan and the element the classical scheme seats in each (the
- * direction table: north-east water, south-east fire, south-west earth, north-west air), each
- * opening its own glossary term.
- */
+/** The four corners, each with the element the direction table seats there and its own term. */
 const CORNERS: readonly { dir: CompassCorner["dir"]; slug: string; element: VastuElement }[] = [
   { dir: "NE", slug: "ishaan", element: "water" },
   { dir: "SE", slug: "agneya", element: "fire" },
@@ -101,24 +101,15 @@ function compassCorners(): CompassCorner[] {
   return CORNERS.map(({ dir, slug, element }) => {
     const term = GLOSSARY.find((t) => t.slug === slug);
     if (!term) throw new Error(`/vastu: glossary term "${slug}" is missing for the ${dir} door`);
-    return {
-      dir,
-      href: `/glossary/${term.slug}`,
-      label: term.term,
-      sanskrit: term.term.split(" (")[0] ?? term.term,
-      element,
-    };
+    const sanskrit = term.term.split(" (")[0] ?? term.term;
+    return { dir, href: `/glossary/${term.slug}`, label: term.term, sanskrit, element };
   });
 }
 
 /**
- * `/vastu` hub — vastu intent (CLAUDE.md §5, §8, §9), in the voice of the home page: the compass
- * whose four corners open their own terms as the opening instrument, the parchment disc at its
- * centre; then plates — a figure, one ruled line, the question-form H2 and its visible answer —
- * with every longer paragraph folded into native `<details>` beneath, the three tables in
- * ledgers (the directions open), the services and the published places as doors, the FAQs as
- * the notes at the foot. Server component: every word, every table and every link is in the
- * HTML with JavaScript disabled. Zero client JavaScript.
+ * `/vastu` hub (CLAUDE.md §5, §8, §9) in the home page's voice: the compass doors, then plates —
+ * figure, one line, question H2, visible answer, longer copy and tables folded in `<details>` —
+ * then doors, notes and the disc. Server component; every word is in the HTML, zero client JS.
  */
 export default async function VastuPage() {
   const [settings, services, publishable] = await Promise.all([
@@ -159,7 +150,6 @@ export default async function VastuPage() {
   return (
     <>
       <MotifSprite />
-
       <SceneHero
         id="vastu"
         title={VASTU_HERO.h1}
@@ -167,6 +157,7 @@ export default async function VastuPage() {
         lede={VASTU_HERO.lede}
         entity={VASTU_HERO.entity}
         figureSize="half"
+        className={HERO}
         figureRatio="1/1"
         breadcrumbs={[{ name: "Vastu shastra", href: ROUTE }]}
         figure={<HeroCompass corners={compassCorners()} />}
@@ -179,7 +170,6 @@ export default async function VastuPage() {
           </Link>
         }
       />
-
       <Container size="wide">
         <Byline
           datePublished={VASTU_DATES.published}
@@ -187,9 +177,7 @@ export default async function VastuPage() {
           withoutPhoto
         />
       </Container>
-
       <KeyFacts route={ROUTE} heading={K.heading} items={facts} columns={3} />
-
       <Toc items={[...VASTU_TOC]} className="[&_a]:px-1 [&_a]:tracking-[0.14em]" />
 
       {/* Plate I — the mandala: nine zones, an element in each corner, the centre open */}
@@ -207,7 +195,6 @@ export default async function VastuPage() {
       {/* Plate II — the eight directions, and the table that names them (the primary table) */}
       <FigureSection
         {...plate(VASTU_DIRECTIONS, 1)}
-        figureWidth="default"
         line={VASTU_DIRECTIONS.eyebrow}
         figure={
           <div className="aspect-square w-full max-w-[20rem] font-display text-accent-strong">
@@ -216,7 +203,7 @@ export default async function VastuPage() {
         }
       >
         <Paragraphs section={VASTU_DIRECTIONS} />
-        <TableFold table={VASTU_DIRECTION_TABLE} firstColumnWidth="14%" open />
+        <TableFold table={VASTU_DIRECTION_TABLE} firstColumnWidth="14%" />
       </FigureSection>
 
       {/* Plate III — the brahmasthan: the plan with its centre lit */}
@@ -237,17 +224,8 @@ export default async function VastuPage() {
       {/* Plate IV — remote: the bearing taken at the door, the how-to folded beneath */}
       <FigureSection
         {...plate(VASTU_REMOTE, 3)}
-        figureWidth="default"
         line="A plan, a bearing, photographs"
-        figure={
-          <div
-            data-sway
-            className="aspect-square w-full max-w-[12rem] text-accent-strong"
-            style={{ ["--sway-deg" as string]: "4deg" }}
-          >
-            <VastuCompass hideLabels strokeWidth={0.9} />
-          </div>
-        }
+        figure={<SwayingCompass />}
       >
         <Paragraphs section={VASTU_REMOTE} />
         <More summary={VASTU_COMPASS_HOWTO.heading}>
@@ -280,16 +258,7 @@ export default async function VastuPage() {
       </FigureSection>
 
       {/* Plate VI — three kinds of premises, each a plan captioned by its column */}
-      <FigureSection
-        {...plate(VASTU_PROPERTY_TYPES, 5)}
-        figureWidth="default"
-        line={premisesLine()}
-        figure={
-          <div className="aspect-square w-full max-w-[14rem] text-accent-strong">
-            <FloorPlan strokeWidth={1.1} />
-          </div>
-        }
-      >
+      <FigureSection {...plate(VASTU_PROPERTY_TYPES, 5)} figure={<Premises />}>
         <Paragraphs section={VASTU_PROPERTY_TYPES} />
         <TableFold table={VASTU_PROPERTY_TABLE} firstColumnWidth="16%" />
       </FigureSection>
@@ -327,7 +296,6 @@ export default async function VastuPage() {
           headings={{ countries: VASTU_WHERE_LABELS.countries, cities: VASTU_WHERE_LABELS.cities }}
         />
       </FigureSection>
-
       <Foot
         id="faq"
         route={ROUTE}
@@ -335,7 +303,6 @@ export default async function VastuPage() {
         answer={VASTU_FAQ.answer}
         faqs={[...VASTU_FAQ.items]}
       />
-
       <CtaDisc
         eyebrow={VASTU_CTA.eyebrow}
         title={VASTU_CTA.title}
@@ -350,9 +317,10 @@ export default async function VastuPage() {
   );
 }
 
-/** The props every plate shares: anchor, route, numeral, question and answer. */
+/** The props every plate shares; the fold stack takes the answer's measure (one left edge). */
 function plate(s: HubSection, i: number) {
-  return { id: s.id, route: ROUTE, n: ROMAN[i], question: s.question, answer: s.answer };
+  const { id, question, answer } = s;
+  return { id, route: ROUTE, n: ROMAN[i], question, answer, className: FOLD };
 }
 
 /** A section's longer paragraphs, folded under its answer — in the HTML, not on the eye. */
@@ -367,58 +335,95 @@ function Paragraphs({ section }: { section: HubSection }) {
   );
 }
 
+const FOLD = "[&>div>div]:max-w-[36rem]";
+
 /**
- * A table folded under its plate: the summary keeps the 60ch fold column (one left edge with
- * `Read more`), only the body breaks out to 64rem, and cells take the §2.1 meta type. The
- * element form of `Ledger` is used so `SpecTable` receives `firstColumnWidth`.
+ * Table body: breaks out to 64rem, cells in the §2.1 meta type. Between 40rem (where scene.css
+ * stops stacking) and `lg` a `.plate-stack` table would scroll sideways, so there each row is its
+ * header over a two-column ruled grid of labelled cells.
  */
-function TableFold({
-  table,
-  firstColumnWidth,
-  open = false,
-}: {
-  table: SpecTableData;
-  firstColumnWidth: string;
-  open?: boolean;
-}) {
+const LEDGER = [
+  "[&_td]:text-[0.8rem] [&_td]:leading-[1.6] [&_th[scope=row]]:text-base",
+  "[&>div]:relative [&>div]:left-1/2 [&>div]:w-[min(64rem,calc(100vw-2rem))] [&>div]:-translate-x-1/2",
+  "sm:max-lg:[&_.plate-stack]:block sm:max-lg:[&_.plate-stack_tbody]:block sm:max-lg:[&_.plate-stack_thead]:sr-only",
+  "sm:max-lg:[&_.plate-stack_tr]:grid sm:max-lg:[&_.plate-stack_tr]:grid-cols-2 sm:max-lg:[&_.plate-stack_tr]:gap-x-8 sm:max-lg:[&_.plate-stack_tr]:py-3",
+  "sm:max-lg:[&_.plate-stack_th]:col-span-2 sm:max-lg:[&_.plate-stack_th]:px-0 sm:max-lg:[&_.plate-stack_td]:px-0",
+  "sm:max-lg:[&_.plate-stack_td]:before:block sm:max-lg:[&_.plate-stack_td]:before:content-[attr(data-label)]",
+  "sm:max-lg:[&_.plate-stack_td]:before:font-display sm:max-lg:[&_.plate-stack_td]:before:text-[0.62rem] sm:max-lg:[&_.plate-stack_td]:before:font-semibold",
+  "sm:max-lg:[&_.plate-stack_td]:before:tracking-[0.2em] sm:max-lg:[&_.plate-stack_td]:before:text-accent-strong sm:max-lg:[&_.plate-stack_td]:before:uppercase",
+].join(" ");
+
+/** A table folded under its plate (element form, so `SpecTable` takes `firstColumnWidth`). */
+function TableFold({ table, ...widths }: { table: SpecTableData; firstColumnWidth: string }) {
   const clause = table.caption.split(/[.;:—]/)[0]?.trim() ?? table.caption;
+  const body = <SpecTable table={table} {...widths} />;
+  return <Ledger summary={`Table · ${clause}`} table={body} className={LEDGER} />;
+}
+
+const SWAY = { "--sway-deg": "6deg" } as React.CSSProperties;
+
+/**
+ * Plate IV (SPEC §4): the rose holds still and only a needle sways over it, on the same 200-unit
+ * geometry — a page-local overlay, because `VastuCompass` has no needle group of its own.
+ */
+function SwayingCompass() {
   return (
-    <Ledger
-      open={open}
-      summary={`Table · ${clause}`}
-      table={<SpecTable table={table} firstColumnWidth={firstColumnWidth} />}
-      className="[&_td]:text-[0.8rem] [&_td]:leading-[1.6] [&_th[scope=row]]:text-base [&>div]:relative [&>div]:left-1/2 [&>div]:w-[min(64rem,calc(100vw-2rem))] [&>div]:-translate-x-1/2"
-    />
+    <div className="relative aspect-square w-full max-w-[12rem] text-accent-strong">
+      <VastuCompass hideLabels strokeWidth={0.9} />
+      <div data-sway aria-hidden="true" className="absolute inset-0" style={SWAY}>
+        <svg viewBox="0 0 200 200" className="size-full" strokeWidth={0.9} strokeLinejoin="round">
+          <path d="M100 40 104 100 96 100Z" fill="currentColor" stroke="currentColor" />
+          <path d="M100 160 104 100 96 100Z" fill="none" stroke="currentColor" />
+        </svg>
+      </div>
+    </div>
   );
 }
 
-/**
- * Plate VI's one line: the three kinds of premises, named by the property table's column heads
- * (the third by the first word of its head; the head in full stays in the table).
- */
-function premisesLine(): string {
-  return VASTU_PROPERTY_TABLE.columns
-    .slice(1)
-    .map((head) => head.split(" (")[0] ?? head)
-    .join(" · ");
+/** A unit among others with its own entrance; a house on its plot; an open commercial floor. */
+const PREMISES = [
+  { frame: "grid grid-cols-2 border border-accent-border/50", zone: "east", w: 7 },
+  { frame: "border border-accent-border/60 p-[18%]", zone: "none", w: 4.5 },
+  { frame: "border-[3px] border-double border-accent-border/60 p-[7%]", zone: "centre", w: 3.5 },
+] as const;
+
+const UNIT =
+  "border-dashed border-accent-border/40 p-[8%] [&:nth-child(-n+2)]:border-b [&:nth-child(odd)]:border-e";
+
+/** Plate VI: the plan seated three ways, each captioned by the property table's column head. */
+function Premises() {
+  const heads = VASTU_PROPERTY_TABLE.columns.slice(1).map((h) => h.split(" (")[0] ?? h);
+  return (
+    <div className="grid w-full max-w-[40rem] grid-cols-3 gap-4 text-accent-strong sm:gap-8">
+      {PREMISES.map(({ frame, zone, w }, i) => {
+        const plan = <FloorPlan decorative highlight={zone} strokeWidth={w} />;
+        return (
+          <div key={heads[i]}>
+            <div className={`aspect-square ${frame}`}>
+              {i === 0
+                ? [0, 1, 2, 3].map((c) => (
+                    <div key={c} className={UNIT}>
+                      {c === 1 ? plan : null}
+                    </div>
+                  ))
+                : plan}
+            </div>
+            <p className="mt-3 text-center font-display text-[0.62rem] font-semibold tracking-[0.2em] text-muted-foreground uppercase">
+              {heads[i]}
+            </p>
+          </div>
+        );
+      })}
+    </div>
+  );
 }
 
-const CARDINAL_NAME: Record<string, string> = {
-  N: "North",
-  E: "East",
-  S: "South",
-  W: "West",
-};
+const CARDINAL_NAME: Record<string, string> = { N: "North", E: "East", S: "South", W: "West" };
 
 /**
- * Composition around `CompassDoors` (class names only, no shared file touched):
- * - the disc label is held at the §2.1 floor of 0.62rem (the `Disc` clamp starts at 0.58rem);
- * - below `lg` the primitive's labels are `sr-only` (still read by assistive technology) and
- *   `PhoneCompassLabels` draws them;
- * - from `lg` every label sits on one line, and east and west — the 6th and 8th `<span>`s, after
- *   the four corners in `CORNERS` order and north — are anchored by their inner edge at the
- *   label radius, so they read outward from the rim instead of straddling the rings (`!`: the
- *   label's centring translate in doors.css is unlayered, so a layered utility cannot win).
+ * Around `CompassDoors` (no shared file touched): the disc label held at the 0.62rem floor; below
+ * `lg` its labels are `sr-only` and `PhoneCompassLabels` draws them; from `lg` labels sit on one
+ * line, east and west (6th and 8th spans) anchored by their inner edge (`!` beats doors.css).
  */
 const HERO_COMPASS = [
   "max-h-full max-w-full",
@@ -450,11 +455,9 @@ const PHONE_LABEL =
   "absolute font-display text-[0.62rem] leading-[1.35] font-semibold tracking-[0.2em] whitespace-nowrap uppercase text-center";
 
 /**
- * The compass labels below `lg` (decorative; the primitive's labels carry the words for screen
- * readers). The rose's sky circle is 38.64% of the box from its centre (r 92 of 200 units in an
- * 84% inset), so each cardinal sits just outside it: north and south above and below, east and
- * west turned along the rim the way an engraved compass letters them; the corners sit in the
- * box's corners, clear of the circle.
+ * Compass labels below `lg` (decorative; the primitive's sr-only labels carry the words). Each
+ * cardinal sits just outside the sky circle (38.64% of the box), east and west turned along the
+ * rim; the corners sit in the box's corners, clear of it.
  */
 function PhoneCompassLabels({ corners }: { corners: CompassCorner[] }) {
   const out = "calc(11.36% - 1.15rem)";
@@ -465,12 +468,11 @@ function PhoneCompassLabels({ corners }: { corners: CompassCorner[] }) {
     E: { left: far, top: "50%", translate: "-50% -50%", rotate: "90deg" },
     W: { left: out, top: "50%", translate: "-50% -50%", rotate: "-90deg" },
   };
-  const corner: Record<CompassCorner["dir"], React.CSSProperties> = {
-    NE: { right: "0.25rem", top: "11.5%", translate: "0 -50%" },
-    SE: { right: "0.25rem", top: "88.5%", translate: "0 -50%" },
-    SW: { left: "0.25rem", top: "88.5%", translate: "0 -50%" },
-    NW: { left: "0.25rem", top: "11.5%", translate: "0 -50%" },
-  };
+  const corner = ({ dir }: CompassCorner): React.CSSProperties => ({
+    [dir.endsWith("E") ? "right" : "left"]: "0.25rem",
+    top: dir.startsWith("N") ? "11.5%" : "88.5%",
+    translate: "0 -50%",
+  });
   return (
     <div aria-hidden="true" className="pointer-events-none absolute inset-0 lg:hidden">
       {DIRECTIONS.filter((d) => d.label in CARDINAL_NAME).map((d) => (
@@ -485,7 +487,7 @@ function PhoneCompassLabels({ corners }: { corners: CompassCorner[] }) {
         </span>
       ))}
       {corners.map((c) => (
-        <span key={c.dir} className={`${PHONE_LABEL} text-foreground`} style={corner[c.dir]}>
+        <span key={c.dir} className={`${PHONE_LABEL} text-foreground`} style={corner(c)}>
           {c.sanskrit}
           <br />
           {c.dir}
