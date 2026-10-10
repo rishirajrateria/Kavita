@@ -1,96 +1,74 @@
 import Link from "next/link";
-import { QuestionHeading } from "@/components/home/question-heading";
-import { cardVariants } from "@/components/ui/card";
-import { Container } from "@/components/ui/container";
-import { Section } from "@/components/ui/section";
+import { DoorField, FigureSection } from "@/components/content";
 import type { LocationRecord } from "@/content/locations/schema";
+import type { GeoService } from "@/lib/data/types";
 import { CHILD_CARD_CAP } from "@/lib/geo/linking";
-import { cn } from "@/lib/utils";
 import type { Question } from "./answers";
+import { SERVICE_MOTIF, WIDE_BLOCK, type Plate } from "./parts";
 
 /**
- * Links DOWN the tree (CLAUDE.md §5): the location's publishable children as cards — the first
- * 24 — with any remainder in a compact inline list so no child is ever orphaned. Country pages
- * set this on the deep-indigo band; state pages on the muted pane, so the two tiers differ.
- *
- * Twenty-four tiles is the largest repeat on the site, so they take the `quiet` card: a
- * hairline and air, with the night showing through. Filled cards here would turn the page into
- * a wall of boxes — the lift on hover is what tells you they are objects.
+ * Links DOWN the tree (CLAUDE.md §5): the location's publishable children as doors — the first
+ * 24 — with any remainder in a compact inline list so no child is ever orphaned. A place has no
+ * true position on a chart or a compass, so the doors sit in a quiet grid (SPEC §1, rule 2),
+ * each carrying the family's glyph and its tier (`Region` / `City`) as meta.
  */
 export function GeoChildrenGrid({
   children,
   href,
   question,
   route,
-  tone,
+  service,
+  plate,
 }: {
   children: LocationRecord[];
   href: (loc: LocationRecord) => string;
   question: Question;
   /** Canonical route of the page, for `/admin/aeo` answer overrides. */
   route?: string;
-  tone: "inverse" | "muted";
+  service: GeoService;
+  plate: Plate;
 }) {
   if (children.length === 0) return null;
-  const cards = children.slice(0, CHILD_CARD_CAP);
+  const doors = children.slice(0, CHILD_CARD_CAP);
   const rest = children.slice(CHILD_CARD_CAP);
 
   return (
-    <Section
+    <FigureSection
       id="children"
-      spacing="lg"
-      tone={tone}
-      className={tone === "inverse" ? "grain overflow-hidden" : undefined}
+      route={route}
+      n={plate.n}
+      tone={plate.tone}
+      question={question.question}
+      answer={question.answer}
+      className={WIDE_BLOCK}
     >
-      <Container size="wide" className="relative space-y-12">
-        <QuestionHeading block={question} route={route} id="children" layout="split" />
+      <DoorField
+        variant="tile"
+        columns={4}
+        doors={doors.map((child) => ({
+          href: href(child),
+          label: child.name,
+          meta: child.type === "state" ? "Region" : "City",
+          motif: SERVICE_MOTIF[service],
+        }))}
+      />
 
-        <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-          {cards.map((child) => (
-            <li key={child.path} className="flex">
+      {rest.length > 0 ? (
+        <p className="max-w-prose border-t border-accent-border/30 pt-6 font-sans text-sm leading-loose text-muted-foreground">
+          <span className="font-semibold text-foreground">Also: </span>
+          {rest.map((child, i) => (
+            <span key={child.path}>
               <Link
                 href={href(child)}
-                // The card here IS the anchor, which Card's `as` union cannot express, so the
-                // panel classes are applied directly rather than wrapping a link in a div.
-                className={cn(
-                  cardVariants({ variant: "quiet", padding: "sm", interactive: true }),
-                  "group w-full gap-3 no-underline",
-                )}
+                className="text-accent-strong underline decoration-accent-border/60 underline-offset-[3px] hover:decoration-accent-strong"
               >
-                <span className="font-serif text-xl leading-snug transition-colors duration-(--duration-base) group-hover:text-accent-strong">
-                  {child.name}
-                </span>
-                <span className="mt-auto flex items-center justify-between text-xs tracking-[0.1em] text-muted-foreground uppercase">
-                  <span>{child.type === "state" ? "Region" : "City"}</span>
-                  <span
-                    aria-hidden="true"
-                    className="inline-block text-accent-strong transition-transform duration-(--duration-base) ease-emphasized group-hover:translate-x-1 motion-reduce:transition-none"
-                  >
-                    →
-                  </span>
-                </span>
+                {child.name}
               </Link>
-            </li>
+              {i < rest.length - 1 ? " · " : ""}
+            </span>
           ))}
-        </ul>
-
-        {rest.length > 0 ? (
-          <p className="max-w-prose border-t border-accent-border/30 pt-6 text-sm leading-loose text-muted-foreground">
-            <span className="font-semibold text-foreground">Also: </span>
-            {rest.map((child, i) => (
-              <span key={child.path}>
-                <Link
-                  href={href(child)}
-                  className="text-accent-strong underline decoration-accent-border/60 underline-offset-[3px] hover:decoration-accent-strong"
-                >
-                  {child.name}
-                </Link>
-                {i < rest.length - 1 ? " · " : ""}
-              </span>
-            ))}
-          </p>
-        ) : null}
-      </Container>
-    </Section>
+        </p>
+      ) : null}
+    </FigureSection>
   );
 }

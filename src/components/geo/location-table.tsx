@@ -1,79 +1,37 @@
-import { QuestionHeading } from "@/components/home/question-heading";
-import { Container } from "@/components/ui/container";
-import { Section } from "@/components/ui/section";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
+import { FigureSection, Ledger } from "@/components/content";
 import type { GeoTable } from "@/lib/geo/tables";
 import type { Question } from "./answers";
+import { WIDE_BLOCK, type Plate } from "./parts";
 
 /**
- * The page's specification table (CLAUDE.md §9.4) in the site's editorial table voice: small-caps
- * column heads over a gold hairline, the first column a serif row header, hairline row rules and
- * no fill at all — a table is type on a grid, not an object, so the night shows through it.
- * Cells wrap, so a three-column table still fits a phone. Rows come from `src/lib/geo/tables`.
+ * The page's specification table (CLAUDE.md §9.4) as a ruled plate: the question, its answer,
+ * then the table on an open `Ledger` — the page's primary table, so it is open at rest and in
+ * the HTML either way. A table of more than three columns stacks its rows on a phone. Rows come
+ * from `src/lib/geo/tables`.
  */
 export function GeoLocationTable({
   table,
   question,
   route,
-  tone = "default",
+  plate,
 }: {
   table: GeoTable;
   question: Question;
   /** Canonical route of the page, for `/admin/aeo` answer overrides. */
   route?: string;
-  tone?: "default" | "muted";
+  plate: Plate;
 }) {
   return (
-    <Section id={table.id} spacing="lg" tone={tone}>
-      <Container size="wide" className="space-y-12">
-        <QuestionHeading block={question} route={route} id={table.id} layout="split" />
-
-        <div>
-          <Table className="text-base" aria-label={table.caption}>
-            <TableHeader>
-              {/* The head row's gold hairline comes from TableHeader; no fill, no box. */}
-              <TableRow className="hover:bg-transparent">
-                {table.columns.map((col, i) => (
-                  <TableHead key={col} scope="col" className={i === 0 ? "w-[22%]" : undefined}>
-                    {col}
-                  </TableHead>
-                ))}
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {table.rows.map((row) => (
-                <TableRow key={row[0]}>
-                  {row.map((cell, i) =>
-                    i === 0 ? (
-                      <th
-                        key={i}
-                        scope="row"
-                        className="py-3.5 pr-6 text-left align-top font-serif text-lg leading-snug font-normal text-foreground"
-                      >
-                        {cell}
-                      </th>
-                    ) : (
-                      <TableCell key={i} className="py-3.5">
-                        {cell}
-                      </TableCell>
-                    ),
-                  )}
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-          {/* Outside the scroll container: a wide table scrolls sideways and would carry its own
-          <caption> off-screen with it on a phone. */}
-          <p className="mt-4 text-sm text-muted-foreground">{table.caption}</p>
-        </div>
-      </Container>
-    </Section>
+    <FigureSection
+      id={table.id}
+      route={route}
+      n={plate.n}
+      tone={plate.tone}
+      question={question.question}
+      answer={question.answer}
+      className={WIDE_BLOCK}
+    >
+      <Ledger table={table} open summary={`Table · ${question.eyebrow}`} />
+    </FigureSection>
   );
 }
