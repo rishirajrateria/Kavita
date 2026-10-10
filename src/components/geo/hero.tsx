@@ -22,13 +22,10 @@ const EARTH_BESIDE_CHART =
   "lg:[&>svg]:top-[6rem] lg:[&>svg]:bottom-auto lg:[&>svg]:left-[calc(50vw-1322px)] lg:[&>svg]:w-[900px] lg:[&>svg]:max-w-none";
 
 /**
- * The hero's disc is the `md` face, so "Book a consultation" sits inside the parchment on two
- * lines at the Cinzel caption floor (0.64 rem, above SPEC §2.1's 0.62 rem); the primitive's own
- * clamp would reach 0.8 rem at 1440, wider than the face. The ghost link keeps clear of the
- * turning ring of ticks, which spills past the face, and so does the lede above it.
+ * The hero's disc is the `md` face; the primitive sizes its label to fit. The vertical margin
+ * keeps the ghost link and the lede clear of the turning ring of ticks, which spills past the face.
  */
-const HERO_DISC =
-  "my-4 [&_.disc-link]:px-[6%] [&_.disc-link]:text-[0.64rem] [&_.disc-link]:tracking-[0.14em]";
+const HERO_DISC = "my-4";
 
 /**
  * The opening scene of a geo page (SPEC §3, geo rows): breadcrumb trail (visible + JSON-LD),

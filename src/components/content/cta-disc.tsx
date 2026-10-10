@@ -29,7 +29,7 @@ export interface CtaDiscProps {
  * The closing call to action of every page (SPEC §2.3): the parchment disc of the hub, lifted,
  * on the deepest night. It follows the `Foot` and, with the footer, is the page's one deep band. The
  * H2 is real; the primary link is an HTML `<a>` inside the disc; the secondary action is a
- * ruled ghost link. The backdrop motif is masked to a band around the disc alone — faded out
+ * ruled ghost link. The backdrop motif is anchored to the disc alone — faded out
  * behind the H2 and body above and behind the ghost link beneath (no text over a figure) — so
  * the disc sits inside its hairlines and nothing else does.
  */
@@ -73,18 +73,6 @@ export async function CtaDisc({
         className,
       )}
     >
-      <div
-        aria-hidden="true"
-        data-breathe
-        className="pointer-events-none absolute top-1/2 left-1/2 w-[38rem] -translate-x-1/2 -translate-y-1/2 [mask-image:linear-gradient(to_bottom,transparent_44%,black_58%,black_70%,transparent_79%)] text-accent-strong/12 sm:w-[46rem]"
-      >
-        {motif === "compass" ? (
-          <VastuCompass decorative hideLabels description="" strokeWidth={0.6} />
-        ) : (
-          <SouthIndianChart decorative strokeWidth={0.6} />
-        )}
-      </div>
-
       <Container size="narrow" className="relative flex flex-col items-center text-center">
         <Rule tone="accent" className="justify-center">
           {eyebrow}
@@ -101,12 +89,27 @@ export async function CtaDisc({
             {body}
           </p>
         )}
-        <Disc
-          href={primaryHref}
-          label={primaryLabel}
-          size="lg"
-          className="mt-12 max-w-[9rem] sm:max-w-none"
-        />
+        {/* The backdrop instrument is anchored to the disc and fades out within its own circle,
+            so it never runs under the question, the body or the secondary link. */}
+        <div className="relative isolate mt-12 grid place-items-center">
+          <div
+            aria-hidden="true"
+            data-breathe
+            className="pointer-events-none absolute top-1/2 left-1/2 -z-10 w-[22rem] -translate-x-1/2 -translate-y-1/2 [mask-image:radial-gradient(circle_closest-side,black_40%,transparent_62%)] text-accent-strong/14 sm:w-[26rem]"
+          >
+            {motif === "compass" ? (
+              <VastuCompass decorative hideLabels description="" strokeWidth={0.6} />
+            ) : (
+              <SouthIndianChart decorative strokeWidth={0.6} />
+            )}
+          </div>
+          <Disc
+            href={primaryHref}
+            label={primaryLabel}
+            size="lg"
+            className="max-w-[9rem] sm:max-w-none"
+          />
+        </div>
         {secondary ? (
           <p className="mt-10">
             {external ? (
