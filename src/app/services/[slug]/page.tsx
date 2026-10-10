@@ -108,7 +108,14 @@ const ODD_LAST = "max-md:[&>li:last-child:nth-child(odd)]:col-span-2";
 /** Plate I's instrument, by which instrument leads: both, the chart, or the plan. */
 function LeadFigure({ lead }: { lead: ServiceLead }) {
   const cls = "text-accent-strong";
-  let node: React.ReactNode = <Instrument className={cls} />;
+  // By day the Instrument's rings and mandala grid are pale brass on parchment: carry them on
+  // the accent itself, and draw every stroke a little heavier, so the plate reads as engraved.
+  let node: React.ReactNode = (
+    <Instrument
+      strokeWidth={1.6}
+      className={`${cls} [[data-theme=light]_&]:[--mandala-strong:color-mix(in_srgb,var(--accent-strong)_70%,transparent)] [[data-theme=light]_&]:[--mandala:color-mix(in_srgb,var(--accent-strong)_42%,transparent)]`}
+    />
+  );
   if (lead === "astrology") node = <NorthIndianChart className={cls} />;
   if (lead === "vastu") node = <FloorPlan className={cls} />;
   return <div className="mx-auto w-full max-w-[24rem]">{node}</div>;
@@ -219,7 +226,7 @@ function PrepareBody({ detail, service }: { detail: ServiceDetail; service: Serv
 /** The three Cinzel phrases under the Convergence figure, set exactly as the home page sets them. */
 function ConvergenceLine() {
   return (
-    <span className="inline-flex flex-wrap justify-center gap-x-3 gap-y-1">
+    <span className="inline-flex flex-col items-center gap-y-1.5 sm:flex-row sm:flex-wrap sm:justify-center sm:gap-x-3">
       <span className="whitespace-nowrap">{INSTRUMENTS.captions.chart}</span>
       <span aria-hidden="true" className="hidden opacity-60 sm:inline">
         ·
@@ -229,6 +236,19 @@ function ConvergenceLine() {
         ·
       </span>
       <span className="whitespace-nowrap">{INSTRUMENTS.captions.home}</span>
+    </span>
+  );
+}
+
+/** Two column heads as one caption: on a phone they stack, so neither line opens on the `·`. */
+function PairLine({ first, second }: { first: string; second: string }) {
+  return (
+    <span className="inline-flex flex-col items-center gap-y-1.5 sm:flex-row sm:gap-x-3">
+      <span className="whitespace-nowrap">{first}</span>
+      <span aria-hidden="true" className="hidden opacity-60 sm:inline">
+        ·
+      </span>
+      <span className="whitespace-nowrap">{second}</span>
     </span>
   );
 }
@@ -330,7 +350,9 @@ export default async function ServicePage({ params }: PageProps<"/services/[slug
       ? {
           "what-to-prepare": {
             node: prepareFigure,
-            line: detail.whatToPrepare.table ? `${chartCol} · ${vastuCol}` : undefined,
+            line: detail.whatToPrepare.table ? (
+              <PairLine first={chartCol} second={vastuCol} />
+            ) : undefined,
             width: "narrow" as const,
           },
         }
@@ -433,16 +455,19 @@ export default async function ServicePage({ params }: PageProps<"/services/[slug
         {related.length ? (
           <div id="related" className="mt-14 scroll-mt-20">
             <h2 className="note-q">{SERVICE_PAGE.related.heading}</h2>
-            <DoorField
-              className={`mt-8 ${ODD_LAST}`}
-              columns={3}
-              doors={related.map((s) => ({
-                href: `/services/${s.slug}`,
-                label: s.name,
-                line: s.shortDescription,
-                meta: doorMeta(s),
-              }))}
-            />
+            {/* The spacing sits on a wrapper: the unlayered `.door-field` rule outranks `mt-*`. */}
+            <div className="mt-8">
+              <DoorField
+                className={ODD_LAST}
+                columns={3}
+                doors={related.map((s) => ({
+                  href: `/services/${s.slug}`,
+                  label: s.name,
+                  line: s.shortDescription,
+                  meta: doorMeta(s),
+                }))}
+              />
+            </div>
           </div>
         ) : null}
       </Foot>
