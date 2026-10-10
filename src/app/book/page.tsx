@@ -5,7 +5,7 @@ import { BookingFlow } from "@/components/booking/booking-flow";
 import type { BookableService, BookingChannels } from "@/components/booking/types";
 import { CtaDisc, FigureSection, Foot, SceneHero, StepLine } from "@/components/content";
 import { HoursFigure } from "@/components/forms/nap-block";
-import { Disc } from "@/components/motifs";
+import { DashaTimeline, Disc, dashaSegmentFractions } from "@/components/motifs";
 import { Callout } from "@/components/ui/callout";
 import { Container } from "@/components/ui/container";
 import { Section } from "@/components/ui/section";
@@ -46,29 +46,58 @@ const ROMAN = ["I", "II", "III", "IV", "V", "VI", "VII"] as const;
 
 /**
  * The seven steps as a plate: the rail's short labels on the ruled line (the picture, from
- * 640 px), and the seven sentences of `BOOK_HOW.steps` as a numbered ruled list beneath it —
- * every sentence visible, nothing folded.
+ * 640 px), and the seven sentences of `BOOK_HOW.steps` as a ruled list beneath it — every
+ * sentence visible, nothing folded. Below 640 px the shared step line drops its rule and turns
+ * its labels into a list that would repeat the sentences directly beneath, so the phone keeps
+ * a figure of its own: the same dasha rule divided seven ways with the numerals I–VII under
+ * their segments, and no words.
  */
 function StepsFigure() {
+  const fractions = dashaSegmentFractions(BOOK_STEPS.map(() => 1));
   return (
-    <StepLine
-      // Below 640 px the rail's labels would repeat the numbered sentences directly beneath.
-      className="w-full max-sm:[&_.step-line-list]:hidden"
-      steps={BOOK_STEPS.map((s) => ({ title: s.short }))}
-      moreSummary="The steps in full"
-    />
+    <>
+      <StepLine
+        className="w-full max-sm:hidden"
+        steps={BOOK_STEPS.map((s) => ({ title: s.short }))}
+        moreSummary="The steps in full"
+      />
+      <div className="w-full sm:hidden" aria-hidden="true">
+        <DashaTimeline
+          segments={BOOK_STEPS.map(() => 1)}
+          decorative
+          className="text-accent-strong"
+        />
+        <div className="mt-1 flex">
+          {BOOK_STEPS.map((s, i) => (
+            <span
+              key={s.short}
+              className="text-center font-serif text-lg leading-none text-accent-strong"
+              style={{
+                flex: `0 0 ${((fractions[i]?.end ?? 0) - (fractions[i]?.start ?? 0)) * 100}%`,
+              }}
+            >
+              {ROMAN[i] ?? String(i + 1)}
+            </span>
+          ))}
+        </div>
+      </div>
+    </>
   );
 }
 
+/** The sentences; numbered on phones only, where the rail's labels are not above them. */
 function StepSentences() {
   return (
     <ol className="border-t border-border/60">
       {BOOK_HOW.steps.map((step, i) => (
         <li
           key={step}
-          className="grid grid-cols-[2.5rem_1fr] items-baseline gap-3 border-b border-border/60 py-3"
+          className="grid grid-cols-[2.5rem_1fr] items-baseline gap-3 border-b border-border/60 py-3 sm:grid-cols-1"
         >
-          <span aria-hidden="true" className="font-serif text-lg leading-none text-accent-strong">
+          <span
+            aria-hidden="true"
+            className="font-serif text-lg leading-none text-accent-strong sm:hidden"
+          >
             {ROMAN[i] ?? String(i + 1)}
           </span>
           <span className="font-serif text-[1.1rem] leading-snug text-foreground">{step}</span>
@@ -145,7 +174,7 @@ export default async function BookPage({ searchParams }: PageProps<"/book">) {
             now={now}
           />
         }
-        figureSize={place ? "wide" : "half"}
+        figureSize={place ? "wide" : "small"}
         figureRatio={place ? "2/1" : "1/1"}
         breadcrumbs={[{ name: "Book", href: "/book" }]}
         actions={<Disc size="sm" href="#booking" label="Begin" title={BOOK_HERO.eyebrow} />}

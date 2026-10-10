@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { applyPageSeo } from "@/lib/seo/page-seo";
-import { Byline, CtaDisc, FigureSection, Rule, SceneHero, Toc } from "@/components/content";
+import { Byline, CtaDisc, FigureSection, SceneHero, Toc } from "@/components/content";
 import { FaqGroup, type FaqSubgroup } from "@/components/faq/faq-group";
 import { FaqSearch } from "@/components/faq/faq-search";
 import { Instrument } from "@/components/motifs";
@@ -117,8 +117,10 @@ export default async function FaqPage() {
         question={FAQ_INTRO.question}
         answer={FAQ_INTRO.answer}
       >
-        <Rule tone="muted">{FAQ_INTRO.eyebrow}</Rule>
-        <FaqSearch total={all.length} />
+        <div className="space-y-3">
+          <p className="plate-n">{FAQ_INTRO.eyebrow}</p>
+          <FaqSearch total={all.length} />
+        </div>
       </FigureSection>
 
       <Toc items={toc} />

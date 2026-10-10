@@ -27,11 +27,15 @@ export const metadata: Metadata = {
 
 const one = (v: string | string[] | undefined) => (typeof v === "string" ? v : undefined);
 
-/** The parchment disc as the page's figure: the one object every page shares. */
-function DiscFigure({ href, title }: { href: string; title?: string }) {
+/**
+ * The parchment disc as the page's figure: the one object every page shares. Its label always
+ * names where it goes — "Your booking" only while the booking can still be managed below, "Book
+ * a new consultation" when it leads to `/book` (WCAG 2.4.4, link purpose).
+ */
+function DiscFigure({ href, label, title }: { href: string; label: string; title?: string }) {
   return (
     <div className="flex h-full w-full items-center justify-center">
-      <Disc size="md" href={href} label={MANAGE_PAGE.eyebrow} title={title} />
+      <Disc size="md" href={href} label={label} title={title} />
     </div>
   );
 }
@@ -60,19 +64,14 @@ export default async function BookingManagePage({
         title={copy.title}
         tagline={MANAGE_PAGE.eyebrow}
         lede={copy.body}
-        figure={<DiscFigure href="/book" />}
+        figure={<DiscFigure href="/book" label={MANAGE_PAGE.bookAgain} />}
         figureSize="small"
         figureRatio="1/1"
         breadcrumbs={crumbs}
         actions={
-          <>
-            <Button asChild variant="gold" size="xl">
-              <Link href="/contact">Contact Astrologer Kavita</Link>
-            </Button>
-            <Button asChild variant="ghost" size="xl">
-              <Link href="/book">{MANAGE_PAGE.bookAgain}</Link>
-            </Button>
-          </>
+          <Button asChild variant="gold" size="xl">
+            <Link href="/contact">Contact Astrologer Kavita</Link>
+          </Button>
         }
       />
     );
@@ -111,10 +110,15 @@ export default async function BookingManagePage({
             : ""
         }. ${BOOK_MODE_STEP.modes[booking.mode].label}, ${durationLabel(service.durationMinutes)}.`}
         figure={
-          <DiscFigure
-            href={closedNote ? "/book" : "#manage"}
-            title={closedNote ? MANAGE_PAGE.bookAgain : BOOK_CONFIRMATION.manage}
-          />
+          closedNote ? (
+            <DiscFigure href="/book" label={MANAGE_PAGE.bookAgain} />
+          ) : (
+            <DiscFigure
+              href="#manage"
+              label={MANAGE_PAGE.eyebrow}
+              title={BOOK_CONFIRMATION.manage}
+            />
+          )
         }
         figureSize="small"
         figureRatio="1/1"
