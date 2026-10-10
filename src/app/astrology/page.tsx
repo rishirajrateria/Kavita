@@ -1,22 +1,37 @@
 import type { Metadata } from "next";
 import { applyPageSeo } from "@/lib/seo/page-seo";
 import Link from "next/link";
+import type * as React from "react";
 import {
   Byline,
-  CtaBand,
-  FaqBlock,
+  CtaDisc,
+  FigureSection,
+  Foot,
   GeoLinkLists,
   KeyFacts,
-  PageHero,
-  QuestionSection,
+  Ledger,
+  More,
+  MotifSprite,
+  SceneHero,
   ServiceList,
-  SpecTable,
+  StepLine,
   Toc,
 } from "@/components/content";
-import { NorthIndianChart, Ornament, SouthIndianChart } from "@/components/motifs";
-import { Button } from "@/components/ui/button";
+import {
+  Convergence,
+  DashaRing,
+  DashaTimeline,
+  Disc,
+  NorthIndianChart,
+  Ornament,
+  PLANETS,
+  SouthIndianChart,
+  TransitArc,
+  VIMSHOTTARI_GRAHAS,
+  VIMSHOTTARI_YEARS,
+  dashaSegmentFractions,
+} from "@/components/motifs";
 import { Container } from "@/components/ui/container";
-import { Heading } from "@/components/ui/heading";
 import { HOME_PLACEHOLDERS } from "@/content/home";
 import {
   ASTROLOGY_ANSWERS,
@@ -52,13 +67,15 @@ import { PRACTITIONER } from "@/content/practitioner";
 import { getPublishableLocations, getServices, getSiteSettings } from "@/lib/data";
 import { realValue } from "@/lib/site";
 
+const ROUTE = "/astrology";
+
 const BASE_METADATA: Metadata = {
   title: { absolute: ASTROLOGY_META.title },
   description: ASTROLOGY_META.description,
-  alternates: { canonical: "/astrology", types: { "text/markdown": "/astrology.md" } },
+  alternates: { canonical: ROUTE, types: { "text/markdown": "/astrology.md" } },
   openGraph: {
     type: "website",
-    url: "/astrology",
+    url: ROUTE,
     title: ASTROLOGY_META.title,
     description: ASTROLOGY_META.description,
     siteName: "Astrologer Kavita",
@@ -67,13 +84,22 @@ const BASE_METADATA: Metadata = {
 
 /** Static metadata plus any admin override from `page_seo` (Phase 6). */
 export function generateMetadata(): Promise<Metadata> {
-  return applyPageSeo(BASE_METADATA, "/astrology");
+  return applyPageSeo(BASE_METADATA, ROUTE);
 }
 
+const ROMAN = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X"] as const;
+
+const GHOST =
+  "inline-flex min-h-11 items-center gap-2 border-b border-accent-border/50 pb-0.5 font-serif text-[1.05rem] text-foreground no-underline transition-colors duration-(--duration-base) hover:border-accent-strong hover:text-accent-strong [&_[data-arrow]]:transition-transform [&_[data-arrow]]:duration-(--duration-base) [&_[data-arrow]]:ease-emphasized hover:[&_[data-arrow]]:translate-x-1";
+
 /**
- * `/astrology` hub — Vedic astrology intent (CLAUDE.md §5, §8, §9). Server component: every
- * word in the HTML, tables for the facts answer engines extract, links to every astrology-led
- * and integrated service and to the published geo pages. Zero client JavaScript.
+ * `/astrology` hub — Vedic astrology intent (CLAUDE.md §5, §8, §9), in the voice of the home
+ * page: the Vimshottari ring as the opening instrument, then plates — a figure, one ruled line,
+ * the question-form H2 and its visible answer — with every longer paragraph folded into native
+ * `<details>` beneath, the tables in ledgers, the honesty lists and the preparation list in
+ * the open, the services and the published places as doors, the FAQs as the notes at the
+ * foot. Server component: every word, every table and every link is in the HTML with
+ * JavaScript disabled. Zero client JavaScript.
  */
 export default async function AstrologyPage() {
   const [settings, services, publishable] = await Promise.all([
@@ -113,180 +139,206 @@ export default async function AstrologyPage() {
 
   return (
     <>
-      <PageHero
+      <MotifSprite />
+
+      <SceneHero
         id="astrology"
-        eyebrow={ASTROLOGY_HERO.eyebrow}
         title={ASTROLOGY_HERO.h1}
+        tagline={ASTROLOGY_HERO.eyebrow}
         lede={ASTROLOGY_HERO.lede}
         entity={ASTROLOGY_HERO.entity}
-        motif="north-chart"
-        breadcrumbs={[{ name: "Vedic astrology", href: "/astrology" }]}
-        actions={<HeroActions {...ASTROLOGY_HERO} />}
+        figureSize="half"
+        figureRatio="1/1"
+        breadcrumbs={[{ name: "Vedic astrology", href: ROUTE }]}
+        figure={
+          <div className="flex size-full flex-col items-center justify-center gap-4">
+            <DashaRing className="min-h-0 w-auto max-w-full flex-1 text-accent-strong" />
+            <DashaNames />
+          </div>
+        }
+        actions={
+          <>
+            <Disc
+              size="sm"
+              href={ASTROLOGY_HERO.primaryCta.href}
+              label={ASTROLOGY_HERO.primaryCta.label}
+              className="[&_.disc-link]:px-[9%] [&_.disc-link]:text-[0.62rem] [&_.disc-link]:tracking-[0.1em]"
+            />
+            <Link href={ASTROLOGY_HERO.secondaryCta.href} className={GHOST}>
+              {ASTROLOGY_HERO.secondaryCta.label}
+              <span aria-hidden="true" data-arrow className="inline-block">
+                →
+              </span>
+            </Link>
+          </>
+        }
       />
 
-      <Toc items={[...ASTROLOGY_TOC]} />
-
-      <Container size="wide" className="py-8">
-        <Byline datePublished={ASTROLOGY_DATES.published} dateModified={ASTROLOGY_DATES.modified} />
+      <Container size="wide">
+        <Byline
+          datePublished={ASTROLOGY_DATES.published}
+          dateModified={ASTROLOGY_DATES.modified}
+          withoutPhoto
+        />
       </Container>
 
-      <KeyFacts route="/astrology" heading={K.heading} items={facts} columns={3} />
+      <KeyFacts route={ROUTE} heading={K.heading} items={facts} columns={3} />
 
-      {/* 1. Vedic vs Western */}
-      <QuestionSection {...props(ASTROLOGY_WHAT)} tone="default">
+      {/* Eleven labels: with plate numerals the rail overruns 1440 px, so the plates alone carry them. */}
+      <Toc items={[...ASTROLOGY_TOC]} className="[&_a]:px-1 [&_a]:tracking-[0.14em]" />
+
+      {/* Plate I — Vedic vs Western: a slow transit across the wheel */}
+      <FigureSection
+        {...plate(ASTROLOGY_WHAT, 0)}
+        tone="muted"
+        figureWidth="narrow"
+        figureRatio="1/1"
+        line={ASTROLOGY_WHAT.eyebrow}
+        figure={<TransitArc className="text-accent-strong" />}
+      >
         <Paragraphs section={ASTROLOGY_WHAT} />
-        <SpecTable table={ASTROLOGY_VS_WESTERN} />
-      </QuestionSection>
+        <Ledger table={ASTROLOGY_VS_WESTERN} open stack />
+      </FigureSection>
 
-      {/* 2. The kundli */}
-      <QuestionSection {...props(ASTROLOGY_KUNDLI)} tone="muted">
+      {/* Plate II — the kundli */}
+      <FigureSection
+        {...plate(ASTROLOGY_KUNDLI, 1)}
+        figureWidth="default"
+        line={ASTROLOGY_KUNDLI.eyebrow}
+        figure={
+          <div className="aspect-square w-full max-w-[20rem] text-accent-strong">
+            <NorthIndianChart
+              title={ASTROLOGY_CHART_MOTIFS.north.title}
+              description={ASTROLOGY_CHART_MOTIFS.north.description}
+              strokeWidth={0.9}
+            />
+          </div>
+        }
+      >
         <Paragraphs section={ASTROLOGY_KUNDLI} />
-        <SpecTable table={ASTROLOGY_KUNDLI_TABLE} />
-      </QuestionSection>
+        <Ledger table={ASTROLOGY_KUNDLI_TABLE} stack />
+      </FigureSection>
 
-      {/* 3. Dashas */}
-      <QuestionSection {...props(ASTROLOGY_DASHAS)} tone="default">
+      {/* Plate III — dashas: the 120-year rule with nine unequal periods */}
+      <FigureSection
+        {...plate(ASTROLOGY_DASHAS, 2)}
+        tone="muted"
+        figureWidth="wide"
+        line="120 years, nine periods"
+        figure={
+          <div className="relative mx-auto w-full max-sm:h-[24rem] max-sm:max-w-[17rem]">
+            {/* On a phone the rule stands upright (one SVG, turned a quarter) so every period
+                keeps a readable height and its name sits level with it. */}
+            <div className="max-sm:absolute max-sm:top-0 max-sm:left-[3.6rem] max-sm:w-[24rem] max-sm:origin-top-left max-sm:rotate-90">
+              <DashaTimeline tickEvery={10} travel className="text-accent-strong" />
+            </div>
+            <DashaNames proportional />
+          </div>
+        }
+      >
         <Paragraphs section={ASTROLOGY_DASHAS} />
-      </QuestionSection>
+      </FigureSection>
 
-      {/* 4. What it answers — two panels on indigo */}
-      <QuestionSection {...props(ASTROLOGY_ANSWERS)} tone="inverse">
+      {/* Plate IV — honest scope: both lists in the open */}
+      <FigureSection {...plate(ASTROLOGY_ANSWERS, 3)}>
+        <div className="grid gap-10 sm:grid-cols-2 sm:gap-8">
+          <RuledList heading={ASTROLOGY_CAN.heading} items={ASTROLOGY_CAN.items} />
+          <RuledList heading={ASTROLOGY_CANNOT.heading} items={ASTROLOGY_CANNOT.items} />
+        </div>
         <Paragraphs section={ASTROLOGY_ANSWERS} />
-        <div className="grid gap-6 lg:grid-cols-2 lg:gap-8">
-          <Panel heading={ASTROLOGY_CAN.heading} items={ASTROLOGY_CAN.items} />
-          <Panel heading={ASTROLOGY_CANNOT.heading} items={ASTROLOGY_CANNOT.items} />
-        </div>
-      </QuestionSection>
+      </FigureSection>
 
-      {/* 5. What to prepare */}
-      <QuestionSection {...props(ASTROLOGY_PREPARE)} tone="default">
-        <div className="grid gap-10 lg:grid-cols-[1.4fr_1fr] lg:gap-16">
-          <Paragraphs section={ASTROLOGY_PREPARE} />
-          <aside className="border-t border-accent-border/50 pt-6 lg:border-t-0 lg:border-l lg:pt-0 lg:pl-8">
-            <Heading
-              as="h3"
-              level={6}
-              className="font-sans text-xs font-semibold tracking-[0.14em] text-accent-strong uppercase"
-            >
-              {ASTROLOGY_PREPARE_LIST.heading}
-            </Heading>
-            <ul className="mt-4 space-y-3">
-              {ASTROLOGY_PREPARE_LIST.items.map((item) => (
-                <li key={item} className="flex gap-3 leading-relaxed">
-                  <Ornament className="mt-1.5 size-3.5 shrink-0 text-accent-strong" />
-                  <span>{item}</span>
-                </li>
-              ))}
-            </ul>
-          </aside>
-        </div>
-      </QuestionSection>
+      {/* Plate V — what to prepare: the list in the open */}
+      <FigureSection {...plate(ASTROLOGY_PREPARE, 4)} tone="muted">
+        <RuledList heading={ASTROLOGY_PREPARE_LIST.heading} items={ASTROLOGY_PREPARE_LIST.items} />
+        <Paragraphs section={ASTROLOGY_PREPARE} />
+      </FigureSection>
 
-      {/* 6. The reading process */}
-      <QuestionSection {...props(ASTROLOGY_PROCESS)} tone="muted">
-        <ol className="grid gap-5 sm:grid-cols-2 lg:grid-cols-5 lg:gap-4">
-          {ASTROLOGY_STEPS.map((step, i) => (
-            <li
-              key={step.title}
-              className="flex flex-col gap-3 rounded-2xl border border-accent-border/30 bg-background p-6"
-            >
-              <span
-                aria-hidden="true"
-                className="font-serif text-3xl leading-none text-accent-strong tabular-nums"
-              >
-                {String(i + 1).padStart(2, "0")}
-              </span>
-              <Heading as="h3" level={5}>
-                {step.title}
-              </Heading>
-              <p className="text-sm leading-relaxed text-muted-foreground">{step.body}</p>
-            </li>
-          ))}
-        </ol>
-      </QuestionSection>
-
-      {/* 7. Chart styles, with both motifs */}
-      <QuestionSection {...props(ASTROLOGY_CHART_STYLES)} tone="default">
-        <div className="grid gap-10 lg:grid-cols-[1.4fr_1fr] lg:items-start lg:gap-16">
-          <Paragraphs section={ASTROLOGY_CHART_STYLES} />
-          <div className="grid grid-cols-2 gap-6 pb-4 text-accent-strong">
-            <figure className="space-y-3">
-              <NorthIndianChart
-                title={ASTROLOGY_CHART_MOTIFS.north.title}
-                description={ASTROLOGY_CHART_MOTIFS.north.description}
-                strokeWidth={0.9}
-              />
-              <figcaption className="text-center text-xs tracking-[0.1em] text-muted-foreground uppercase">
-                North Indian
-              </figcaption>
-            </figure>
-            <figure className="space-y-3">
-              <SouthIndianChart
-                title={ASTROLOGY_CHART_MOTIFS.south.title}
-                description={ASTROLOGY_CHART_MOTIFS.south.description}
-                strokeWidth={0.9}
-              />
-              <figcaption className="text-center text-xs tracking-[0.1em] text-muted-foreground uppercase">
-                South Indian
-              </figcaption>
-            </figure>
-          </div>
-        </div>
-        <SpecTable table={ASTROLOGY_CHART_STYLE_TABLE} />
-      </QuestionSection>
-
-      {/* 8. Adding vastu — the worked pattern on indigo */}
-      <QuestionSection {...props(ASTROLOGY_WITH_VASTU)} tone="inverse">
-        <div className="double-rule relative m-2 rounded-2xl border border-accent-border/50 bg-surface-inverse-deep/60 px-6 py-10 sm:px-10 sm:py-12 lg:px-14">
-          <div className="flex justify-center text-accent-strong">
-            <Ornament className="size-7" strokeWidth={1.1} />
-          </div>
-          <div className="mx-auto mt-6 max-w-[60ch] space-y-5 border-l-2 border-accent-border pl-5 font-serif text-[1.2rem] leading-[1.5] italic sm:pl-7 sm:text-[1.4rem]">
-            {ASTROLOGY_WITH_VASTU.paragraphs?.map((p) => (
-              <p key={p.slice(0, 32)}>{p}</p>
+      {/* Plate VI — the reading, as steps on a ruled line: the titles are the figure, the bodies fold */}
+      <FigureSection
+        {...plate(ASTROLOGY_PROCESS, 5)}
+        figureWidth="wide"
+        line={ASTROLOGY_PROCESS.eyebrow}
+        figure={
+          <StepLine className="w-full" steps={ASTROLOGY_STEPS.map(({ title }) => ({ title }))} />
+        }
+      >
+        <More summary="The steps in full">
+          <ol>
+            {ASTROLOGY_STEPS.map((s) => (
+              <li key={s.title}>
+                <h3>{s.title}</h3>
+                <p className="mt-2">{s.body}</p>
+              </li>
             ))}
-          </div>
-          <p className="mx-auto mt-8 max-w-prose border-t border-accent-border/40 pt-6 text-muted-foreground">
-            {ASTROLOGY_WITH_VASTU.closing}
-          </p>
-        </div>
-        <p className="text-sm text-muted-foreground">
+          </ol>
+        </More>
+      </FigureSection>
+
+      {/* Plate VII — two drawings of one chart */}
+      <FigureSection
+        {...plate(ASTROLOGY_CHART_STYLES, 6)}
+        tone="muted"
+        figureWidth="default"
+        line={ASTROLOGY_CHART_STYLES.eyebrow}
+        figure={<ChartStyles />}
+      >
+        <Paragraphs section={ASTROLOGY_CHART_STYLES} />
+        <Ledger table={ASTROLOGY_CHART_STYLE_TABLE} stack />
+      </FigureSection>
+
+      {/* Plate VIII — the other instrument */}
+      <FigureSection
+        {...plate(ASTROLOGY_WITH_VASTU, 7)}
+        figureWidth="wide"
+        figureRatio="2/1"
+        line={ASTROLOGY_WITH_VASTU.eyebrow}
+        figure={<Convergence className="text-accent-strong" />}
+      >
+        <p className="text-center font-serif text-[1.05rem] leading-[1.5] text-muted-foreground italic">
+          {ASTROLOGY_WITH_VASTU.closing}
+        </p>
+        <Paragraphs section={ASTROLOGY_WITH_VASTU} />
+        <p className="text-center text-sm text-muted-foreground">
           Read the other instrument:{" "}
           <Link href="/vastu" className="text-accent-strong">
             vastu shastra, read together with your birth chart →
           </Link>
         </p>
-      </QuestionSection>
+      </FigureSection>
 
-      {/* 9. Services */}
-      <QuestionSection {...props(ASTROLOGY_SERVICES)} tone="default">
-        <ServiceList services={own} allLink={ASTROLOGY_SERVICE_LABELS.allLink} />
-      </QuestionSection>
+      {/* Plate IX — services as doors */}
+      <FigureSection {...plate(ASTROLOGY_SERVICES, 8)} tone="muted">
+        <Doorway>
+          <ServiceList services={own} allLink={ASTROLOGY_SERVICE_LABELS.allLink} columns={4} />
+        </Doorway>
+      </FigureSection>
 
-      {/* 10. Where */}
-      <QuestionSection {...props(ASTROLOGY_WHERE)} tone="muted">
-        <GeoLinkLists
-          service="astrologer"
-          countries={countries}
-          cities={cities}
-          linkLabel={ASTROLOGY_WHERE_LABELS.linkLabel}
-          headings={{
-            countries: ASTROLOGY_WHERE_LABELS.countries,
-            cities: ASTROLOGY_WHERE_LABELS.cities,
-          }}
-        />
-      </QuestionSection>
+      {/* Plate X — where: country doors and the city list */}
+      <FigureSection {...plate(ASTROLOGY_WHERE, 9)}>
+        <Doorway>
+          <GeoLinkLists
+            service="astrologer"
+            countries={countries}
+            cities={cities}
+            linkLabel={ASTROLOGY_WHERE_LABELS.linkLabel}
+            headings={{
+              countries: ASTROLOGY_WHERE_LABELS.countries,
+              cities: ASTROLOGY_WHERE_LABELS.cities,
+            }}
+          />
+        </Doorway>
+      </FigureSection>
 
-      <FaqBlock
-        route="/astrology"
+      <Foot
         id="faq"
-        eyebrow={ASTROLOGY_FAQ.eyebrow}
+        route={ROUTE}
         heading={ASTROLOGY_FAQ.heading}
         answer={ASTROLOGY_FAQ.answer}
-        items={[...ASTROLOGY_FAQ.items]}
+        faqs={[...ASTROLOGY_FAQ.items]}
       />
 
-      <CtaBand
+      <CtaDisc
         eyebrow={ASTROLOGY_CTA.eyebrow}
         title={ASTROLOGY_CTA.title}
         body={ASTROLOGY_CTA.body}
@@ -299,68 +351,130 @@ export default async function AstrologyPage() {
   );
 }
 
-function props(s: HubSection) {
-  return {
-    id: s.id,
-    route: "/astrology",
-    eyebrow: s.eyebrow,
-    question: s.question,
-    answer: s.answer,
-  };
+/** The props every plate shares: anchor, route, numeral, question and answer. */
+function plate(s: HubSection, i: number) {
+  return { id: s.id, route: ROUTE, n: ROMAN[i], question: s.question, answer: s.answer };
 }
 
+/** A section's longer paragraphs, folded under its answer — in the HTML, not on the eye. */
 function Paragraphs({ section }: { section: HubSection }) {
   if (!section.paragraphs?.length) return null;
   return (
-    <div className="max-w-[70ch] space-y-5 text-lg leading-relaxed">
+    <More>
       {section.paragraphs.map((p) => (
         <p key={p.slice(0, 40)}>{p}</p>
       ))}
+    </More>
+  );
+}
+
+/**
+ * Widens a door grid past the 40 rem prose column to 64 rem (inset 2 rem from the viewport on
+ * smaller screens), centred on it, so the H2 and its answer keep their measure while the doors
+ * get room. The service meta ("Astrology-led · 60 min") never breaks before its unit.
+ */
+function Doorway({ children }: { children: React.ReactNode }) {
+  return (
+    <div className="lg:mx-[calc(50%-min(32rem,50vw-2rem))] [&_.door-meta]:whitespace-nowrap">
+      {children}
     </div>
   );
 }
 
-function HeroActions({
-  primaryCta,
-  secondaryCta,
-}: {
-  primaryCta: { label: string; href: string };
-  secondaryCta: { label: string; href: string };
-}) {
+/** An honesty or preparation list: a Cinzel heading and ruled Cormorant items, always visible. */
+function RuledList({ heading, items }: { heading: string; items: readonly string[] }) {
   return (
-    <>
-      <Button asChild variant="gold" size="xl">
-        <Link href={primaryCta.href}>{primaryCta.label}</Link>
-      </Button>
-      <Button asChild variant="ghost" size="xl">
-        <Link href={secondaryCta.href}>
-          {secondaryCta.label}
-          <span aria-hidden="true" data-arrow className="inline-block">
-            →
-          </span>
-        </Link>
-      </Button>
-    </>
-  );
-}
-
-function Panel({ heading, items }: { heading: string; items: readonly string[] }) {
-  return (
-    <article className="flex flex-col gap-5 rounded-2xl border border-accent-border/25 bg-card p-6 text-card-foreground sm:p-8">
-      <Heading as="h3" level={3} tone="accent" className="max-w-[18ch]">
+    <div>
+      <h3 className="font-display text-[0.72rem] font-semibold tracking-[0.22em] text-accent-strong uppercase">
         {heading}
-      </Heading>
-      <ul className="space-y-3 border-t border-accent-border/30 pt-5 leading-relaxed text-muted-foreground">
+      </h3>
+      <ul className="mt-3 divide-y divide-border/60 border-y border-border/60">
         {items.map((item) => (
-          <li key={item.slice(0, 24)} className="flex gap-3">
-            <span
-              aria-hidden="true"
-              className="mt-2.5 size-1.5 shrink-0 rounded-full bg-accent-strong"
-            />
+          <li
+            key={item.slice(0, 24)}
+            className="flex gap-3 py-3 font-serif text-[1.05rem] leading-snug text-foreground"
+          >
+            <Ornament className="mt-1.5 size-3 shrink-0 text-accent-strong" />
             <span>{item}</span>
           </li>
         ))}
       </ul>
-    </article>
+    </div>
+  );
+}
+
+/**
+ * The nine periods named in HTML beneath a figure (never inside the SVG): an equal ruled row
+ * under the ring in the hero (a 3 × 3 grid on a phone; a little wider than the ring from 640 px
+ * so "Saturn" and "Mercury" never touch), or sized to their segments under the timeline
+ * (`proportional`) — on a phone a column ruled level with the upright rule beside it.
+ */
+function DashaNames({ proportional = false }: { proportional?: boolean }) {
+  const fractions = dashaSegmentFractions();
+  return (
+    <ol
+      aria-label="The nine planetary periods and their lengths in years"
+      className={
+        proportional
+          ? "flex w-full text-center max-sm:absolute max-sm:inset-y-0 max-sm:right-0 max-sm:left-[4.75rem] max-sm:w-auto max-sm:flex-col max-sm:text-left sm:mt-1"
+          : "grid w-full shrink-0 grid-cols-3 gap-y-1.5 border-t border-accent-border/40 pt-3 text-center sm:flex sm:w-[calc(100%+3rem)] sm:gap-0 lg:w-[calc(100%+6rem)]"
+      }
+    >
+      {VIMSHOTTARI_GRAHAS.map((key, i) => {
+        const f = fractions[i];
+        return (
+          <li
+            key={key}
+            className={
+              proportional
+                ? "min-w-0 [flex:0_0_calc(var(--w)*100%)] max-sm:flex max-sm:items-center max-sm:gap-2 max-sm:border-t max-sm:border-accent-border/30 max-sm:last:border-b sm:px-1"
+                : "flex items-baseline justify-center gap-1.5 sm:block sm:flex-1"
+            }
+            style={
+              proportional
+                ? ({ ["--w" as string]: f ? f.end - f.start : 0 } as React.CSSProperties)
+                : undefined
+            }
+          >
+            <span className="font-display text-[0.62rem] font-semibold tracking-[0.18em] text-muted-foreground uppercase sm:block">
+              {PLANETS[key].name}
+            </span>
+            <span className="font-serif text-sm leading-none text-muted-foreground sm:block sm:leading-snug">
+              {VIMSHOTTARI_YEARS[i]} yrs
+            </span>
+          </li>
+        );
+      })}
+    </ol>
+  );
+}
+
+/** The same kundli drawn both ways, each captioned, side by side. */
+function ChartStyles() {
+  const caption =
+    "mt-3 text-center font-display text-[0.62rem] font-semibold tracking-[0.22em] whitespace-nowrap text-muted-foreground uppercase";
+  return (
+    <div className="grid w-full grid-cols-2 gap-6 text-accent-strong sm:gap-10">
+      <figure>
+        <div className="aspect-square w-full">
+          <NorthIndianChart
+            title={ASTROLOGY_CHART_MOTIFS.north.title}
+            description={ASTROLOGY_CHART_MOTIFS.north.description}
+            strokeWidth={0.9}
+          />
+        </div>
+        <figcaption className={caption}>North Indian</figcaption>
+      </figure>
+      <figure>
+        <div className="aspect-square w-full">
+          <SouthIndianChart
+            title={ASTROLOGY_CHART_MOTIFS.south.title}
+            description={ASTROLOGY_CHART_MOTIFS.south.description}
+            strokeWidth={0.9}
+          />
+        </div>
+        <figcaption className={caption}>South Indian</figcaption>
+      </figure>
+    </div>
   );
 }
