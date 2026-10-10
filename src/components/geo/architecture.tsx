@@ -1,11 +1,9 @@
-import { QuestionHeading } from "@/components/home/question-heading";
-import { VastuCompass } from "@/components/motifs";
-import { Container } from "@/components/ui/container";
-import { Heading } from "@/components/ui/heading";
-import { Section } from "@/components/ui/section";
+import { FigureSection, StepLine } from "@/components/content";
+import { FloorPlan } from "@/components/motifs";
 import type { LocationRecord } from "@/content/locations/schema";
 import type { Question } from "./answers";
-import { paragraphs } from "./opening";
+import { FactList } from "./fact-list";
+import { CAPTION_H3, Paragraphs, type Plate, SmallFigure } from "./parts";
 
 const REMOTE_STEPS = [
   {
@@ -24,108 +22,75 @@ const REMOTE_STEPS = [
     title: "The session and the written observations",
     body: "The plan is read on screen with the occupants' charts; the suggestions — room use, direction, colour, storage first — arrive in writing afterwards.",
   },
-] as const;
+];
 
 /**
  * Vastu pages: the researched climate-and-housing facts that genuinely change the advice here,
- * the 150–250 word narrative, and (city pages) the four steps of a remote review. Compass motif
- * as backdrop.
+ * as a column plate — a plan of the nine zones on the left; on the right the question, its
+ * answer, the site conditions as a ruled list, housing stock and plot orientation, the 150–250
+ * word narrative and (city pages) the four steps of a remote review on a ruled line, titles
+ * visible and their bodies folded beneath. Every researched fact is visible.
  */
 export function GeoArchitecture({
   loc,
   question,
   route,
   showRemoteProcess = false,
-  tone = "default",
+  plate,
 }: {
   loc: LocationRecord;
   question: Question;
   /** Canonical route of the page, for `/admin/aeo` answer overrides. */
   route?: string;
   showRemoteProcess?: boolean;
-  tone?: "default" | "muted";
+  plate: Plate;
 }) {
   const ca = loc.research?.climateArchitecture;
   if (!ca) return null;
+  const stock: [string, string][] = [["Housing stock", ca.housingStock]];
+  if (ca.plotOrientation) stock.push(["Plot orientation", ca.plotOrientation]);
 
   return (
-    <Section id="architecture" spacing="lg" tone={tone} className="overflow-hidden">
-      <div
-        aria-hidden="true"
-        data-breathe
-        className="pointer-events-none absolute -right-28 -bottom-28 w-80 text-accent-strong/12 sm:w-[28rem]"
-      >
-        <VastuCompass decorative hideLabels description="" strokeWidth={0.6} />
-      </div>
-      <Container size="wide" className="relative space-y-12">
-        <QuestionHeading block={question} route={route} id="architecture" layout="split" />
-
-        <div className="grid gap-10 lg:grid-cols-[1.4fr_1fr] lg:gap-16">
-          <div className="max-w-prose space-y-6 text-lg leading-relaxed text-muted-foreground">
-            {paragraphs(ca.narrative).map((p) => (
-              <p key={p.slice(0, 40)}>{p}</p>
-            ))}
-          </div>
-
-          <aside className="self-start border-t border-accent-border/50 pt-7 lg:border-t-0 lg:border-l lg:border-accent-border/30 lg:pt-0 lg:pl-10">
-            <Heading
-              as="h3"
-              level={6}
-              className="font-sans text-xs font-semibold tracking-[0.14em] text-accent-strong uppercase"
+    <FigureSection
+      id="architecture"
+      route={route}
+      n={plate.n}
+      tone={plate.tone}
+      layout="column"
+      question={question.question}
+      answer={question.answer}
+      line={question.eyebrow}
+      figureWidth="narrow"
+      figure={
+        <SmallFigure>
+          <FloorPlan className="text-accent-strong" />
+        </SmallFigure>
+      }
+    >
+      <div>
+        <h3 className={CAPTION_H3}>Site conditions that shape the advice in {loc.name}</h3>
+        <ul className="mt-2">
+          {ca.facts.map((fact) => (
+            <li
+              key={fact.slice(0, 32)}
+              className="border-t border-accent-border/25 py-3 font-serif text-[1.1rem] leading-snug text-foreground"
             >
-              Site conditions that shape the advice in {loc.name}
-            </Heading>
-            <ul className="mt-5 space-y-4 leading-relaxed text-muted-foreground">
-              {ca.facts.map((fact) => (
-                <li key={fact.slice(0, 32)} className="flex gap-3">
-                  <span
-                    aria-hidden="true"
-                    className="mt-2.5 size-1.5 shrink-0 rounded-full bg-accent-strong"
-                  />
-                  <span>{fact}</span>
-                </li>
-              ))}
-            </ul>
-            <dl className="mt-8 space-y-4 border-t border-accent-border/30 pt-6 text-sm">
-              <div>
-                <dt className="font-semibold text-foreground">Housing stock</dt>
-                <dd className="text-muted-foreground">{ca.housingStock}</dd>
-              </div>
-              {ca.plotOrientation ? (
-                <div>
-                  <dt className="font-semibold text-foreground">Plot orientation</dt>
-                  <dd className="text-muted-foreground">{ca.plotOrientation}</dd>
-                </div>
-              ) : null}
-            </dl>
-          </aside>
-        </div>
+              {fact}
+            </li>
+          ))}
+        </ul>
+      </div>
+      <FactList facts={stock} />
+      <Paragraphs text={ca.narrative} />
 
-        {showRemoteProcess ? (
-          <div className="border-t border-accent-border/30 pt-12">
-            <Heading as="h3" level={3} className="max-w-[28ch]">
-              How a remote vastu review of a {loc.name} home works
-            </Heading>
-            <ol className="relative mt-8 grid gap-8 before:absolute before:top-2 before:bottom-2 before:left-6 before:w-px before:bg-accent-border/50 before:content-[''] lg:grid-cols-4 lg:gap-6 lg:before:inset-x-0 lg:before:top-8 lg:before:bottom-auto lg:before:h-px lg:before:w-auto">
-              {REMOTE_STEPS.map((step, index) => (
-                <li key={step.title} className="relative pl-20 lg:pl-0">
-                  <span
-                    aria-hidden="true"
-                    className="absolute top-0 left-0 inline-flex h-12 w-12 items-center justify-center bg-background font-serif text-3xl leading-none text-accent-strong lg:static lg:mb-6 lg:h-16 lg:w-auto lg:justify-start lg:pr-5 lg:text-5xl"
-                  >
-                    {String(index + 1).padStart(2, "0")}
-                  </span>
-                  <Heading as="h4" level={5}>
-                    <span className="sr-only">Step {index + 1}: </span>
-                    {step.title}
-                  </Heading>
-                  <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{step.body}</p>
-                </li>
-              ))}
-            </ol>
-          </div>
-        ) : null}
-      </Container>
-    </Section>
+      {showRemoteProcess ? (
+        <div className="pt-4">
+          <h3 className="font-serif text-[1.35rem] leading-snug font-normal text-foreground">
+            How a remote vastu review of a {loc.name} home works
+          </h3>
+          <StepLine steps={REMOTE_STEPS} className="mt-6 [&_.more]:mx-0" />
+        </div>
+      ) : null}
+    </FigureSection>
   );
 }

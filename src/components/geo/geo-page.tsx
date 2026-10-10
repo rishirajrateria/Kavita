@@ -1,3 +1,4 @@
+import { MotifSprite } from "@/components/content";
 import { JsonLd } from "@/components/seo/json-ld";
 import type { LocationRecord, LocationType } from "@/content/locations/schema";
 import {
@@ -15,11 +16,9 @@ import { getLinkGraph } from "@/lib/geo/linking";
 import { GEO_SERVICE_META, INTEGRATED_SERVICE_SLUG, geoH1 } from "@/lib/geo/service";
 import { cityTable, countryTable, modesTable, stateTable, type GeoTable } from "@/lib/geo/tables";
 import {
-  faqPageSchema,
   localBusinessSchema,
   placeChain,
   serviceSchema,
-  withSpeakable,
   type WithContext,
   type Thing,
 } from "@/lib/seo/schema";
@@ -50,6 +49,7 @@ import { GeoLinks } from "./links";
 import { GeoLocationTable } from "./location-table";
 import { GeoOpening } from "./opening";
 import { GeoTestimonial } from "./testimonial";
+import { plateCounter } from "./parts";
 import { GeoTradition } from "./tradition";
 
 export interface GeoPageProps {
@@ -150,156 +150,125 @@ export async function GeoPage({ service, loc, level }: GeoPageProps) {
       offers: realOffers(integrated, loc.currency),
       channels: integrated?.deliveryModes,
     }),
-    withSpeakable(faqPageSchema(research.faqs), [".answer"]),
   ];
 
   const wa = whatsappHref(settings.whatsapp);
+  // Plates are numbered in DOM order and alternate default/muted panes (SPEC §2.3).
+  const nextPlate = plateCounter();
+  const opening = (
+    <GeoOpening
+      route={route}
+      loc={loc}
+      service={service}
+      question={openingQuestion(ctx)}
+      plate={nextPlate()}
+    />
+  );
+  const children =
+    level !== "city" && graph.children.length > 0 ? (
+      <GeoChildrenGrid
+        route={route}
+        question={childrenQuestion(ctx)}
+        href={graph.href}
+        service={service}
+        plate={nextPlate()}
+      >
+        {graph.children}
+      </GeoChildrenGrid>
+    ) : null;
+  const combined =
+    level !== "country" ? (
+      <GeoCombinedMethod
+        route={route}
+        loc={loc}
+        service={service}
+        question={combinedQuestion(ctx)}
+        plate={nextPlate()}
+      />
+    ) : null;
   const tradition = astro ? (
-    <GeoTradition route={route} loc={loc} question={traditionQuestion(ctx)} />
+    <GeoTradition route={route} loc={loc} question={traditionQuestion(ctx)} plate={nextPlate()} />
   ) : (
     <GeoArchitecture
       route={route}
       loc={loc}
       question={architectureQuestion(ctx)}
       showRemoteProcess={level === "city"}
+      plate={nextPlate()}
     />
   );
+  const consulting =
+    level !== "state" ? (
+      <GeoConsultingFrom
+        route={route}
+        loc={loc}
+        question={consultingQuestion(ctx)}
+        window={window}
+        practitionerTimezone={settings.timezone}
+        businessHours={settings.businessHours}
+        plate={nextPlate()}
+      />
+    ) : null;
+  const locationTable = table ? (
+    <GeoLocationTable
+      route={route}
+      table={table}
+      question={tableQuestion(ctx, tableKind)}
+      plate={nextPlate()}
+    />
+  ) : null;
+  const keyFacts =
+    level !== "state" ? (
+      <GeoKeyFacts
+        route={route}
+        loc={loc}
+        service={service}
+        settings={settings}
+        services={services}
+        window={window}
+        countryName={countryName}
+      />
+    ) : null;
+  const faq = <GeoFaq route={route} faqs={research.faqs} question={faqQuestion(ctx)} />;
+  const clientExperience =
+    level === "city" && testimonial ? (
+      <GeoTestimonial
+        route={route}
+        testimonial={testimonial}
+        placeName={loc.name}
+        question={testimonialQuestion(ctx)}
+        plate={nextPlate()}
+      />
+    ) : null;
+  const links =
+    level !== "country" ? (
+      <GeoLinks
+        route={route}
+        loc={loc}
+        service={service}
+        graph={graph}
+        question={linksQuestion(ctx)}
+        plate={nextPlate()}
+      />
+    ) : null;
 
+  // Tier order and presence (country · state · city) are what make the three tiers distinct;
+  // the plates are evaluated above in that same DOM order so their numerals read I, II, III….
   return (
     <>
       <JsonLd data={jsonLd} id="geo-schema" />
+      <MotifSprite />
       <GeoHero loc={loc} service={service} graph={graph} countryName={countryName} />
-
-      {level === "country" ? (
-        <>
-          <GeoKeyFacts
-            route={route}
-            loc={loc}
-            service={service}
-            settings={settings}
-            services={services}
-            window={window}
-            countryName={countryName}
-          />
-          <GeoOpening route={route} loc={loc} service={service} question={openingQuestion(ctx)} />
-          <GeoChildrenGrid
-            route={route}
-            tone="inverse"
-            question={childrenQuestion(ctx)}
-            href={graph.href}
-          >
-            {graph.children}
-          </GeoChildrenGrid>
-          {tradition}
-          <GeoConsultingFrom
-            route={route}
-            loc={loc}
-            question={consultingQuestion(ctx)}
-            window={window}
-            practitionerTimezone={settings.timezone}
-          />
-          {table ? (
-            <GeoLocationTable
-              route={route}
-              table={table}
-              question={tableQuestion(ctx, tableKind)}
-            />
-          ) : null}
-          <GeoFaq route={route} faqs={research.faqs} question={faqQuestion(ctx)} tone="muted" />
-        </>
-      ) : null}
-
-      {level === "state" ? (
-        <>
-          <GeoOpening route={route} loc={loc} service={service} question={openingQuestion(ctx)} />
-          <GeoChildrenGrid
-            route={route}
-            tone="muted"
-            question={childrenQuestion(ctx)}
-            href={graph.href}
-          >
-            {graph.children}
-          </GeoChildrenGrid>
-          <GeoCombinedMethod
-            route={route}
-            loc={loc}
-            service={service}
-            question={combinedQuestion(ctx)}
-            tone="inverse"
-          />
-          {tradition}
-          {table ? (
-            <GeoLocationTable
-              route={route}
-              table={table}
-              question={tableQuestion(ctx, tableKind)}
-              tone="muted"
-            />
-          ) : null}
-          <GeoFaq route={route} faqs={research.faqs} question={faqQuestion(ctx)} />
-          <GeoLinks
-            route={route}
-            loc={loc}
-            service={service}
-            graph={graph}
-            question={linksQuestion(ctx)}
-            tone="muted"
-          />
-        </>
-      ) : null}
-
-      {level === "city" ? (
-        <>
-          <GeoKeyFacts
-            route={route}
-            loc={loc}
-            service={service}
-            settings={settings}
-            services={services}
-            window={window}
-            countryName={countryName}
-          />
-          <GeoOpening route={route} loc={loc} service={service} question={openingQuestion(ctx)} />
-          <GeoCombinedMethod
-            route={route}
-            loc={loc}
-            service={service}
-            question={combinedQuestion(ctx)}
-            tone="inverse"
-          />
-          {tradition}
-          <GeoConsultingFrom
-            route={route}
-            loc={loc}
-            question={consultingQuestion(ctx)}
-            window={window}
-            practitionerTimezone={settings.timezone}
-          />
-          {table ? (
-            <GeoLocationTable
-              route={route}
-              table={table}
-              question={tableQuestion(ctx, tableKind)}
-            />
-          ) : null}
-          <GeoFaq route={route} faqs={research.faqs} question={faqQuestion(ctx)} />
-          {testimonial ? (
-            <GeoTestimonial
-              route={route}
-              testimonial={testimonial}
-              question={testimonialQuestion(ctx)}
-            />
-          ) : null}
-          <GeoLinks
-            route={route}
-            loc={loc}
-            service={service}
-            graph={graph}
-            question={linksQuestion(ctx)}
-            tone={testimonial ? "default" : "muted"}
-          />
-        </>
-      ) : null}
+      {keyFacts}
+      {opening}
+      {children}
+      {combined}
+      {tradition}
+      {consulting}
+      {locationTable}
+      {faq}
+      {clientExperience}
+      {links}
 
       <GeoCta
         route={route}

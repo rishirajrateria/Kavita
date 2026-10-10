@@ -1,11 +1,7 @@
-import { Card } from "@/components/ui/card";
-import { Container } from "@/components/ui/container";
-import { Heading } from "@/components/ui/heading";
-import { Section } from "@/components/ui/section";
+import { KeyFacts } from "@/components/content";
 import type { LocationRecord } from "@/content/locations/schema";
 import type { GeoService, Service, SiteSettings } from "@/lib/data/types";
 import { GEO_SERVICE_META } from "@/lib/geo/service";
-import { getKeyFactsOverride, mergeKeyFacts } from "@/lib/seo/aeo-data";
 import { realValue } from "@/lib/site";
 import type { WindowInfo } from "./types";
 
@@ -14,12 +10,10 @@ import type { WindowInfo } from "./types";
  * languages, session length, time zone with today's offset, live-session window in both zones,
  * response time. Every value is data; the visual matches the home-page band exactly.
  *
- * This is one of the two places on a geo page that spends `.glass`: the facts are the block an
- * answer engine lifts almost verbatim, so it is the block that should read as a physical
- * instrument plate lifting off the night rather than another ruled paragraph. The rules inside
- * are hairlines on the plate, not cell fills — a grid of filled boxes reads as flat as a table.
+ * Rendered on the shared `KeyFacts` plate — the page's one `.glass sheen` object (SPEC §2.5),
+ * which also merges any facts saved for this route in `/admin/aeo`.
  */
-export async function GeoKeyFacts({
+export function GeoKeyFacts({
   loc,
   service,
   settings,
@@ -78,37 +72,14 @@ export async function GeoKeyFacts({
       value: `Usually within ${settings.responseTimeHours} hours`,
     },
   ];
-  const facts = mergeKeyFacts(ownFacts, route ? await getKeyFactsOverride(route) : []);
-
   return (
-    <Section spacing="sm" aria-labelledby="geo-key-facts">
-      <Container size="wide">
-        <Card variant="glass" padding="lg">
-          <Heading
-            as="h2"
-            level={6}
-            id="geo-key-facts"
-            className="flex items-center gap-4 font-sans text-xs font-semibold tracking-[0.16em] text-accent-strong uppercase after:h-px after:flex-1 after:bg-accent-border/40"
-          >
-            {GEO_SERVICE_META[service].label} in {loc.name} at a glance
-          </Heading>
-          <dl className="mt-2 grid gap-x-10 sm:grid-cols-2 lg:grid-cols-3">
-            {facts.map(({ label, value }) => (
-              <div key={label} className="border-t border-accent-border/25 py-4 sm:py-5">
-                <dt className="text-[0.65rem] font-semibold tracking-[0.12em] text-accent-strong uppercase">
-                  {label}
-                </dt>
-                <dd className="mt-2 font-serif text-lg leading-snug text-foreground">{value}</dd>
-              </div>
-            ))}
-          </dl>
-          {window.note ? (
-            <p className="border-t border-accent-border/25 pt-4 text-sm text-muted-foreground">
-              {window.note}
-            </p>
-          ) : null}
-        </Card>
-      </Container>
-    </Section>
+    <KeyFacts
+      id="geo-key-facts"
+      route={route}
+      heading={`${GEO_SERVICE_META[service].label} in ${loc.name} at a glance`}
+      items={ownFacts}
+      columns={3}
+      note={window.note}
+    />
   );
 }
