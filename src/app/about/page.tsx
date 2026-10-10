@@ -93,7 +93,8 @@ const GHOST =
 /**
  * `/about` — the E-E-A-T anchor (CLAUDE.md §8, §9.9), set as plates in the voice of the home
  * page: the practitioner's portrait as the opening figure, her credentials as a ruled ledger,
- * the method on a step line, the Instrument, the two honesty blocks visible in full, the Earth
+ * the method on a step line, the Instrument, her view of the practice, the "not claimed" list
+ * visible in full, the Earth
  * with a door to every country, then the notes to the plates and the parchment disc. A Server
  * Component; every word, link and answer is in the HTML. The entity sentence is the first
  * paragraph; credentials, years and counts stay the practitioner's placeholders until supplied;
@@ -143,9 +144,17 @@ export default async function AboutPage() {
         figure={<Portrait name={name} planet={planet} />}
         actions={
           <>
-            <Disc size="sm" href={ABOUT_HERO.primaryCta.href} label={ABOUT_HERO.primaryCta.label} />
-            {/* The disc's halo and tick ring overflow its box, so the ghost link stands a little off it. */}
-            <Link href={ABOUT_HERO.secondaryCta.href} className={cn(GHOST, "sm:ms-6")}>
+            {/* `md`, not `sm`: the twelve capitals of the label need the 8 rem face (tracked a
+                little tighter so they sit inside it). Its halo and tick ring overflow the box, so it
+                takes margin above and below, clear of the lede and the entity's rule, and the ghost
+                link stands off it. */}
+            <Disc
+              size="md"
+              href={ABOUT_HERO.primaryCta.href}
+              label={ABOUT_HERO.primaryCta.label}
+              className="my-8 [&_.disc-link]:px-[10%] [&_.disc-link]:tracking-[0.12em]"
+            />
+            <Link href={ABOUT_HERO.secondaryCta.href} className={cn(GHOST, "sm:ms-10")}>
               {ABOUT_HERO.secondaryCta.label}
               <span aria-hidden="true" data-arrow className="inline-block">
                 →
@@ -213,9 +222,9 @@ export default async function AboutPage() {
         <Paragraphs section={ABOUT_SESSION} />
       </FigureSection>
 
-      {/* Plate IV — her view of the practice. An honesty block: nothing here is folded. */}
+      {/* Plate IV — her view of the practice: the answer at rest, the paragraphs folded (SPEC §3). */}
       <FigureSection {...plate(ABOUT_LIMITS)} n="IV">
-        <Visible section={ABOUT_LIMITS} />
+        <Paragraphs section={ABOUT_LIMITS} />
       </FigureSection>
 
       {/* Plate V — plainly stated. The five items and the closing line stay visible. */}
@@ -308,35 +317,13 @@ function Paragraphs({ section, closing = false }: { section: AboutSection; closi
 }
 
 /**
- * A section's paragraphs visible in full — the honesty blocks are never folded. Set as ruled
- * entries, each with the hero's star at its head, so the block reads as a ledger of plain
- * statements in the voice of the "not claimed" list rather than as an essay column.
- */
-function Visible({ section }: { section: AboutSection }) {
-  if (!section.paragraphs?.length) return null;
-  return (
-    <div className="divide-y divide-accent-border/40 border-y border-accent-border/40">
-      {section.paragraphs.map((p) => (
-        <p
-          key={p.slice(0, 40)}
-          className="flex gap-4 py-5 font-serif text-[1.05rem] leading-[1.55] text-muted-foreground"
-        >
-          <Ornament className="mt-1.5 size-4 shrink-0 text-accent-strong" />
-          <span>{p}</span>
-        </p>
-      ))}
-    </div>
-  );
-}
-
-/**
  * The portrait as the hero's figure. `SceneHero` draws its figure in a box of a fixed landscape
  * or square ratio and offers no portrait one, so the plate is fitted to the box's height with
  * container units (the image is 4:5; the glass, name, title and orb take ~10 rem beneath it),
  * capped at the 22 rem the plate is meant to be. A taller screen gives the full plate. On a
- * phone the box is at most 46svh and no width fits both the image and the caption, so the plate
- * keeps its proportions at 15.5 rem and is scaled as a whole (`zoom`, which lays out, unlike a
- * transform) to sit inside the box.
+ * phone the square box is the column's width (~22 rem at 390 px), so the plate is set at
+ * 12 rem, which fits image and caption at full type size — no scaling, so the job title
+ * stays at its 0.8 rem.
  */
 function Portrait({ name, planet }: { name: string; planet: PlanetKey | undefined }) {
   return (
@@ -345,7 +332,7 @@ function Portrait({ name, planet }: { name: string; planet: PlanetKey | undefine
         name={name}
         planet={planet}
         priority
-        className="w-[min(22rem,calc((100cqh_-_10rem)/1.25))] max-w-[22rem] max-sm:w-[15.5rem] max-sm:[zoom:0.72]"
+        className="w-[min(22rem,calc((100cqh_-_10rem)/1.25))] max-w-[22rem] max-sm:w-[12rem]"
       />
     </div>
   );
@@ -385,15 +372,61 @@ function Credentials() {
   );
 }
 
-/** The Earth's lit horizon, cropped to a 2:1 frame so the planet's dome curves through it. */
+/** The Earth's frame fades on every side, so the dome curves through it with no hard edge. */
+const EARTH_MASK =
+  "linear-gradient(to right, transparent, #000 14%, #000 86%, transparent), linear-gradient(to bottom, transparent, #000 10%, #000 55%, transparent)";
+
+/**
+ * The figure of plate VI. By night, the Earth's lit horizon (the home hero's planet) raised so
+ * its dome fills a 2:1 frame. `EarthHorizon` is drawn in night colours only, so by day the same
+ * frame carries the horizon engraved instead: the planet's rim as a brass hairline arc, the
+ * atmosphere a dashed arc above it, the city lights as brass points — never a dark slab on the
+ * parchment page.
+ */
 function Earth() {
   return (
     <div
       aria-hidden="true"
-      className="relative aspect-[2/1] w-full overflow-hidden [mask-image:linear-gradient(to_bottom,black_70%,transparent)]"
+      className="relative aspect-[2/1] w-full overflow-hidden"
+      style={{ maskImage: EARTH_MASK, maskComposite: "intersect", WebkitMaskImage: EARTH_MASK }}
     >
-      <EarthHorizon className="top-[26%] bottom-auto -left-[10%] w-[120%] max-w-none md:top-[26%] md:bottom-auto md:-left-[10%] md:w-[120%]" />
+      <div className="hidden dark:block">
+        <EarthHorizon className="top-[16%] bottom-auto -left-[10%] w-[120%] max-w-none md:top-[16%] md:bottom-auto md:-left-[10%] md:w-[120%]" />
+      </div>
+      <EngravedHorizon className="absolute inset-0 size-full text-accent-strong dark:hidden" />
     </div>
+  );
+}
+
+/** City lights along the engraved rim: a fixed, even scatter (no data, no randomness). */
+const RIM_LIGHTS = Array.from({ length: 23 }, (_, i) => {
+  const a = ((-150 + i * 5.5) * Math.PI) / 180;
+  const r = 576 - (i % 3) * 6;
+  return { x: 500 + r * Math.cos(a), y: 696 + r * Math.sin(a), big: i % 4 === 0 };
+});
+
+/** The day version of the Earth figure, in the same geometry as the night one. */
+function EngravedHorizon({ className }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 1000 500" fill="none" stroke="currentColor" className={className}>
+      <circle cx="500" cy="696" r="626" strokeWidth="0.8" strokeDasharray="2 7" opacity="0.6" />
+      <g opacity="0.35">
+        <circle cx="500" cy="696" r="604" strokeWidth="0.6" data-breathe />
+      </g>
+      <circle cx="500" cy="696" r="588" strokeWidth="1.25" pathLength={1400} data-draw />
+      <circle cx="500" cy="696" r="520" strokeWidth="0.6" opacity="0.3" />
+      <g fill="currentColor" stroke="none">
+        {RIM_LIGHTS.map((l) => (
+          <circle
+            key={`${l.x.toFixed(1)}-${l.y.toFixed(1)}`}
+            cx={l.x}
+            cy={l.y}
+            r={l.big ? 2.4 : 1.4}
+            opacity={l.big ? 0.8 : 0.5}
+          />
+        ))}
+      </g>
+    </svg>
   );
 }
 
@@ -414,7 +447,14 @@ function CountryDoors({ countries }: { countries: Location[] }) {
       motif: "compass",
     },
   ]);
+  // One row per country at every width, its two doors side by side: the station field is a
+  // single column below 48 rem, so the two-column grid is held here (`!`, over the field's rule).
   return (
-    <DoorField doors={doors} variant="station" columns={2} className="border-b border-border/60" />
+    <DoorField
+      doors={doors}
+      variant="station"
+      columns={2}
+      className="border-b border-border/60 max-md:grid-cols-2! max-md:gap-x-4!"
+    />
   );
 }
