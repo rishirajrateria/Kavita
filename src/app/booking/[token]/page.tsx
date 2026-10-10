@@ -2,7 +2,8 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { CalendarPlusIcon } from "lucide-react";
 import { ManageBooking } from "@/components/booking/manage-booking";
-import { KeyFacts, PageHero } from "@/components/content";
+import { KeyFacts, SceneHero } from "@/components/content";
+import { Disc } from "@/components/motifs";
 import { Button } from "@/components/ui/button";
 import { Callout } from "@/components/ui/callout";
 import { Container } from "@/components/ui/container";
@@ -27,9 +28,24 @@ export const metadata: Metadata = {
 const one = (v: string | string[] | undefined) => (typeof v === "string" ? v : undefined);
 
 /**
+ * The parchment disc as the page's figure: the one object every page shares. Its label always
+ * names where it goes — "Your booking" only while the booking can still be managed below, "Book
+ * a new consultation" when it leads to `/book` (WCAG 2.4.4, link purpose).
+ */
+function DiscFigure({ href, label, title }: { href: string; label: string; title?: string }) {
+  return (
+    <div className="flex h-full w-full items-center justify-center">
+      <Disc size="md" href={href} label={label} title={title} />
+    </div>
+  );
+}
+
+/**
  * `/booking/[token]` — the private self-service page from the confirmation email. The token is
- * verified server-side; the page shows the session in both zones and hands reschedule/cancel
- * to a small island. Never indexed, never cached.
+ * verified server-side; the page opens in the home hero's language (the parchment disc as the
+ * figure, the status on the ruled tagline, the session in both zones as the lede), shows the
+ * session on the key-facts plate and hands reschedule/cancel to a small island. Never indexed,
+ * never cached.
  */
 export default async function BookingManagePage({
   params,
@@ -37,30 +53,27 @@ export default async function BookingManagePage({
 }: PageProps<"/booking/[token]">) {
   const [{ token }, sp] = await Promise.all([params, searchParams]);
   const result = await getBookingByToken(token);
+  const crumbs = [{ name: "Your booking", href: `/booking/${encodeURIComponent(token)}` }];
 
   if (!result.ok) {
     const notConnected = result.reason === "not_connected";
     const copy = notConnected ? MANAGE_PAGE.notConnected : MANAGE_PAGE.invalid;
     return (
-      <>
-        <PageHero
-          eyebrow={MANAGE_PAGE.eyebrow}
-          title={copy.title}
-          lede={copy.body}
-          motif="lines"
-          breadcrumbs={[{ name: "Your booking", href: `/booking/${encodeURIComponent(token)}` }]}
-          actions={
-            <>
-              <Button asChild variant="gold" size="xl">
-                <Link href="/contact">Contact Astrologer Kavita</Link>
-              </Button>
-              <Button asChild variant="ghost" size="xl">
-                <Link href="/book">{MANAGE_PAGE.bookAgain}</Link>
-              </Button>
-            </>
-          }
-        />
-      </>
+      <SceneHero
+        id="booking-hero"
+        title={copy.title}
+        tagline={MANAGE_PAGE.eyebrow}
+        lede={copy.body}
+        figure={<DiscFigure href="/book" label={MANAGE_PAGE.bookAgain} />}
+        figureSize="small"
+        figureRatio="1/1"
+        breadcrumbs={crumbs}
+        actions={
+          <Button asChild variant="gold" size="xl">
+            <Link href="/contact">Contact Astrologer Kavita</Link>
+          </Button>
+        }
+      />
     );
   }
 
@@ -87,16 +100,29 @@ export default async function BookingManagePage({
 
   return (
     <>
-      <PageHero
-        eyebrow={`${MANAGE_PAGE.eyebrow} · ${MANAGE_PAGE.status[booking.status]}`}
+      <SceneHero
+        id="booking-hero"
         title={MANAGE_PAGE.title(service.name)}
+        tagline={`${MANAGE_PAGE.eyebrow} · ${MANAGE_PAGE.status[booking.status]}`}
         lede={`${formatInZone(startsAt, clientTz, "long-date")} at ${parts.clientTime} ${parts.clientZone}${
           parts.practitionerTime
             ? ` — ${parts.practitionerTime} ${parts.practitionerZone} for Astrologer Kavita`
             : ""
         }. ${BOOK_MODE_STEP.modes[booking.mode].label}, ${durationLabel(service.durationMinutes)}.`}
-        motif="compass"
-        breadcrumbs={[{ name: "Your booking", href: `/booking/${encodeURIComponent(token)}` }]}
+        figure={
+          closedNote ? (
+            <DiscFigure href="/book" label={MANAGE_PAGE.bookAgain} />
+          ) : (
+            <DiscFigure
+              href="#manage"
+              label={MANAGE_PAGE.eyebrow}
+              title={BOOK_CONFIRMATION.manage}
+            />
+          )
+        }
+        figureSize="small"
+        figureRatio="1/1"
+        breadcrumbs={crumbs}
         actions={
           result.isActive ? (
             <>
@@ -139,7 +165,7 @@ export default async function BookingManagePage({
         ]}
       />
 
-      <Section spacing="lg">
+      <Section id="manage" spacing="lg" className="scroll-mt-20">
         <Container size="default" className="space-y-8">
           {one(sp.moved) === "1" ? (
             <Callout variant="success" role="status">
@@ -169,17 +195,17 @@ export default async function BookingManagePage({
           )}
           {service.whatToPrepare.length > 0 && result.isActive ? (
             <div className="border-t border-accent-border/30 pt-8">
-              <p className="mb-3 font-sans text-xs font-semibold tracking-[0.14em] text-accent-strong uppercase">
-                {BOOK_CONFIRMATION.prepareHeading}
-              </p>
-              <ul className="list-disc space-y-1 pl-5 text-sm leading-relaxed">
+              <p className="plate-n mb-4">{BOOK_CONFIRMATION.prepareHeading}</p>
+              <ul className="divide-y divide-border/60 border-y border-border/60">
                 {service.whatToPrepare.map((item) => (
-                  <li key={item}>{item}</li>
+                  <li key={item} className="py-3 font-serif text-[1.1rem] leading-snug">
+                    {item}
+                  </li>
                 ))}
               </ul>
             </div>
           ) : null}
-          <p className="text-xs leading-relaxed text-muted-foreground">
+          <p className="font-sans text-[0.8rem] leading-relaxed text-muted-foreground">
             {BOOK_CONFIRMATION.paymentNote}
             {contactLine.some(Boolean) ? (
               <>
