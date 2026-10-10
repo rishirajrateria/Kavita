@@ -21,10 +21,16 @@ import {
   type SpecTableData,
   type VastuElement,
 } from "@/components/content";
-import { Convergence, FloorPlan, VastuCompass, VastuDirections } from "@/components/motifs";
+import {
+  Convergence,
+  DIRECTIONS,
+  FloorPlan,
+  VastuCompass,
+  VastuDirections,
+} from "@/components/motifs";
 import { Container } from "@/components/ui/container";
 import { GLOSSARY } from "@/content/glossary";
-import { HOME_PLACEHOLDERS } from "@/content/home";
+import { HOME_PLACEHOLDERS, HUB } from "@/content/home";
 import type { HubSection } from "@/content/pages/astrology";
 import {
   VASTU_BRAHMASTHAN,
@@ -77,9 +83,6 @@ const ROMAN = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX"] as const;
 
 const GHOST =
   "inline-flex min-h-11 items-center gap-2 border-b border-accent-border/50 pb-0.5 font-serif text-[1.05rem] text-foreground no-underline transition-colors duration-(--duration-base) hover:border-accent-strong hover:text-accent-strong [&_[data-arrow]]:transition-transform [&_[data-arrow]]:duration-(--duration-base) [&_[data-arrow]]:ease-emphasized hover:[&_[data-arrow]]:translate-x-1";
-
-const CAPTION =
-  "font-display text-[0.62rem] font-semibold tracking-[0.22em] text-muted-foreground uppercase";
 
 /**
  * The four corners of the plan and the element the classical scheme seats in each (the
@@ -166,17 +169,7 @@ export default async function VastuPage() {
         figureSize="half"
         figureRatio="1/1"
         breadcrumbs={[{ name: "Vastu shastra", href: ROUTE }]}
-        figure={
-          <CompassDoors
-            corners={compassCorners()}
-            centre={{
-              href: VASTU_HERO.primaryCta.href,
-              label: VASTU_HERO.primaryCta.label,
-              title: VASTU_HERO.primaryCta.label,
-            }}
-            className="mx-auto max-h-full max-w-full [&_.disc-link]:text-[0.58rem] md:[&_[data-corner]]:max-w-none md:[&_[data-corner]]:whitespace-nowrap"
-          />
-        }
+        figure={<HeroCompass corners={compassCorners()} />}
         actions={
           <Link href={VASTU_HERO.secondaryCta.href} className={GHOST}>
             {VASTU_HERO.secondaryCta.label}
@@ -249,14 +242,10 @@ export default async function VastuPage() {
         figure={
           <div
             data-sway
-            className="aspect-square w-full max-w-[16rem] text-accent-strong"
+            className="aspect-square w-full max-w-[12rem] text-accent-strong"
             style={{ ["--sway-deg" as string]: "4deg" }}
           >
-            <VastuCompass
-              hideLabels
-              strokeWidth={0.8}
-              title="A compass rose for taking the bearing of the main entrance"
-            />
+            <VastuCompass hideLabels strokeWidth={0.9} />
           </div>
         }
       >
@@ -294,8 +283,12 @@ export default async function VastuPage() {
       <FigureSection
         {...plate(VASTU_PROPERTY_TYPES, 5)}
         figureWidth="default"
-        line={VASTU_PROPERTY_TYPES.eyebrow}
-        figure={<PremisesPlans />}
+        line={premisesLine()}
+        figure={
+          <div className="aspect-square w-full max-w-[14rem] text-accent-strong">
+            <FloorPlan strokeWidth={1.1} />
+          </div>
+        }
       >
         <Paragraphs section={VASTU_PROPERTY_TYPES} />
         <TableFold table={VASTU_PROPERTY_TABLE} firstColumnWidth="16%" />
@@ -375,21 +368,9 @@ function Paragraphs({ section }: { section: HubSection }) {
 }
 
 /**
- * Lets a ledger of four or five columns break out of the plate's 60ch measure to the width a
- * table needs, centred on the page, while the folds above it keep the reading measure.
- */
-function WideFold({ children }: { children: React.ReactNode }) {
-  return (
-    <div className="relative left-1/2 w-[min(64rem,calc(100vw-2rem))] -translate-x-1/2">
-      {children}
-    </div>
-  );
-}
-
-/**
- * A ledger whose table keeps the first-column width the page set before the redesign: `Ledger`
- * takes table data or an element, and only the element form lets `SpecTable` receive
- * `firstColumnWidth`, so the summary is composed here exactly as `Ledger` composes it.
+ * A table folded under its plate: the summary keeps the 60ch fold column (one left edge with
+ * `Read more`), only the body breaks out to 64rem, and cells take the §2.1 meta type. The
+ * element form of `Ledger` is used so `SpecTable` receives `firstColumnWidth`.
  */
 function TableFold({
   table,
@@ -402,29 +383,114 @@ function TableFold({
 }) {
   const clause = table.caption.split(/[.;:—]/)[0]?.trim() ?? table.caption;
   return (
-    <WideFold>
-      <Ledger
-        open={open}
-        summary={`Table · ${clause}`}
-        table={<SpecTable table={table} firstColumnWidth={firstColumnWidth} />}
-      />
-    </WideFold>
+    <Ledger
+      open={open}
+      summary={`Table · ${clause}`}
+      table={<SpecTable table={table} firstColumnWidth={firstColumnWidth} />}
+      className="[&_td]:text-[0.8rem] [&_td]:leading-[1.6] [&_th[scope=row]]:text-base [&>div]:relative [&>div]:left-1/2 [&>div]:w-[min(64rem,calc(100vw-2rem))] [&>div]:-translate-x-1/2"
+    />
   );
 }
 
-/** Three small plans, one per kind of premises, captioned with the property table's column heads. */
-function PremisesPlans() {
-  const heads = VASTU_PROPERTY_TABLE.columns.slice(1);
+/**
+ * Plate VI's one line: the three kinds of premises, named by the property table's column heads
+ * (the third by the first word of its head; the head in full stays in the table).
+ */
+function premisesLine(): string {
+  return VASTU_PROPERTY_TABLE.columns
+    .slice(1)
+    .map((head) => head.split(" (")[0] ?? head)
+    .join(" · ");
+}
+
+const CARDINAL_NAME: Record<string, string> = {
+  N: "North",
+  E: "East",
+  S: "South",
+  W: "West",
+};
+
+/**
+ * Composition around `CompassDoors` (class names only, no shared file touched):
+ * - the disc label is held at the §2.1 floor of 0.62rem (the `Disc` clamp starts at 0.58rem);
+ * - below `lg` the primitive's labels are `sr-only` (still read by assistive technology) and
+ *   `PhoneCompassLabels` draws them;
+ * - from `lg` every label sits on one line, and east and west — the 6th and 8th `<span>`s, after
+ *   the four corners in `CORNERS` order and north — are anchored by their inner edge at the
+ *   label radius, so they read outward from the rim instead of straddling the rings (`!`: the
+ *   label's centring translate in doors.css is unlayered, so a layered utility cannot win).
+ */
+const HERO_COMPASS = [
+  "max-h-full max-w-full",
+  "[&_.disc-link]:text-[clamp(0.62rem,0.5rem+0.4vw,0.8rem)]",
+  "max-lg:[&_.compass-label]:sr-only",
+  "lg:[&_.compass-label]:max-w-none lg:[&_.compass-label]:whitespace-nowrap",
+  "lg:[&>span:nth-of-type(6)]:[translate:0_-50%]! lg:[&>span:nth-of-type(8)]:[translate:-100%_-50%]!",
+].join(" ");
+
+/** The hero instrument: the compass doors, the disc at the centre (the hub's short label). */
+function HeroCompass({ corners }: { corners: CompassCorner[] }) {
   return (
-    <ul className="grid w-full grid-cols-3 gap-4 text-accent-strong sm:gap-10">
-      {heads.map((head) => (
-        <li key={head} className="flex flex-col items-center">
-          <div className="aspect-square w-full max-w-[12rem]">
-            <FloorPlan decorative strokeWidth={1.1} />
-          </div>
-          <span className={`mt-3 max-w-[14ch] text-center ${CAPTION}`}>{head}</span>
-        </li>
+    <div className="relative mx-auto aspect-square max-h-full w-full max-w-full">
+      <CompassDoors
+        corners={corners}
+        centre={{
+          href: VASTU_HERO.primaryCta.href,
+          label: HUB.centre.label,
+          title: VASTU_HERO.primaryCta.label,
+        }}
+        className={HERO_COMPASS}
+      />
+      <PhoneCompassLabels corners={corners} />
+    </div>
+  );
+}
+
+const PHONE_LABEL =
+  "absolute font-display text-[0.62rem] leading-[1.35] font-semibold tracking-[0.2em] whitespace-nowrap uppercase text-center";
+
+/**
+ * The compass labels below `lg` (decorative; the primitive's labels carry the words for screen
+ * readers). The rose's sky circle is 38.64% of the box from its centre (r 92 of 200 units in an
+ * 84% inset), so each cardinal sits just outside it: north and south above and below, east and
+ * west turned along the rim the way an engraved compass letters them; the corners sit in the
+ * box's corners, clear of the circle.
+ */
+function PhoneCompassLabels({ corners }: { corners: CompassCorner[] }) {
+  const out = "calc(11.36% - 1.15rem)";
+  const far = "calc(88.64% + 1.15rem)";
+  const cardinal: Record<string, React.CSSProperties> = {
+    N: { left: "50%", top: out, translate: "-50% -50%" },
+    S: { left: "50%", top: far, translate: "-50% -50%" },
+    E: { left: far, top: "50%", translate: "-50% -50%", rotate: "90deg" },
+    W: { left: out, top: "50%", translate: "-50% -50%", rotate: "-90deg" },
+  };
+  const corner: Record<CompassCorner["dir"], React.CSSProperties> = {
+    NE: { right: "0.25rem", top: "11.5%", translate: "0 -50%" },
+    SE: { right: "0.25rem", top: "88.5%", translate: "0 -50%" },
+    SW: { left: "0.25rem", top: "88.5%", translate: "0 -50%" },
+    NW: { left: "0.25rem", top: "11.5%", translate: "0 -50%" },
+  };
+  return (
+    <div aria-hidden="true" className="pointer-events-none absolute inset-0 lg:hidden">
+      {DIRECTIONS.filter((d) => d.label in CARDINAL_NAME).map((d) => (
+        <span
+          key={d.label}
+          className={`${PHONE_LABEL} text-muted-foreground`}
+          style={cardinal[d.label]}
+        >
+          {CARDINAL_NAME[d.label]}
+          <br />
+          {d.sanskrit}
+        </span>
       ))}
-    </ul>
+      {corners.map((c) => (
+        <span key={c.dir} className={`${PHONE_LABEL} text-foreground`} style={corner[c.dir]}>
+          {c.sanskrit}
+          <br />
+          {c.dir}
+        </span>
+      ))}
+    </div>
   );
 }
