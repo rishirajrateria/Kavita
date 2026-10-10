@@ -18,17 +18,35 @@ function href(service?: string, region?: string): string {
   return q ? `/testimonials?${q}#experiences` : "/testimonials#experiences";
 }
 
+/** Cinzel caption type (SPEC §2.1): the ruled label above each row of chips. */
+const LABEL =
+  "block font-display text-[0.62rem] font-semibold tracking-[0.34em] text-accent-strong uppercase";
+
+/**
+ * One row of quiet text links with a 3 px brass dot in the gap before every item. The row
+ * starts a gutter early (`-ms-4`, each item `ms-4`) and is clipped 5 px short of the column
+ * edge, so the dot before whichever item opens a line falls outside the clip while that
+ * item's focus ring (4 px out) stays inside it. From `sm` the row wraps; on a phone it stays
+ * one line that scrolls sideways in its own box and fades at the right edge instead of
+ * cutting a name hard at the gutter.
+ */
+const ROW =
+  "-ms-4 -me-4 flex snap-x scroll-ps-4 flex-nowrap items-center overflow-x-auto pe-4 pb-1 [clip-path:inset(-0.5rem_-0.5rem_-0.5rem_calc(1rem-5px))] [mask-image:linear-gradient(to_right,#000_85%,transparent)] sm:me-0 sm:flex-wrap sm:overflow-visible sm:pe-0 sm:pb-0 sm:[mask-image:none]";
+
+const ITEM =
+  "relative ms-4 inline-flex shrink-0 snap-start items-center before:absolute before:-start-[calc(0.5rem+1.5px)] before:top-1/2 before:size-[3px] before:-translate-y-1/2 before:rounded-full before:bg-accent-strong/80 before:content-['']";
+
 function Chip({ active, to, children }: { active: boolean; to: string; children: string }) {
   return (
-    <li>
+    <li className={ITEM}>
       <Link
         href={to}
         aria-current={active ? "true" : undefined}
         className={cn(
-          "inline-flex min-h-9 items-center rounded-full border px-3.5 text-sm no-underline transition-colors",
+          "inline-flex min-h-11 items-center px-1 font-sans text-[0.8rem] no-underline underline-offset-[6px] transition-colors duration-(--duration-base) sm:min-h-8",
           active
-            ? "border-accent-border bg-accent text-accent-foreground"
-            : "border-border text-muted-foreground hover:border-accent-border hover:text-foreground",
+            ? "text-accent-strong underline decoration-accent-strong/70 decoration-1"
+            : "text-muted-foreground hover:text-foreground hover:underline hover:decoration-accent-border hover:decoration-1",
         )}
       >
         {children}
@@ -37,7 +55,10 @@ function Chip({ active, to, children }: { active: boolean; to: string; children:
   );
 }
 
-/** Filter chips as plain links with search params — server-handled, no JavaScript. */
+/**
+ * Filters as plain links with search params — server-handled, no JavaScript. Set as two rows
+ * of quiet Karla links under Cinzel captions; the active item is brass with a hairline rule.
+ */
 export function TestimonialFilters({
   services,
   regions,
@@ -46,12 +67,10 @@ export function TestimonialFilters({
 }: TestimonialFiltersProps) {
   const f = TESTIMONIALS_LIST.filters;
   return (
-    <nav aria-label="Filter experiences" className="space-y-4">
-      <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
-        <span className="font-sans text-xs font-semibold tracking-[0.12em] text-accent-strong uppercase">
-          {f.serviceLabel}
-        </span>
-        <ul className="flex flex-wrap gap-2">
+    <nav aria-label="Filter experiences" className="space-y-6">
+      <div className="space-y-3">
+        <span className={LABEL}>{f.serviceLabel}</span>
+        <ul className={ROW}>
           <Chip active={!activeService} to={href(undefined, activeRegion)}>
             {f.all}
           </Chip>
@@ -62,11 +81,9 @@ export function TestimonialFilters({
           ))}
         </ul>
       </div>
-      <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
-        <span className="font-sans text-xs font-semibold tracking-[0.12em] text-accent-strong uppercase">
-          {f.regionLabel}
-        </span>
-        <ul className="flex flex-wrap gap-2">
+      <div className="space-y-3">
+        <span className={LABEL}>{f.regionLabel}</span>
+        <ul className={ROW}>
           <Chip active={!activeRegion} to={href(activeService, undefined)}>
             {f.all}
           </Chip>
