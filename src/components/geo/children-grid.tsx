@@ -31,6 +31,9 @@ export function GeoChildrenGrid({
   if (children.length === 0) return null;
   const doors = children.slice(0, CHILD_CARD_CAP);
   const rest = children.slice(CHILD_CARD_CAP);
+  // Columns follow the count, so two or three doors never leave most of the block empty; a
+  // short field also keeps to the answer's measure rather than the wide block's.
+  const columns = doors.length >= 4 ? 4 : doors.length === 3 ? 3 : 2;
 
   return (
     <FigureSection
@@ -44,7 +47,8 @@ export function GeoChildrenGrid({
     >
       <DoorField
         variant="tile"
-        columns={4}
+        columns={columns}
+        className={doors.length < 4 ? "max-w-[32rem]" : undefined}
         doors={doors.map((child) => ({
           href: href(child),
           label: child.name,

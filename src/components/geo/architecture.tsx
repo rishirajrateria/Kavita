@@ -88,7 +88,7 @@ export function GeoArchitecture({
           <h3 className="font-serif text-[1.35rem] leading-snug font-normal text-foreground">
             How a remote vastu review of a {loc.name} home works
           </h3>
-          <StepLine steps={REMOTE_STEPS} className="mt-6" />
+          <StepLine steps={REMOTE_STEPS} className="mt-6 [&_.more]:mx-0" />
         </div>
       ) : null}
     </FigureSection>
