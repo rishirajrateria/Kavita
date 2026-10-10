@@ -1,22 +1,29 @@
 import type { Metadata } from "next";
 import { applyPageSeo } from "@/lib/seo/page-seo";
 import Link from "next/link";
+import type * as React from "react";
 import {
   Byline,
-  CtaBand,
-  FaqBlock,
+  CompassDoors,
+  CtaDisc,
+  FigureSection,
+  Foot,
   GeoLinkLists,
   KeyFacts,
-  PageHero,
-  QuestionSection,
+  Ledger,
+  More,
+  MotifSprite,
+  SceneHero,
   ServiceList,
   SpecTable,
   Toc,
+  type CompassCorner,
+  type SpecTableData,
+  type VastuElement,
 } from "@/components/content";
-import { Ornament, VastuCompass } from "@/components/motifs";
-import { Button } from "@/components/ui/button";
+import { Convergence, FloorPlan, VastuCompass, VastuDirections } from "@/components/motifs";
 import { Container } from "@/components/ui/container";
-import { Heading } from "@/components/ui/heading";
+import { GLOSSARY } from "@/content/glossary";
 import { HOME_PLACEHOLDERS } from "@/content/home";
 import type { HubSection } from "@/content/pages/astrology";
 import {
@@ -46,13 +53,15 @@ import { PRACTITIONER } from "@/content/practitioner";
 import { getPublishableLocations, getServices, getSiteSettings } from "@/lib/data";
 import { realValue } from "@/lib/site";
 
+const ROUTE = "/vastu";
+
 const BASE_METADATA: Metadata = {
   title: { absolute: VASTU_META.title },
   description: VASTU_META.description,
-  alternates: { canonical: "/vastu", types: { "text/markdown": "/vastu.md" } },
+  alternates: { canonical: ROUTE, types: { "text/markdown": "/vastu.md" } },
   openGraph: {
     type: "website",
-    url: "/vastu",
+    url: ROUTE,
     title: VASTU_META.title,
     description: VASTU_META.description,
     siteName: "Astrologer Kavita",
@@ -61,13 +70,52 @@ const BASE_METADATA: Metadata = {
 
 /** Static metadata plus any admin override from `page_seo` (Phase 6). */
 export function generateMetadata(): Promise<Metadata> {
-  return applyPageSeo(BASE_METADATA, "/vastu");
+  return applyPageSeo(BASE_METADATA, ROUTE);
+}
+
+const ROMAN = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX"] as const;
+
+const GHOST =
+  "inline-flex min-h-11 items-center gap-2 border-b border-accent-border/50 pb-0.5 font-serif text-[1.05rem] text-foreground no-underline transition-colors duration-(--duration-base) hover:border-accent-strong hover:text-accent-strong [&_[data-arrow]]:transition-transform [&_[data-arrow]]:duration-(--duration-base) [&_[data-arrow]]:ease-emphasized hover:[&_[data-arrow]]:translate-x-1";
+
+const CAPTION =
+  "font-display text-[0.62rem] font-semibold tracking-[0.22em] text-muted-foreground uppercase";
+
+/**
+ * The four corners of the plan and the element the classical scheme seats in each (the
+ * direction table: north-east water, south-east fire, south-west earth, north-west air), each
+ * opening its own glossary term.
+ */
+const CORNERS: readonly { dir: CompassCorner["dir"]; slug: string; element: VastuElement }[] = [
+  { dir: "NE", slug: "ishaan", element: "water" },
+  { dir: "SE", slug: "agneya", element: "fire" },
+  { dir: "SW", slug: "nairutya", element: "earth" },
+  { dir: "NW", slug: "vayavya", element: "air" },
+];
+
+/** Resolve each corner from `GLOSSARY` at build time; a missing term fails the build. */
+function compassCorners(): CompassCorner[] {
+  return CORNERS.map(({ dir, slug, element }) => {
+    const term = GLOSSARY.find((t) => t.slug === slug);
+    if (!term) throw new Error(`/vastu: glossary term "${slug}" is missing for the ${dir} door`);
+    return {
+      dir,
+      href: `/glossary/${term.slug}`,
+      label: term.term,
+      sanskrit: term.term.split(" (")[0] ?? term.term,
+      element,
+    };
+  });
 }
 
 /**
- * `/vastu` hub — vastu intent (CLAUDE.md §5, §8, §9). Server component: every word in the
- * HTML, the directional table, the non-structural corrections table and the premises table,
- * links to every vastu-led and integrated service and to the published geo pages.
+ * `/vastu` hub — vastu intent (CLAUDE.md §5, §8, §9), in the voice of the home page: the compass
+ * whose four corners open their own terms as the opening instrument, the parchment disc at its
+ * centre; then plates — a figure, one ruled line, the question-form H2 and its visible answer —
+ * with every longer paragraph folded into native `<details>` beneath, the three tables in
+ * ledgers (the directions open), the services and the published places as doors, the FAQs as
+ * the notes at the foot. Server component: every word, every table and every link is in the
+ * HTML with JavaScript disabled. Zero client JavaScript.
  */
 export default async function VastuPage() {
   const [settings, services, publishable] = await Promise.all([
@@ -107,136 +155,177 @@ export default async function VastuPage() {
 
   return (
     <>
-      <PageHero
+      <MotifSprite />
+
+      <SceneHero
         id="vastu"
-        eyebrow={VASTU_HERO.eyebrow}
         title={VASTU_HERO.h1}
+        tagline={VASTU_HERO.eyebrow}
         lede={VASTU_HERO.lede}
         entity={VASTU_HERO.entity}
-        motif="compass"
-        breadcrumbs={[{ name: "Vastu shastra", href: "/vastu" }]}
+        figureSize="half"
+        figureRatio="1/1"
+        breadcrumbs={[{ name: "Vastu shastra", href: ROUTE }]}
+        figure={
+          <CompassDoors
+            corners={compassCorners()}
+            centre={{
+              href: VASTU_HERO.primaryCta.href,
+              label: VASTU_HERO.primaryCta.label,
+              title: VASTU_HERO.primaryCta.label,
+            }}
+            className="mx-auto max-h-full max-w-full [&_.disc-link]:text-[0.58rem] md:[&_[data-corner]]:max-w-none md:[&_[data-corner]]:whitespace-nowrap"
+          />
+        }
         actions={
-          <>
-            <Button asChild variant="gold" size="xl">
-              <Link href={VASTU_HERO.primaryCta.href}>{VASTU_HERO.primaryCta.label}</Link>
-            </Button>
-            <Button asChild variant="ghost" size="xl">
-              <Link href={VASTU_HERO.secondaryCta.href}>
-                {VASTU_HERO.secondaryCta.label}
-                <span aria-hidden="true" data-arrow className="inline-block">
-                  →
-                </span>
-              </Link>
-            </Button>
-          </>
+          <Link href={VASTU_HERO.secondaryCta.href} className={GHOST}>
+            {VASTU_HERO.secondaryCta.label}
+            <span aria-hidden="true" data-arrow className="inline-block">
+              →
+            </span>
+          </Link>
         }
       />
 
-      <Toc items={[...VASTU_TOC]} />
-
-      <Container size="wide" className="py-8">
-        <Byline datePublished={VASTU_DATES.published} dateModified={VASTU_DATES.modified} />
+      <Container size="wide">
+        <Byline
+          datePublished={VASTU_DATES.published}
+          dateModified={VASTU_DATES.modified}
+          withoutPhoto
+        />
       </Container>
 
-      <KeyFacts route="/vastu" heading={K.heading} items={facts} columns={3} />
+      <KeyFacts route={ROUTE} heading={K.heading} items={facts} columns={3} />
 
-      {/* 1. What vastu is */}
-      <QuestionSection {...props(VASTU_WHAT)} tone="default">
+      <Toc items={[...VASTU_TOC]} className="[&_a]:px-1 [&_a]:tracking-[0.14em]" />
+
+      {/* Plate I — the mandala: nine zones, an element in each corner, the centre open */}
+      <FigureSection
+        {...plate(VASTU_WHAT, 0)}
+        tone="muted"
+        figureWidth="narrow"
+        figureRatio="1/1"
+        line="Nine zones, five elements"
+        figure={<VastuDirections className="size-full text-accent-strong" />}
+      >
         <Paragraphs section={VASTU_WHAT} />
-      </QuestionSection>
+      </FigureSection>
 
-      {/* 2. Directions table */}
-      <QuestionSection {...props(VASTU_DIRECTIONS)} tone="muted">
+      {/* Plate II — the eight directions, and the table that names them (the primary table) */}
+      <FigureSection
+        {...plate(VASTU_DIRECTIONS, 1)}
+        figureWidth="default"
+        line={VASTU_DIRECTIONS.eyebrow}
+        figure={
+          <div className="aspect-square w-full max-w-[20rem] font-display text-accent-strong">
+            <VastuCompass strokeWidth={0.9} />
+          </div>
+        }
+      >
         <Paragraphs section={VASTU_DIRECTIONS} />
-        <SpecTable table={VASTU_DIRECTION_TABLE} firstColumnWidth="14%" />
-      </QuestionSection>
+        <TableFold table={VASTU_DIRECTION_TABLE} firstColumnWidth="14%" open />
+      </FigureSection>
 
-      {/* 3. Brahmasthan, with the compass rose */}
-      <QuestionSection {...props(VASTU_BRAHMASTHAN)} tone="default">
-        <div className="grid gap-10 lg:grid-cols-[1.4fr_1fr] lg:items-center lg:gap-16">
-          <Paragraphs section={VASTU_BRAHMASTHAN} />
-          <figure className="mx-auto w-full max-w-[18rem] text-accent-strong lg:max-w-[22rem]">
+      {/* Plate III — the brahmasthan: the plan with its centre lit */}
+      <FigureSection
+        {...plate(VASTU_BRAHMASTHAN, 2)}
+        tone="muted"
+        figureWidth="narrow"
+        line={VASTU_BRAHMASTHAN.eyebrow}
+        figure={
+          <div className="aspect-square w-full max-w-[22rem] text-accent-strong">
+            <FloorPlan highlight="centre" strokeWidth={1} />
+          </div>
+        }
+      >
+        <Paragraphs section={VASTU_BRAHMASTHAN} />
+      </FigureSection>
+
+      {/* Plate IV — remote: the bearing taken at the door, the how-to folded beneath */}
+      <FigureSection
+        {...plate(VASTU_REMOTE, 3)}
+        figureWidth="default"
+        line="A plan, a bearing, photographs"
+        figure={
+          <div
+            data-sway
+            className="aspect-square w-full max-w-[16rem] text-accent-strong"
+            style={{ ["--sway-deg" as string]: "4deg" }}
+          >
             <VastuCompass
-              title="Vastu compass rose"
-              description="The eight directions of a vastu plan around an open centre, north at the top."
-              strokeWidth={0.9}
+              hideLabels
+              strokeWidth={0.8}
+              title="A compass rose for taking the bearing of the main entrance"
             />
-            <figcaption className="mt-3 text-center text-xs tracking-[0.1em] text-muted-foreground uppercase">
-              Eight directions around the brahmasthan
-            </figcaption>
-          </figure>
-        </div>
-      </QuestionSection>
-
-      {/* 4. Remote consultation + compass how-to on indigo */}
-      <QuestionSection {...props(VASTU_REMOTE)} tone="inverse">
+          </div>
+        }
+      >
         <Paragraphs section={VASTU_REMOTE} />
-        <article className="double-rule relative m-2 rounded-2xl border border-accent-border/50 bg-surface-inverse-deep/60 px-6 py-8 sm:px-10 sm:py-10">
-          <Heading as="h3" level={3} tone="accent">
-            {VASTU_COMPASS_HOWTO.heading}
-          </Heading>
-          <p className="mt-3 max-w-prose text-lg leading-relaxed text-muted-foreground">
-            {VASTU_COMPASS_HOWTO.intro}
-          </p>
-          <ol className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {VASTU_COMPASS_HOWTO.steps.map((step, i) => (
-              <li
-                key={step.slice(0, 24)}
-                className="flex gap-4 rounded-xl border border-accent-border/25 bg-card p-5 text-card-foreground"
-              >
-                <span
-                  aria-hidden="true"
-                  className="font-serif text-3xl leading-none text-accent-strong tabular-nums"
-                >
-                  {i + 1}
-                </span>
-                <p className="text-sm leading-relaxed">{step}</p>
-              </li>
+        <More summary={VASTU_COMPASS_HOWTO.heading}>
+          <p>{VASTU_COMPASS_HOWTO.intro}</p>
+          <ol>
+            {VASTU_COMPASS_HOWTO.steps.map((step) => (
+              <li key={step.slice(0, 24)}>{step}</li>
             ))}
           </ol>
-          <p className="mt-6 max-w-prose border-t border-accent-border/40 pt-5 text-sm text-muted-foreground">
-            {VASTU_COMPASS_HOWTO.note}
-          </p>
-        </article>
-      </QuestionSection>
-
-      {/* 5. Corrections without construction */}
-      <QuestionSection {...props(VASTU_CORRECTIONS)} tone="default">
-        <Paragraphs section={VASTU_CORRECTIONS} />
-        <SpecTable table={VASTU_CORRECTION_TABLE} firstColumnWidth="24%" />
-      </QuestionSection>
-
-      {/* 6. Property types */}
-      <QuestionSection {...props(VASTU_PROPERTY_TYPES)} tone="muted">
-        <Paragraphs section={VASTU_PROPERTY_TYPES} />
-        <SpecTable table={VASTU_PROPERTY_TABLE} firstColumnWidth="16%" />
-      </QuestionSection>
-
-      {/* 7. Adding the chart */}
-      <QuestionSection {...props(VASTU_WITH_CHART)} tone="inverse">
-        <div className="mx-auto max-w-[70ch] space-y-5 border-l-2 border-accent-border pl-5 font-serif text-[1.2rem] leading-[1.5] italic sm:pl-7 sm:text-[1.35rem]">
-          {VASTU_WITH_CHART.paragraphs?.map((p) => (
-            <p key={p.slice(0, 32)}>{p}</p>
-          ))}
-        </div>
-        <p className="mx-auto flex max-w-prose items-start gap-4 border-t border-accent-border/40 pt-6 text-muted-foreground">
-          <Ornament className="mt-1.5 size-5 shrink-0 text-accent-strong" strokeWidth={1.1} />
-          <span>
-            Read the other instrument:{" "}
-            <Link href="/astrology" className="text-accent-strong">
-              Vedic astrology, read together with the vastu of your home →
-            </Link>
-          </span>
+        </More>
+        <p className="mx-auto max-w-[60ch] border-t border-accent-border/40 pt-5 text-center font-serif text-[1.05rem] leading-[1.5] text-muted-foreground italic">
+          {VASTU_COMPASS_HOWTO.note}
         </p>
-      </QuestionSection>
+      </FigureSection>
 
-      {/* 8. Services */}
-      <QuestionSection {...props(VASTU_SERVICES)} tone="default">
+      {/* Plate V — corrections: the south-west room, the corner most corrections turn on */}
+      <FigureSection
+        {...plate(VASTU_CORRECTIONS, 4)}
+        tone="muted"
+        figureWidth="narrow"
+        line={VASTU_CORRECTIONS.eyebrow}
+        figure={
+          <div className="aspect-square w-full max-w-[22rem] text-accent-strong">
+            <FloorPlan highlight="south-west" strokeWidth={1} />
+          </div>
+        }
+      >
+        <Paragraphs section={VASTU_CORRECTIONS} />
+        <TableFold table={VASTU_CORRECTION_TABLE} firstColumnWidth="24%" />
+      </FigureSection>
+
+      {/* Plate VI — three kinds of premises, each a plan captioned by its column */}
+      <FigureSection
+        {...plate(VASTU_PROPERTY_TYPES, 5)}
+        figureWidth="default"
+        line={VASTU_PROPERTY_TYPES.eyebrow}
+        figure={<PremisesPlans />}
+      >
+        <Paragraphs section={VASTU_PROPERTY_TYPES} />
+        <TableFold table={VASTU_PROPERTY_TABLE} firstColumnWidth="16%" />
+      </FigureSection>
+
+      {/* Plate VII — the other instrument */}
+      <FigureSection
+        {...plate(VASTU_WITH_CHART, 6)}
+        tone="muted"
+        figureWidth="wide"
+        figureRatio="2/1"
+        line={VASTU_WITH_CHART.eyebrow}
+        figure={<Convergence className="text-accent-strong" />}
+      >
+        <Paragraphs section={VASTU_WITH_CHART} />
+        <p className="text-center text-sm text-muted-foreground">
+          Read the other instrument:{" "}
+          <Link href="/astrology" className="text-accent-strong">
+            Vedic astrology, read together with the vastu of your home →
+          </Link>
+        </p>
+      </FigureSection>
+
+      {/* Plate VIII — services as doors */}
+      <FigureSection {...plate(VASTU_SERVICES, 7)} className="[&>div>div]:max-w-[64rem]">
         <ServiceList services={own} />
-      </QuestionSection>
+      </FigureSection>
 
-      {/* 9. Where */}
-      <QuestionSection {...props(VASTU_WHERE)} tone="muted">
+      {/* Plate IX — where: country doors and the city list */}
+      <FigureSection {...plate(VASTU_WHERE, 8)} tone="muted" className="[&>div>div]:max-w-[64rem]">
         <GeoLinkLists
           service="vastu-consultant"
           countries={countries}
@@ -244,18 +333,17 @@ export default async function VastuPage() {
           linkLabel={VASTU_WHERE_LABELS.linkLabel}
           headings={{ countries: VASTU_WHERE_LABELS.countries, cities: VASTU_WHERE_LABELS.cities }}
         />
-      </QuestionSection>
+      </FigureSection>
 
-      <FaqBlock
-        route="/vastu"
+      <Foot
         id="faq"
-        eyebrow={VASTU_FAQ.eyebrow}
+        route={ROUTE}
         heading={VASTU_FAQ.heading}
         answer={VASTU_FAQ.answer}
-        items={[...VASTU_FAQ.items]}
+        faqs={[...VASTU_FAQ.items]}
       />
 
-      <CtaBand
+      <CtaDisc
         eyebrow={VASTU_CTA.eyebrow}
         title={VASTU_CTA.title}
         body={VASTU_CTA.body}
@@ -269,23 +357,74 @@ export default async function VastuPage() {
   );
 }
 
-function props(s: HubSection) {
-  return {
-    id: s.id,
-    route: "/vastu",
-    eyebrow: s.eyebrow,
-    question: s.question,
-    answer: s.answer,
-  };
+/** The props every plate shares: anchor, route, numeral, question and answer. */
+function plate(s: HubSection, i: number) {
+  return { id: s.id, route: ROUTE, n: ROMAN[i], question: s.question, answer: s.answer };
 }
 
+/** A section's longer paragraphs, folded under its answer — in the HTML, not on the eye. */
 function Paragraphs({ section }: { section: HubSection }) {
   if (!section.paragraphs?.length) return null;
   return (
-    <div className="max-w-[70ch] space-y-5 text-lg leading-relaxed">
+    <More>
       {section.paragraphs.map((p) => (
         <p key={p.slice(0, 40)}>{p}</p>
       ))}
+    </More>
+  );
+}
+
+/**
+ * Lets a ledger of four or five columns break out of the plate's 60ch measure to the width a
+ * table needs, centred on the page, while the folds above it keep the reading measure.
+ */
+function WideFold({ children }: { children: React.ReactNode }) {
+  return (
+    <div className="relative left-1/2 w-[min(64rem,calc(100vw-2rem))] -translate-x-1/2">
+      {children}
     </div>
+  );
+}
+
+/**
+ * A ledger whose table keeps the first-column width the page set before the redesign: `Ledger`
+ * takes table data or an element, and only the element form lets `SpecTable` receive
+ * `firstColumnWidth`, so the summary is composed here exactly as `Ledger` composes it.
+ */
+function TableFold({
+  table,
+  firstColumnWidth,
+  open = false,
+}: {
+  table: SpecTableData;
+  firstColumnWidth: string;
+  open?: boolean;
+}) {
+  const clause = table.caption.split(/[.;:—]/)[0]?.trim() ?? table.caption;
+  return (
+    <WideFold>
+      <Ledger
+        open={open}
+        summary={`Table · ${clause}`}
+        table={<SpecTable table={table} firstColumnWidth={firstColumnWidth} />}
+      />
+    </WideFold>
+  );
+}
+
+/** Three small plans, one per kind of premises, captioned with the property table's column heads. */
+function PremisesPlans() {
+  const heads = VASTU_PROPERTY_TABLE.columns.slice(1);
+  return (
+    <ul className="grid w-full grid-cols-3 gap-4 text-accent-strong sm:gap-10">
+      {heads.map((head) => (
+        <li key={head} className="flex flex-col items-center">
+          <div className="aspect-square w-full max-w-[12rem]">
+            <FloorPlan decorative strokeWidth={1.1} />
+          </div>
+          <span className={`mt-3 max-w-[14ch] text-center ${CAPTION}`}>{head}</span>
+        </li>
+      ))}
+    </ul>
   );
 }
