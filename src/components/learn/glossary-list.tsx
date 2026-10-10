@@ -14,8 +14,8 @@ function termDoor(t: GlossaryTerm, withShort: boolean): Door {
 /**
  * The glossary as a ruled field of doors — every `short` definition visible in the HTML, so the
  * index page itself answers "what is a dasha" without a click. Two columns from tablet width;
- * each term links to its own page and carries the instrument of its science. Rendered in a
- * plate's `figure` slot, so it fills the figure's measure.
+ * each term links to its own page and carries the instrument of its science. Set under the
+ * plate's answer, inside a `DoorSpread`.
  */
 export function GlossaryList({ terms, id }: { terms: GlossaryTerm[]; id?: string }) {
   if (terms.length === 0) return null;

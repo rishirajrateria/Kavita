@@ -14,9 +14,9 @@ import {
 } from "@/components/content";
 import {
   ArticleGrid,
+  DoorSpread,
   LearnFigure,
   TermChips,
-  articleGridWidth,
   articleSchema,
   learnCtaMotif,
   learnFigureRatio,
@@ -89,7 +89,9 @@ export default async function ArticlePage({ params }: PageProps<"/learn/[categor
         titleFont="serif"
         tagline={`Learn · ${cat.name}`}
         lede={article.description}
-        figure={<LearnFigure motif={cat.motif} title={`The instrument of ${cat.name}`} />}
+        figure={
+          <LearnFigure motif={cat.motif} size="small" title={`The instrument of ${cat.name}`} />
+        }
         figureSize="small"
         figureRatio={learnFigureRatio(cat.motif)}
         breadcrumbs={[
@@ -123,7 +125,7 @@ export default async function ArticlePage({ params }: PageProps<"/learn/[categor
             <TermChips terms={terms} label="Terms in this article" />
             <div className="space-y-3">
               <p className="plate-n">About the author</p>
-              <p className="font-serif text-base leading-relaxed text-muted-foreground">
+              <p className="font-serif text-[1.05rem] leading-relaxed text-foreground/80">
                 {practitioner
                   ? `${practitioner} practises as Astrologer Kavita, reading`
                   : "Astrologer Kavita reads"}{" "}
@@ -155,10 +157,12 @@ export default async function ArticlePage({ params }: PageProps<"/learn/[categor
           route={article.href}
           question="What should you read next?"
           answer={`After this guide, Astrologer Kavita suggests the related articles below: they take up the questions this one raises — the companion topics in ${cat.name.toLowerCase()} and the neighbouring sections — and each opens, as this one does, with a self-contained answer and defines every term on first use.`}
-          figure={<ArticleGrid articles={related} columns={3} />}
-          figureWidth={articleGridWidth(related.length)}
-          line="Keep reading"
-        />
+        >
+          <DoorSpread>
+            <p className="plate-n mb-5 text-center">Keep reading</p>
+            <ArticleGrid articles={related} columns={3} />
+          </DoorSpread>
+        </FigureSection>
       ) : null}
 
       <CtaDisc

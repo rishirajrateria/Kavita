@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { applyPageSeo } from "@/lib/seo/page-seo";
 import { CtaDisc, FigureSection, MotifSprite, SceneHero } from "@/components/content";
 import {
+  DoorSpread,
   GhostLink,
   GlossaryList,
   LearnFigure,
@@ -29,9 +30,10 @@ export function generateMetadata(): Promise<Metadata> {
 }
 
 /**
- * `/glossary` — every term grouped by science as a ruled field of doors, the short definitions
- * visible in the HTML, each field the picture of its plate with the count ruled beneath and the
- * question and answer under that; the South Indian chart opens the page, the disc closes it.
+ * `/glossary` — every term grouped by science: each plate is that science's instrument (the
+ * North Indian chart for astrology, the compass rose for vastu) with the count ruled beneath,
+ * the question and its answer, then the terms as a ruled field of doors with every short
+ * definition visible in the HTML. The South Indian chart opens the page, the disc closes it.
  */
 export default function GlossaryPage() {
   const siteUrl = getSiteUrl();
@@ -48,11 +50,7 @@ export default function GlossaryPage() {
         tagline="Learn · Glossary"
         lede="The words a reading uses, defined in one plain sentence and one fuller paragraph each. Where traditions differ, the entry says so; no entry promises an outcome."
         figure={
-          <LearnFigure
-            motif="south-chart"
-            title="A South Indian birth chart"
-            description="The square South Indian chart layout, in which the twelve signs keep fixed places and the ascendant is marked."
-          />
+          <LearnFigure motif="south-chart" size="half" title="South Indian birth chart layout" />
         }
         figureSize="half"
         figureRatio="1/1"
@@ -74,10 +72,18 @@ export default function GlossaryPage() {
         n="I"
         question="What do the Vedic astrology terms in a reading mean?"
         answer="The Vedic astrology terms below — kundli, lagna, rashi, nakshatra, dasha, navamsa and the rest — are the vocabulary Astrologer Kavita uses when reading a birth chart. Each is defined here in one standalone sentence; the term's own page carries the fuller definition, related terms and the guides that use it."
-        figure={<GlossaryList terms={astrology} />}
-        figureWidth="wide"
+        figure={
+          <div className="aspect-square w-[min(100%,18rem)]">
+            <LearnFigure motif="north-chart" size="plate" title="North Indian birth chart layout" />
+          </div>
+        }
+        figureWidth="narrow"
         line={`${astrology.length} terms`}
-      />
+      >
+        <DoorSpread>
+          <GlossaryList terms={astrology} />
+        </DoorSpread>
+      </FigureSection>
 
       <FigureSection
         route="/glossary"
@@ -86,10 +92,23 @@ export default function GlossaryPage() {
         tone="muted"
         question="What do the vastu shastra terms in a reading mean?"
         answer="The vastu shastra terms below — the vastu purusha mandala, the brahmasthan, and the four corner directions ishaan, agneya, nairutya and vayavya — are the vocabulary Astrologer Kavita uses when reading a home or workplace. Each is defined in one standalone sentence, with the fuller definition on the term's own page."
-        figure={<GlossaryList terms={vastu} />}
+        figure={
+          <div className="aspect-square w-[min(100%,20rem)]">
+            <LearnFigure
+              motif="compass"
+              size="plate"
+              labels
+              title="Vastu compass rose showing the eight directions"
+            />
+          </div>
+        }
         figureWidth="default"
         line={`${vastu.length} terms`}
-      />
+      >
+        <DoorSpread>
+          <GlossaryList terms={vastu} />
+        </DoorSpread>
+      </FigureSection>
 
       <CtaDisc
         eyebrow="Beyond definitions"

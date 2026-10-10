@@ -11,9 +11,9 @@ import {
 } from "@/components/content";
 import {
   ArticleGrid,
+  DoorSpread,
   LearnFigure,
   TermChips,
-  articleGridWidth,
   definedTermSchema,
   learnMetadata,
 } from "@/components/learn";
@@ -81,6 +81,7 @@ export default async function GlossaryTermPage({ params }: PageProps<"/glossary/
         figure={
           <LearnFigure
             motif={vastu ? "compass" : "north-chart"}
+            size="small"
             title={vastu ? "The vastu compass rose" : "A North Indian birth chart"}
           />
         }
@@ -105,7 +106,9 @@ export default async function GlossaryTermPage({ params }: PageProps<"/glossary/
       />
 
       <Container size="wide">
-        <Byline datePublished={term.dateModified} withoutPhoto />
+        <div className="mx-auto max-w-[40rem]">
+          <Byline datePublished={term.dateModified} withoutPhoto />
+        </div>
       </Container>
 
       <FigureSection
@@ -114,6 +117,7 @@ export default async function GlossaryTermPage({ params }: PageProps<"/glossary/
         n="I"
         question={`What does ${heading.toLowerCase()} mean in ${science}?`}
         answer={`${term.short} Astrologer Kavita uses the term in this sense when reading a client's birth chart and home together, and defines it fully below.`}
+        className="pt-8 sm:pt-10"
       >
         <Prose className="font-serif text-[1.25rem] leading-[1.7]">
           <p>{term.definition}</p>
@@ -129,10 +133,12 @@ export default async function GlossaryTermPage({ params }: PageProps<"/glossary/
           tone="muted"
           question={`Which guides use the term ${heading.toLowerCase()}?`}
           answer={`The guides below from Astrologer Kavita use ${heading.toLowerCase()} in context — in a worked explanation rather than a definition — so the meaning above can be seen doing its work. Each opens with a self-contained answer, defines every term on first use, and links back to this glossary entry where the term appears.`}
-          figure={<ArticleGrid articles={articles} columns={3} />}
-          figureWidth={articleGridWidth(articles.length)}
-          line="In use"
-        />
+        >
+          <DoorSpread>
+            <p className="plate-n mb-5 text-center">In use</p>
+            <ArticleGrid articles={articles} columns={3} />
+          </DoorSpread>
+        </FigureSection>
       ) : null}
 
       <CtaDisc

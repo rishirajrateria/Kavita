@@ -4,8 +4,8 @@ import { notFound } from "next/navigation";
 import { CtaDisc, FigureSection, Foot, MotifSprite, SceneHero } from "@/components/content";
 import {
   ArticleGrid,
+  DoorSpread,
   LearnFigure,
-  articleGridWidth,
   learnCtaMotif,
   learnFigureRatio,
   learnMetadata,
@@ -39,9 +39,10 @@ export async function generateMetadata({
 }
 
 /**
- * `/learn/[category]` — one section of the library: its instrument as the hero, its guides as
- * doors with the count ruled beneath and the section's question and answer under that, the
- * readers' questions in the foot, the disc.
+ * `/learn/[category]` — one section of the library: its instrument as the hero, then the
+ * section's question and answer as a quiet ruled plate (the hero already is its instrument; a
+ * second copy would only repeat it) with its guides as doors beneath, the readers' questions
+ * in the foot, the disc.
  */
 export default async function CategoryPage({ params }: PageProps<"/learn/[category]">) {
   const { category } = await params;
@@ -59,7 +60,9 @@ export default async function CategoryPage({ params }: PageProps<"/learn/[catego
         title={cat.name}
         tagline={`Learn · ${cat.name}`}
         lede={cat.description}
-        figure={<LearnFigure motif={cat.motif} title={`The instrument of ${cat.name}`} />}
+        figure={
+          <LearnFigure motif={cat.motif} size="small" title={`The instrument of ${cat.name}`} />
+        }
         figureSize="small"
         figureRatio={learnFigureRatio(cat.motif)}
         breadcrumbs={[
@@ -68,16 +71,12 @@ export default async function CategoryPage({ params }: PageProps<"/learn/[catego
         ]}
       />
 
-      <FigureSection
-        id="articles"
-        route={route}
-        n="I"
-        question={cat.question}
-        answer={cat.answer}
-        figure={<ArticleGrid articles={articles} showCategory={false} columns={3} />}
-        figureWidth={articleGridWidth(articles.length)}
-        line={count}
-      />
+      <FigureSection id="articles" route={route} n="I" question={cat.question} answer={cat.answer}>
+        <DoorSpread>
+          <p className="plate-n mb-5 text-center">{count}</p>
+          <ArticleGrid articles={articles} showCategory={false} columns={3} />
+        </DoorSpread>
+      </FigureSection>
 
       <Foot
         route={route}
