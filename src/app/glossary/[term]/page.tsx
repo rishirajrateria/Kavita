@@ -11,7 +11,6 @@ import {
 } from "@/components/content";
 import {
   ArticleGrid,
-  DoorSpread,
   LearnFigure,
   TermChips,
   definedTermSchema,
@@ -134,10 +133,7 @@ export default async function GlossaryTermPage({ params }: PageProps<"/glossary/
           question={`Which guides use the term ${heading.toLowerCase()}?`}
           answer={`The guides below from Astrologer Kavita use ${heading.toLowerCase()} in context — in a worked explanation rather than a definition — so the meaning above can be seen doing its work. Each opens with a self-contained answer, defines every term on first use, and links back to this glossary entry where the term appears.`}
         >
-          <DoorSpread>
-            <p className="plate-n mb-5 text-center">In use</p>
-            <ArticleGrid articles={articles} columns={3} />
-          </DoorSpread>
+          <ArticleGrid articles={articles} columns={2} caption="In use" captionAlign="start" />
         </FigureSection>
       ) : null}
 

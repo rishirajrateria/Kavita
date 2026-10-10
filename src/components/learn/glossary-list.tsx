@@ -1,5 +1,7 @@
 import { DoorField, type Door } from "@/components/content";
 import type { GlossaryTerm } from "@/content/glossary";
+import { cn } from "@/lib/utils";
+import { LABEL_CONTRAST, STATION_META_GAP } from "./door-tweaks";
 
 /** A term's door: the chart for an astrology term, the compass rose for a vastu term. */
 function termDoor(t: GlossaryTerm, withShort: boolean): Door {
@@ -21,7 +23,12 @@ export function GlossaryList({ terms, id }: { terms: GlossaryTerm[]; id?: string
   if (terms.length === 0) return null;
   return (
     <div id={id} className="w-full">
-      <DoorField doors={terms.map((t) => termDoor(t, true))} variant="station" columns={2} />
+      <DoorField
+        doors={terms.map((t) => termDoor(t, true))}
+        variant="station"
+        columns={2}
+        className={cn(LABEL_CONTRAST, STATION_META_GAP)}
+      />
     </div>
   );
 }
@@ -32,7 +39,11 @@ export function TermChips({ terms, label }: { terms: GlossaryTerm[]; label: stri
   return (
     <div className="space-y-4">
       <p className="plate-n">{label}</p>
-      <DoorField doors={terms.map((t) => termDoor(t, false))} variant="chip" />
+      <DoorField
+        doors={terms.map((t) => termDoor(t, false))}
+        variant="chip"
+        className={LABEL_CONTRAST}
+      />
     </div>
   );
 }

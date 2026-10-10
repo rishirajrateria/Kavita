@@ -73,7 +73,7 @@ export default function GlossaryPage() {
         question="What do the Vedic astrology terms in a reading mean?"
         answer="The Vedic astrology terms below — kundli, lagna, rashi, nakshatra, dasha, navamsa and the rest — are the vocabulary Astrologer Kavita uses when reading a birth chart. Each is defined here in one standalone sentence; the term's own page carries the fuller definition, related terms and the guides that use it."
         figure={
-          <div className="aspect-square w-[min(100%,18rem)]">
+          <div className="aspect-square w-[min(100%,11rem)] md:w-[min(100%,18rem)]">
             <LearnFigure motif="north-chart" size="plate" title="North Indian birth chart layout" />
           </div>
         }

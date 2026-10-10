@@ -4,7 +4,7 @@ import { notFound } from "next/navigation";
 import { CtaDisc, FigureSection, Foot, MotifSprite, SceneHero } from "@/components/content";
 import {
   ArticleGrid,
-  DoorSpread,
+  CENTRED_PLATE,
   LearnFigure,
   learnCtaMotif,
   learnFigureRatio,
@@ -71,11 +71,15 @@ export default async function CategoryPage({ params }: PageProps<"/learn/[catego
         ]}
       />
 
-      <FigureSection id="articles" route={route} n="I" question={cat.question} answer={cat.answer}>
-        <DoorSpread>
-          <p className="plate-n mb-5 text-center">{count}</p>
-          <ArticleGrid articles={articles} showCategory={false} columns={3} />
-        </DoorSpread>
+      <FigureSection
+        id="articles"
+        route={route}
+        n="I"
+        question={cat.question}
+        answer={cat.answer}
+        className={CENTRED_PLATE}
+      >
+        <ArticleGrid articles={articles} showCategory={false} columns={3} spread caption={count} />
       </FigureSection>
 
       <Foot

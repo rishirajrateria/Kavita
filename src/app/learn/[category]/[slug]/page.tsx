@@ -14,7 +14,7 @@ import {
 } from "@/components/content";
 import {
   ArticleGrid,
-  DoorSpread,
+  CENTRED_PLATE,
   LearnFigure,
   TermChips,
   articleSchema,
@@ -155,13 +155,11 @@ export default async function ArticlePage({ params }: PageProps<"/learn/[categor
         <FigureSection
           id="related"
           route={article.href}
+          className={CENTRED_PLATE}
           question="What should you read next?"
           answer={`After this guide, Astrologer Kavita suggests the related articles below: they take up the questions this one raises — the companion topics in ${cat.name.toLowerCase()} and the neighbouring sections — and each opens, as this one does, with a self-contained answer and defines every term on first use.`}
         >
-          <DoorSpread>
-            <p className="plate-n mb-5 text-center">Keep reading</p>
-            <ArticleGrid articles={related} columns={3} />
-          </DoorSpread>
+          <ArticleGrid articles={related} columns={3} spread caption="Keep reading" />
         </FigureSection>
       ) : null}
 

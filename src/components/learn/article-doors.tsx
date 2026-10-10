@@ -1,5 +1,8 @@
 import { DoorField, formatDisplayDate, type Door } from "@/components/content";
 import type { Article, ArticleCategoryWithCount } from "@/lib/articles";
+import { cn } from "@/lib/utils";
+import { DoorSpread } from "./door-spread";
+import { LABEL_CONTRAST, STATION_BELOW_MD, STATION_META_GAP } from "./door-tweaks";
 
 const NBSP = "\u00a0";
 
@@ -34,35 +37,61 @@ function articleDoor(article: Article, showCategory: boolean): Door {
 /**
  * Every list is a door (SPEC §2.3): the articles of a hub as a field of real links, each
  * carrying the glyph of its category, the title in Cinzel, the description visible beneath, and
- * the revision date and reading time as data-built meta. Three or more are a grid of tiles (one
- * column on a phone, where two would pinch the descriptions); one or two are ruled station rows
- * in a single column. Set under a plate's answer (`FigureSection` children) inside a
- * `DoorSpread`, so every "below" in the answer is true. Plain server HTML; the page renders the
- * `MotifSprite` the glyphs reference.
+ * the revision date and reading time as data-built meta. Three or more are a grid of tiles —
+ * let out to the plate's width in a `DoorSpread` when `spread`, and set as ruled station rows
+ * below 768 px; one or two are station rows in the plate's own column (a lone row stretched
+ * across a 52 rem spread reads as a stray footer). `caption` is the Cinzel line above the field.
+ * Plain server HTML; the page renders the `MotifSprite` the glyphs reference.
  */
 export function ArticleGrid({
   articles,
   showCategory = true,
   columns = 3,
+  spread = false,
+  caption,
+  captionAlign = "center",
 }: {
   articles: Article[];
   showCategory?: boolean;
   columns?: 2 | 3;
+  spread?: boolean;
+  caption?: string;
+  captionAlign?: "center" | "start";
 }) {
   if (articles.length === 0) return null;
   const doors = articles.map((a) => articleDoor(a, showCategory));
-  if (articles.length < 3) {
-    return (
-      <DoorField doors={doors} columns={2} variant="station" className="w-full md:grid-cols-1!" />
-    );
-  }
-  return (
+  const stations = articles.length < 3;
+  const head = caption ? (
+    <p className={cn("plate-n mb-5", captionAlign === "center" && "text-center")}>{caption}</p>
+  ) : null;
+  const field = stations ? (
+    <DoorField
+      doors={doors}
+      columns={2}
+      variant="station"
+      className={cn("w-full md:grid-cols-1!", LABEL_CONTRAST, STATION_META_GAP)}
+    />
+  ) : (
     <DoorField
       doors={doors}
       columns={columns}
       variant="tile"
-      className="w-full max-md:grid-cols-1!"
+      className={cn("w-full", LABEL_CONTRAST, STATION_BELOW_MD)}
     />
+  );
+  if (spread && !stations) {
+    return (
+      <DoorSpread>
+        {head}
+        {field}
+      </DoorSpread>
+    );
+  }
+  return (
+    <div>
+      {head}
+      {field}
+    </div>
   );
 }
 
@@ -72,7 +101,7 @@ export function CategoryDoors({ categories }: { categories: ArticleCategoryWithC
     <DoorField
       columns={4}
       variant="tile"
-      className="w-full max-md:grid-cols-1!"
+      className={cn("w-full", LABEL_CONTRAST, STATION_BELOW_MD)}
       doors={categories.map((c) => ({
         href: c.href,
         label: c.name,

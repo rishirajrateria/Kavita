@@ -3,6 +3,7 @@ import { applyPageSeo } from "@/lib/seo/page-seo";
 import { CtaDisc, FigureSection, MotifSprite, SceneHero } from "@/components/content";
 import {
   ArticleGrid,
+  CENTRED_PLATE,
   CategoryDoors,
   DoorSpread,
   GhostLink,
@@ -98,12 +99,11 @@ export default function LearnPage() {
         id="latest"
         n="II"
         tone="muted"
+        className={CENTRED_PLATE}
         question="Which guides are newest?"
         answer="The newest guides from Astrologer Kavita are listed below with the date each was last revised and its reading time. Every article is written for a first-time reader, opens each section with a self-contained answer, closes with the questions people most often ask, and links the terms it uses to the glossary."
       >
-        <DoorSpread>
-          <ArticleGrid articles={latest} columns={3} />
-        </DoorSpread>
+        <ArticleGrid articles={latest} columns={3} spread />
       </FigureSection>
 
       <FigureSection
