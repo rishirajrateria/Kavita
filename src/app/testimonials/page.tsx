@@ -1,13 +1,21 @@
 import type { Metadata } from "next";
 import { applyPageSeo } from "@/lib/seo/page-seo";
 import Link from "next/link";
-import { Byline, CtaBand, FaqBlock, PageHero, QuestionSection } from "@/components/content";
+import {
+  Byline,
+  CtaDisc,
+  FigureSection,
+  Foot,
+  More,
+  SceneHero,
+  Tablets,
+} from "@/components/content";
+import { AstronomicalLines } from "@/components/motifs";
 import { JsonLd } from "@/components/seo/json-ld";
-import { TestimonialCard } from "@/components/testimonials/card";
 import { TestimonialFilters } from "@/components/testimonials/filters";
+import { GhostLink } from "@/components/testimonials/ghost-link";
 import { loadTestimonialContext } from "@/components/testimonials/resolve";
 import { aggregateRatingSchema, reviewSchema, reviewable } from "@/components/testimonials/schema";
-import { Button } from "@/components/ui/button";
 import { Callout } from "@/components/ui/callout";
 import { Container } from "@/components/ui/container";
 import {
@@ -22,13 +30,15 @@ import {
 import { getPublishedTestimonials } from "@/lib/data";
 import { getSiteUrl } from "@/lib/site";
 
+const ROUTE = "/testimonials";
+
 const BASE_METADATA: Metadata = {
   title: { absolute: TESTIMONIALS_META.title },
   description: TESTIMONIALS_META.description,
-  alternates: { canonical: "/testimonials" },
+  alternates: { canonical: ROUTE },
   openGraph: {
     type: "website",
-    url: "/testimonials",
+    url: ROUTE,
     title: TESTIMONIALS_META.title,
     description: TESTIMONIALS_META.description,
   },
@@ -36,14 +46,19 @@ const BASE_METADATA: Metadata = {
 
 /** Static metadata plus any admin override from `page_seo` (Phase 6). */
 export function generateMetadata(): Promise<Metadata> {
-  return applyPageSeo(BASE_METADATA, "/testimonials");
+  return applyPageSeo(BASE_METADATA, ROUTE);
 }
 
 const one = (v: string | string[] | undefined) => (typeof v === "string" && v ? v : undefined);
 
 /**
- * All client experiences (CLAUDE.md §12). Filters are plain links handled here on the server.
- * Review / AggregateRating JSON-LD only when at least one real, consented testimonial exists.
+ * All client experiences (CLAUDE.md §12), in the redesign's language (SPEC §3): the orbital
+ * linework as the scene, a quiet ruled plate on how experiences are collected, then the
+ * experiences themselves as levitating glass tablets — the picture of Plate II, with the
+ * placeholder warning above them unchanged so the production build gate still trips. Filters
+ * are plain links handled here on the server. The questions sit in the foot; the parchment disc
+ * closes the page. Review / AggregateRating JSON-LD only when at least one real, consented
+ * testimonial exists.
  */
 export default async function TestimonialsPage({ searchParams }: PageProps<"/testimonials">) {
   const sp = await searchParams;
@@ -76,54 +91,96 @@ export default async function TestimonialsPage({ searchParams }: PageProps<"/tes
     )
     .filter((r) => r !== null);
   const aggregate = aggregateRatingSchema(testimonials, siteUrl);
-  const isFiltered = Boolean(activeService || activeRegion);
+
+  const items = filtered.map((t) => {
+    const place = t.clientLocationId ? ctx.placeById.get(t.clientLocationId) : undefined;
+    const service = t.serviceId ? ctx.serviceById.get(t.serviceId) : undefined;
+    const placeName = place
+      ? place.location.type === "country"
+        ? place.location.name
+        : `${place.location.name}, ${place.country.name}`
+      : undefined;
+    return { testimonial: t, placeName, serviceName: service?.name };
+  });
+  const single =
+    testimonials.length === 0
+      ? { title: TESTIMONIALS_LIST.none.title, body: TESTIMONIALS_LIST.none.body }
+      : {
+          title: TESTIMONIALS_LIST.empty.title,
+          body: (
+            <>
+              {TESTIMONIALS_LIST.empty.body}{" "}
+              <Link href="/testimonials#experiences" className="text-accent-strong">
+                {TESTIMONIALS_LIST.filters.clear}
+              </Link>
+            </>
+          ),
+        };
 
   return (
     <>
       {reviews.length ? (
         <JsonLd data={aggregate ? [...reviews, aggregate] : reviews} id="review-schema" />
       ) : null}
-      <PageHero
-        eyebrow={TESTIMONIALS_HERO.eyebrow}
+      <SceneHero
         title={TESTIMONIALS_HERO.title}
+        tagline={TESTIMONIALS_HERO.eyebrow}
         lede={TESTIMONIALS_HERO.lede}
-        motif="lines"
-        breadcrumbs={[{ name: "Client experiences", href: "/testimonials" }]}
+        figureSize="wide"
+        figureRatio="16/9"
+        figure={<AstronomicalLines strokeWidth={0.8} className="text-accent-strong" />}
+        breadcrumbs={[{ name: "Client experiences", href: ROUTE }]}
         actions={
-          <Button asChild variant="gold-outline" size="lg">
-            <Link href={TESTIMONIALS_LIST.shareLink.href}>{TESTIMONIALS_LIST.shareLink.label}</Link>
-          </Button>
+          <GhostLink href={TESTIMONIALS_LIST.shareLink.href}>
+            {TESTIMONIALS_LIST.shareLink.label}
+          </GhostLink>
         }
       />
       <Container size="wide">
         <Byline
           datePublished={TESTIMONIALS_DATES.published}
           dateModified={TESTIMONIALS_DATES.modified}
+          withoutPhoto
         />
       </Container>
 
-      <QuestionSection
-        route="/testimonials"
+      <FigureSection
+        route={ROUTE}
         id={TESTIMONIALS_INTRO.id}
-        eyebrow={TESTIMONIALS_INTRO.eyebrow}
+        n="I"
         question={TESTIMONIALS_INTRO.question}
         answer={TESTIMONIALS_INTRO.answer}
-        bodyClassName="max-w-prose"
       >
-        {TESTIMONIALS_INTRO.body.map((p) => (
-          <p key={p} className="leading-relaxed text-muted-foreground">
-            {p}
-          </p>
-        ))}
-      </QuestionSection>
+        <More>
+          {TESTIMONIALS_INTRO.body.map((p) => (
+            <p key={p}>{p}</p>
+          ))}
+        </More>
+      </FigureSection>
 
-      <QuestionSection
-        route="/testimonials"
+      <FigureSection
+        route={ROUTE}
         id={TESTIMONIALS_LIST.id}
-        eyebrow={TESTIMONIALS_LIST.eyebrow}
+        n="II"
+        tone="muted"
         question={TESTIMONIALS_LIST.question}
         answer={TESTIMONIALS_LIST.answer}
-        tone="muted"
+        figureWidth="wide"
+        line={TESTIMONIALS_LIST.eyebrow}
+        figure={
+          <div className="w-full space-y-8">
+            {hasPlaceholders ? (
+              <Callout
+                variant="warn"
+                title={TESTIMONIALS_PLACEHOLDER.title}
+                className="mx-auto max-w-[44rem]"
+              >
+                {TESTIMONIALS_PLACEHOLDER.note}
+              </Callout>
+            ) : null}
+            <Tablets items={items} single={single} className={items.length ? "" : "mx-auto"} />
+          </div>
+        }
       >
         {testimonials.length ? (
           <TestimonialFilters
@@ -133,64 +190,21 @@ export default async function TestimonialsPage({ searchParams }: PageProps<"/tes
             activeRegion={activeRegion}
           />
         ) : null}
+        <p className="text-center">
+          <GhostLink href={TESTIMONIALS_LIST.shareLink.href}>
+            {TESTIMONIALS_LIST.shareLink.label}
+          </GhostLink>
+        </p>
+      </FigureSection>
 
-        {hasPlaceholders ? (
-          <Callout variant="warn" title={TESTIMONIALS_PLACEHOLDER.title}>
-            {TESTIMONIALS_PLACEHOLDER.note}
-          </Callout>
-        ) : null}
-
-        {testimonials.length === 0 ? (
-          <Callout variant="info" title={TESTIMONIALS_LIST.none.title}>
-            {TESTIMONIALS_LIST.none.body}
-          </Callout>
-        ) : filtered.length === 0 ? (
-          <Callout variant="info" title={TESTIMONIALS_LIST.empty.title}>
-            {TESTIMONIALS_LIST.empty.body}{" "}
-            <Link href="/testimonials#experiences" className="text-accent-strong">
-              {TESTIMONIALS_LIST.filters.clear}
-            </Link>
-          </Callout>
-        ) : (
-          <ul
-            className="grid gap-5 md:grid-cols-2 lg:grid-cols-3"
-            aria-live={isFiltered ? "polite" : undefined}
-          >
-            {filtered.map((t) => {
-              const place = t.clientLocationId ? ctx.placeById.get(t.clientLocationId) : undefined;
-              const service = t.serviceId ? ctx.serviceById.get(t.serviceId) : undefined;
-              const placeName = place
-                ? place.location.type === "country"
-                  ? place.location.name
-                  : `${place.location.name}, ${place.country.name}`
-                : undefined;
-              return (
-                <li key={t.id}>
-                  <TestimonialCard
-                    testimonial={t}
-                    placeName={placeName}
-                    serviceName={service?.name}
-                  />
-                </li>
-              );
-            })}
-          </ul>
-        )}
-
-        <Button asChild variant="link" className="px-0">
-          <Link href={TESTIMONIALS_LIST.shareLink.href}>{TESTIMONIALS_LIST.shareLink.label} →</Link>
-        </Button>
-      </QuestionSection>
-
-      <FaqBlock
-        route="/testimonials"
+      <Foot
+        route={ROUTE}
         heading={TESTIMONIALS_FAQ.heading}
         answer={TESTIMONIALS_FAQ.answer}
-        eyebrow={TESTIMONIALS_FAQ.eyebrow}
-        items={[...TESTIMONIALS_FAQ.items]}
+        faqs={[...TESTIMONIALS_FAQ.items]}
       />
 
-      <CtaBand
+      <CtaDisc
         title="Had a consultation already?"
         body="If Astrologer Kavita has read your chart or reviewed your home, your words help the next person decide. Share them in any length; nothing is published without your permission."
         primaryHref="/share-your-experience"

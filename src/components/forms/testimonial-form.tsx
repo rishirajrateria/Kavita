@@ -128,9 +128,9 @@ export function TestimonialForm({
       </div>
 
       <fieldset className="space-y-2">
-        <legend className="text-sm font-medium">{F.rating}</legend>
+        <legend className="text-sm font-medium text-foreground">{F.rating}</legend>
         <div className="flex flex-wrap gap-2" role="radiogroup">
-          <label className="inline-flex min-h-9 cursor-pointer items-center gap-2 rounded-full border px-3 text-sm has-checked:border-accent-border has-checked:bg-accent">
+          <label className="inline-flex min-h-9 cursor-pointer items-center gap-2 rounded-full border border-accent-border/30 px-3 font-sans text-[0.8rem] text-muted-foreground transition-colors duration-(--duration-base) hover:border-accent-border has-checked:border-accent-strong/70 has-checked:text-accent-strong">
             <input
               type="radio"
               name="rating"
@@ -143,7 +143,7 @@ export function TestimonialForm({
           {[1, 2, 3, 4, 5].map((n) => (
             <label
               key={n}
-              className="inline-flex min-h-9 cursor-pointer items-center gap-2 rounded-full border px-3 text-sm has-checked:border-accent-border has-checked:bg-accent"
+              className="inline-flex min-h-9 cursor-pointer items-center gap-2 rounded-full border border-accent-border/30 px-3 font-sans text-[0.8rem] text-muted-foreground transition-colors duration-(--duration-base) hover:border-accent-border has-checked:border-accent-strong/70 has-checked:text-accent-strong"
             >
               <input type="radio" name="rating" value={n} className="accent-accent-strong" />
               {n} / 5
@@ -176,7 +176,7 @@ export function TestimonialForm({
         />
       </Field>
 
-      <div className="space-y-1.5 rounded-lg border border-accent-border/40 bg-surface-muted p-4">
+      <div className="space-y-1.5 rounded-lg border border-accent-border/40 p-4">
         <label htmlFor="consent" className="flex items-start gap-3 text-sm font-medium">
           <input
             id="consent"

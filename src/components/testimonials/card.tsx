@@ -33,11 +33,11 @@ export function TestimonialCard({ testimonial: t, placeName, serviceName }: Test
           </Badge>
         ) : null}
       </div>
-      <blockquote className="flex-1 leading-relaxed">
+      <blockquote className="flex-1 font-serif text-[1.15rem] leading-[1.55] [overflow-wrap:anywhere] text-foreground">
         <p>{t.quote}</p>
       </blockquote>
-      <figcaption className="border-t border-accent-border/30 pt-4 text-sm text-muted-foreground">
-        <span className="font-serif text-base text-foreground">{t.clientName}</span>
+      <figcaption className="border-t border-accent-border/30 pt-4 font-sans text-[0.8rem] text-muted-foreground">
+        <span className="font-serif text-[1.05rem] text-foreground">{t.clientName}</span>
         {placeName ? <span> · {placeName}</span> : null}
         <span className="block sm:mt-0.5">
           {serviceName ?? TESTIMONIALS_LIST.unknownService}
