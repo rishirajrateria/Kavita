@@ -141,7 +141,11 @@ export async function FigureSection({
         <p className={cn(ANSWER, "mx-auto mt-5 max-w-[36rem] border-s-0 ps-0 text-center")}>
           {answer}
         </p>
-        {children ? <div className="mx-auto mt-8 max-w-[60ch] space-y-6">{children}</div> : null}
+        {children ? (
+          <div className="mx-auto mt-8 max-w-[60ch] space-y-6 [&>.more>summary]:justify-center">
+            {children}
+          </div>
+        ) : null}
       </Container>
     </Section>
   );

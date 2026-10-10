@@ -95,13 +95,8 @@ const TOC_IDS: readonly (keyof typeof ABOUT_TOC_LABELS)[] = [
 const NUMERALS = ["I", "II", "III", "IV", "V", "VI"];
 const TOC: TocItem[] = TOC_IDS.map((id, i) => ({ id, text: ABOUT_TOC_LABELS[id], n: NUMERALS[i] }));
 
-/** The disc's tick ring turns about its own box (the face's centre), not the viewBox's (40,40). */
-const DISC_TURN =
-  "[&_g[data-turn]]:[transform-box:fill-box] [&_g[data-turn]]:[transform-origin:center]";
-
-/** The tagline on one line where it fits; on a phone the portrait stands clear below it. */
-const HERO_FIT =
-  "lg:[&_.rule]:max-w-none lg:[&_.rule>span:nth-child(2)]:whitespace-nowrap max-sm:[&_.scene-figure]:mt-12";
+/** On a phone the portrait stands clear below the tagline. */
+const HERO_FIT = "max-sm:[&_.scene-figure]:mt-12";
 
 /** A fold's summary sits centred under the centred H2 and answer of its plate. */
 const CENTRED_FOLD = "[&>summary]:justify-center";
@@ -171,10 +166,7 @@ export default async function AboutPage() {
               size="md"
               href={ABOUT_HERO.primaryCta.href}
               label={ABOUT_HERO.primaryCta.label}
-              className={cn(
-                DISC_TURN,
-                "my-6 [&_.disc-link]:px-[10%] [&_.disc-link]:tracking-[0.12em]",
-              )}
+              className="my-6"
             />
             <Link href={ABOUT_HERO.secondaryCta.href} className={cn(GHOST, "sm:ms-6")}>
               {ABOUT_HERO.secondaryCta.label}
@@ -317,7 +309,6 @@ export default async function AboutPage() {
         primaryLabel={ABOUT_CTA.primary.label}
         secondaryHref={ABOUT_CTA.secondary.href}
         secondaryLabel={ABOUT_CTA.secondary.label}
-        className={DISC_TURN}
       />
     </>
   );

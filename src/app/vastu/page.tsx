@@ -427,7 +427,6 @@ const CARDINAL_NAME: Record<string, string> = { N: "North", E: "East", S: "South
  */
 const HERO_COMPASS = [
   "max-h-full max-w-full",
-  "[&_.disc-link]:text-[clamp(0.62rem,0.5rem+0.4vw,0.8rem)]",
   "max-lg:[&_.compass-label]:sr-only",
   "lg:[&_.compass-label]:max-w-none lg:[&_.compass-label]:whitespace-nowrap",
   "lg:[&>span:nth-of-type(6)]:[translate:0_-50%]! lg:[&>span:nth-of-type(8)]:[translate:-100%_-50%]!",

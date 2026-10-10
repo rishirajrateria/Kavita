@@ -162,7 +162,6 @@ export default async function AstrologyPage() {
               size="sm"
               href={ASTROLOGY_HERO.primaryCta.href}
               label={ASTROLOGY_HERO.primaryCta.label}
-              className="[&_.disc-link]:px-[9%] [&_.disc-link]:text-[0.62rem] [&_.disc-link]:tracking-[0.1em]"
             />
             <Link href={ASTROLOGY_HERO.secondaryCta.href} className={GHOST}>
               {ASTROLOGY_HERO.secondaryCta.label}

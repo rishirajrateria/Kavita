@@ -106,7 +106,7 @@ export function SceneHero({
           >
             {title}
           </h1>
-          <Rule tone="accent" className="mx-auto mt-5 max-w-[44rem] justify-center">
+          <Rule tone="accent" className="mx-auto mt-5 max-w-[min(100%,64rem)] justify-center">
             {tagline}
           </Rule>
         </div>
