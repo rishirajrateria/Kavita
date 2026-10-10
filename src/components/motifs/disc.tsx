@@ -29,9 +29,20 @@ export interface DiscProps {
 }
 
 const SIZE: Record<NonNullable<DiscProps["size"]>, string> = {
-  sm: "5.5rem",
-  md: "8rem",
+  sm: "7.25rem",
+  md: "8.5rem",
   lg: "11rem",
+};
+
+/**
+ * Label type per size. Cinzel capitals are wide: "CONSULTATION" is ~91px at 0.62rem/0.06em, so
+ * each size pairs its face with a fixed type size and tracking that keeps the longest word of a
+ * three-word label inside the parchment (about 80% of the face diameter at the label's height).
+ */
+const LABEL: Record<NonNullable<DiscProps["size"]>, string> = {
+  sm: "text-[0.62rem] tracking-[0.06em]",
+  md: "text-[0.7rem] tracking-[0.08em]",
+  lg: "text-[0.8rem] tracking-[0.14em]",
 };
 
 export function Disc({ href, label, title, size = "md", className }: DiscProps) {
@@ -88,7 +99,10 @@ export function Disc({ href, label, title, size = "md", className }: DiscProps) 
       <Link
         href={href}
         title={title}
-        className="disc-link absolute inset-0 flex items-center justify-center rounded-full px-[14%] text-center font-display text-[clamp(0.58rem,0.5rem+0.4vw,0.8rem)] leading-snug font-semibold tracking-[0.16em] uppercase no-underline"
+        className={cn(
+          "disc-link absolute inset-0 flex items-center justify-center rounded-full px-[8%] text-center font-display leading-snug font-semibold uppercase no-underline",
+          LABEL[size],
+        )}
       >
         <span className="relative">{label}</span>
       </Link>

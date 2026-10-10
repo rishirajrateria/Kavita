@@ -20,6 +20,12 @@
   overflow: visible;
   pointer-events: none;
 }
+/* The tick ring turns about the face's centre. The SVG's viewBox starts at (40,40), so the global
+   [data-turn] origin (50% of the view box) would sit on the face's corner and swing the ring away. */
+.disc-svg g[data-turn] {
+  transform-box: fill-box;
+  transform-origin: center;
+}
 .disc-halo {
   transform-box: fill-box;
   transform-origin: center;
