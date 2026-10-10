@@ -11,11 +11,17 @@ import {
   More,
   SceneHero,
 } from "@/components/content";
-import { FloorPlan, Instrument, KundliNav, NorthIndianChart } from "@/components/motifs";
+import {
+  Convergence,
+  FloorPlan,
+  Instrument,
+  KundliNav,
+  NorthIndianChart,
+} from "@/components/motifs";
 import { ServicesComparisonTable } from "@/components/services/comparison-table";
 import { servicePrice } from "@/components/services/price";
 import { Container } from "@/components/ui/container";
-import { HUB } from "@/content/home";
+import { HUB, INSTRUMENTS } from "@/content/home";
 import {
   LEAD_DESCRIPTION,
   LEAD_LABEL,
@@ -28,7 +34,7 @@ import {
   SERVICES_LIST,
   SERVICES_META,
 } from "@/content/pages/services";
-import { getServices, type ServiceLead } from "@/lib/data";
+import { getServices, type Service, type ServiceLead } from "@/lib/data";
 
 const BASE_METADATA: Metadata = {
   title: { absolute: SERVICES_META.title },
@@ -87,11 +93,42 @@ function LeadColumns() {
   );
 }
 
+/** The three Cinzel phrases under the Convergence figure, set exactly as the home page sets them. */
+function ConvergenceLine() {
+  return (
+    <span className="inline-flex flex-wrap justify-center gap-x-3 gap-y-1">
+      <span className="whitespace-nowrap">{INSTRUMENTS.captions.chart}</span>
+      <span aria-hidden="true" className="hidden opacity-60 sm:inline">
+        ·
+      </span>
+      <span className="whitespace-nowrap text-accent-strong">{INSTRUMENTS.captions.together}</span>
+      <span aria-hidden="true" className="hidden opacity-60 sm:inline">
+        ·
+      </span>
+      <span className="whitespace-nowrap">{INSTRUMENTS.captions.home}</span>
+    </span>
+  );
+}
+
+/**
+ * A door's meta from data — lead · minutes · price — with non-breaking spaces inside each part,
+ * so a narrow tile wraps only at the separators, never mid-phrase.
+ */
+function doorMeta(s: Service): string {
+  return [LEAD_LABEL[s.lead], `${s.durationMinutes} min`, servicePrice(s).text]
+    .map((part) => part.replace(/ /g, "\u00a0"))
+    .join(" · ");
+}
+
+/** On a phone the doors sit two by two; an odd last door takes the whole row. */
+const ODD_LAST = "max-md:[&>li:last-child:nth-child(odd)]:col-span-2";
+
 /**
  * All services (CLAUDE.md §5) in the home hero's language: the chart is the door. The kundli hub
  * opens the page with every service in its house; the three leads sit ruled beneath it; then the
- * notes — which to book first, the comparison ledger, and the nine services again as HTML doors
- * outside the SVG (each a real `<a>` with its planet from `HUB`), the questions, and the disc.
+ * plates — which to book first (the Convergence figure: the integrated reading it recommends),
+ * the comparison ledger, and the nine services again as HTML doors outside the SVG (each a real
+ * `<a>` with its planet from `HUB`, in a `<nav>`), the questions, and the disc.
  * Static; no client JS; every answer block and link is in the served HTML.
  */
 export default async function ServicesPage() {
@@ -123,6 +160,10 @@ export default async function ServicesPage() {
         n="I"
         question={SERVICES_INTRO.question}
         answer={SERVICES_INTRO.answer}
+        figure={<Convergence className="text-accent-strong" />}
+        line={<ConvergenceLine />}
+        figureWidth="wide"
+        figureRatio="2/1"
       >
         <More>
           {SERVICES_INTRO.body.map((p) => (
@@ -153,28 +194,23 @@ export default async function ServicesPage() {
         n="III"
         question={SERVICES_LIST.question}
         answer={SERVICES_LIST.answer}
-        line={SERVICES_LIST.eyebrow}
-        figureWidth="wide"
-        figure={
-          <div
-            className="w-full"
-            data-placeholder={
-              services.some((s) => servicePrice(s).placeholder) ? "price" : undefined
-            }
-          >
-            <DoorField
-              columns={3}
-              className="w-full"
-              doors={services.map((s) => ({
-                href: `/services/${s.slug}`,
-                label: s.name,
-                line: s.shortDescription,
-                meta: `${LEAD_LABEL[s.lead]} · ${s.durationMinutes} min · ${servicePrice(s).text}`,
-              }))}
-            />
-          </div>
-        }
+        className="[&_.answer]:max-w-[40rem] [&>div>div]:max-w-[64rem]"
       >
+        <nav
+          aria-label={SERVICES_LIST.eyebrow}
+          data-placeholder={services.some((s) => servicePrice(s).placeholder) ? "price" : undefined}
+        >
+          <DoorField
+            columns={3}
+            className={ODD_LAST}
+            doors={services.map((s) => ({
+              href: `/services/${s.slug}`,
+              label: s.name,
+              line: s.shortDescription,
+              meta: doorMeta(s),
+            }))}
+          />
+        </nav>
         <p className="text-center font-serif text-[1.05rem] text-muted-foreground">
           Every service is available online worldwide.{" "}
           <Link href="/contact" className="text-accent-strong">

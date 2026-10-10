@@ -16,13 +16,16 @@ import {
 } from "@/components/content";
 import {
   Convergence,
+  DashaTimeline,
   Disc,
   FloorPlan,
   Instrument,
   KundliNav,
   NorthIndianChart,
   Ornament,
+  TransitArc,
   VastuCompass,
+  VastuDirections,
 } from "@/components/motifs";
 import { JsonLd } from "@/components/seo/json-ld";
 import { LeadBadge } from "@/components/services/lead-badge";
@@ -90,12 +93,17 @@ const SERVICE_TYPE = {
 const ROMAN = ["I", "II", "III", "IV", "V", "VI"] as const;
 
 /**
- * The lit house's label takes its planet's glow — the hover colour, held at rest. The shared rule
- * (doors.css) sets it to `--accent-strong`, which by day is brass-700 on the chart's night
- * interior and fails contrast; this keeps the label legible in both themes. Important because
- * doors.css is unlayered and outranks a utility.
+ * A door's meta from data — lead · minutes · price — with non-breaking spaces inside each part,
+ * so a narrow tile wraps only at the separators, never mid-phrase.
  */
-const LIT_LABEL = "[&_.kundli-house[data-lit]_.kundli-house-label]:fill-(--house-glow)!";
+function doorMeta(s: Service): string {
+  return [LEAD_LABEL[s.lead], `${s.durationMinutes} min`, servicePrice(s).text]
+    .map((part) => part.replace(/ /g, "\u00a0"))
+    .join(" · ");
+}
+
+/** On a phone the doors sit two by two; an odd last door takes the whole row. */
+const ODD_LAST = "max-md:[&>li:last-child:nth-child(odd)]:col-span-2";
 
 /** Plate I's instrument, by which instrument leads: both, the chart, or the plan. */
 function LeadFigure({ lead }: { lead: ServiceLead }) {
@@ -107,17 +115,39 @@ function LeadFigure({ lead }: { lead: ServiceLead }) {
 }
 
 /**
+ * Plate II's instrument — the part of the tradition that brings someone to this service, by
+ * lead: a slow transit for an integrated reading (a move, a hard stretch, a turning point), the
+ * dasha periods for an astrology-led one (when, not only what), the nine zones of the mandala
+ * for a vastu-led one. Drawn small; no line beneath.
+ */
+function WhoFigure({ lead }: { lead: ServiceLead }) {
+  if (lead === "astrology") {
+    return (
+      <div className="w-full max-w-[40rem] text-accent-strong">
+        <DashaTimeline tickEvery={10} />
+      </div>
+    );
+  }
+  return (
+    <div className="mx-auto w-full max-w-[18rem] text-accent-strong">
+      {lead === "vastu" ? <VastuDirections /> : <TransitArc />}
+    </div>
+  );
+}
+
+/**
  * Plate IV's instrument — what the inputs become. An integrated reading needs both the birth
- * details (the chart) and the plan (the home), drawn side by side as the table's two columns; a
- * vastu-led service needs a plan with north marked, so the compass rose. An astrology-led
- * service needs only birth details, whose instrument Plate I already draws — it gets none.
+ * details (the chart) and a plan with north marked: a small chart beside the compass rose, the
+ * table's two columns — not the chart-and-plan pair, which Plate VI's Convergence carries. A
+ * vastu-led service needs the plan's bearing, so the rose alone. An astrology-led service needs
+ * only birth details, whose instrument Plate I already draws — it gets none.
  */
 function prepareFigureFor({ detail, lead }: { detail: ServiceDetail; lead: ServiceLead }) {
   if (detail.whatToPrepare.table) {
     return (
-      <div className="grid w-full grid-cols-2 items-center gap-8 text-accent-strong sm:gap-16">
-        <NorthIndianChart className="mx-auto w-full max-w-[13rem]" />
-        <FloorPlan className="mx-auto w-full max-w-[13rem]" />
+      <div className="grid w-full grid-cols-2 items-center gap-8 text-accent-strong sm:gap-14">
+        <NorthIndianChart className="mx-auto w-full max-w-[9rem]" />
+        <VastuCompass className="mx-auto w-full max-w-[15rem]" />
       </div>
     );
   }
@@ -286,7 +316,7 @@ export default async function ServicePage({ params }: PageProps<"/services/[slug
     {
       node: React.ReactNode;
       line?: React.ReactNode;
-      width: "narrow" | "default";
+      width: "narrow" | "default" | "wide";
       ratio?: "2/1" | "1/1";
     }
   > = {
@@ -295,12 +325,13 @@ export default async function ServicePage({ params }: PageProps<"/services/[slug
       line: LEAD_LABEL[service.lead],
       width: "narrow",
     },
+    "who-it-is-for": { node: <WhoFigure lead={service.lead} />, width: "default" },
     ...(prepareFigure
       ? {
           "what-to-prepare": {
             node: prepareFigure,
             line: detail.whatToPrepare.table ? `${chartCol} · ${vastuCol}` : undefined,
-            width: detail.whatToPrepare.table ? ("default" as const) : ("narrow" as const),
+            width: "narrow" as const,
           },
         }
       : {}),
@@ -319,15 +350,7 @@ export default async function ServicePage({ params }: PageProps<"/services/[slug
         title={service.name}
         tagline={`Service · ${LEAD_LABEL[service.lead]}`}
         lede={detail.lede}
-        figure={
-          <KundliNav
-            houses={HUB.houses}
-            centre={HUB.centre}
-            lit={house?.n}
-            size="half"
-            className={LIT_LABEL}
-          />
-        }
+        figure={<KundliNav houses={HUB.houses} centre={HUB.centre} lit={house?.n} size="half" />}
         figureSize="half"
         figureRatio="3/2"
         breadcrumbs={[
@@ -376,7 +399,9 @@ export default async function ServicePage({ params }: PageProps<"/services/[slug
           ...sections.map((s, i) => ({
             id: s.id,
             n: ROMAN[i],
-            text: s.section.question.replace(/ with Astrologer Kavita\??$/, "").replace(/\?$/, ""),
+            // The section's own short key ("what it is", "who it is for"…): the full questions,
+            // set in tracked capitals, overflow the rail; each is the H2 just below anyway.
+            text: s.id.replace(/-/g, " "),
           })),
           { id: "faq", text: "FAQ" },
         ]}
@@ -409,13 +434,13 @@ export default async function ServicePage({ params }: PageProps<"/services/[slug
           <div id="related" className="mt-14 scroll-mt-20">
             <h2 className="note-q">{SERVICE_PAGE.related.heading}</h2>
             <DoorField
-              className="mt-8"
+              className={`mt-8 ${ODD_LAST}`}
               columns={3}
               doors={related.map((s) => ({
                 href: `/services/${s.slug}`,
                 label: s.name,
                 line: s.shortDescription,
-                meta: `${LEAD_LABEL[s.lead]} · ${s.durationMinutes} min · ${servicePrice(s).text}`,
+                meta: doorMeta(s),
               }))}
             />
           </div>
