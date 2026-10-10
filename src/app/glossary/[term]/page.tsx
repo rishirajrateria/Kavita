@@ -1,9 +1,23 @@
 import type { Metadata } from "next";
 import { applyPageSeo } from "@/lib/seo/page-seo";
 import { notFound } from "next/navigation";
-import { Byline, CtaBand, PageHero, Prose, QuestionSection } from "@/components/content";
-import { ArticleGrid, TermChips, definedTermSchema, learnMetadata } from "@/components/learn";
+import {
+  Byline,
+  CtaDisc,
+  FigureSection,
+  MotifSprite,
+  Prose,
+  SceneHero,
+} from "@/components/content";
+import {
+  ArticleGrid,
+  LearnFigure,
+  TermChips,
+  definedTermSchema,
+  learnMetadata,
+} from "@/components/learn";
 import { JsonLd } from "@/components/seo/json-ld";
+import { Container } from "@/components/ui/container";
 import { GLOSSARY } from "@/content/glossary";
 import { getArticlesForTerm, getGlossaryTerm, getRelatedTerms } from "@/lib/articles";
 import { getSiteUrl } from "@/lib/site";
@@ -36,9 +50,10 @@ export async function generateMetadata({
 }
 
 /**
- * `/glossary/[term]` — one term: the standalone short definition as the `.answer`, the fuller
- * definition, related terms, and the guides that use it. `DefinedTerm` JSON-LD points at the
- * `DefinedTermSet` on `/glossary`.
+ * `/glossary/[term]` — one term: its science's instrument as the hero, the standalone short
+ * definition as the `.answer`, the fuller definition visible in full, related terms as chip
+ * doors, the guides that use it as doors. `DefinedTerm` JSON-LD points at the `DefinedTermSet`
+ * on `/glossary`.
  */
 export default async function GlossaryTermPage({ params }: PageProps<"/glossary/[term]">) {
   const { term: slug } = await params;
@@ -50,19 +65,31 @@ export default async function GlossaryTermPage({ params }: PageProps<"/glossary/
   const related = getRelatedTerms(term);
   const articles = getArticlesForTerm(term.slug);
   const heading = term.term.replace(/\s*\(.*\)$/, "");
+  const route = `/glossary/${term.slug}`;
+  const vastu = term.category === "vastu";
 
   return (
     <>
       <JsonLd id="term-schema" data={definedTermSchema(term, siteUrl)} />
-      <PageHero
-        eyebrow={`Glossary · ${science}`}
+      <MotifSprite />
+      <SceneHero
         title={term.term}
+        titleFont="serif"
+        tagline={`Glossary · ${science}`}
         lede={`A ${science} term, defined by Astrologer Kavita: one standalone sentence, the fuller meaning, related terms, and the guides in which it is used.`}
-        motif={term.category === "vastu" ? "compass" : "north-chart"}
+        figure={
+          <LearnFigure
+            motif={vastu ? "compass" : "north-chart"}
+            size="small"
+            title={vastu ? "The vastu compass rose" : "A North Indian birth chart"}
+          />
+        }
+        figureSize="small"
+        figureRatio="1/1"
         breadcrumbs={[
           { name: "Learn", href: "/learn" },
           { name: "Glossary", href: "/glossary" },
-          { name: term.term, href: `/glossary/${term.slug}` },
+          { name: term.term, href: route },
         ]}
         entity={
           term.sanskrit ? (
@@ -77,38 +104,40 @@ export default async function GlossaryTermPage({ params }: PageProps<"/glossary/
         className="pb-8 sm:pb-10 lg:pb-12"
       />
 
-      <div className="mx-auto w-full max-w-wide px-gutter">
-        <Byline datePublished={term.dateModified} />
-      </div>
+      <Container size="wide">
+        <div className="mx-auto max-w-[40rem]">
+          <Byline datePublished={term.dateModified} withoutPhoto />
+        </div>
+      </Container>
 
-      <QuestionSection
+      <FigureSection
         id="definition"
-        route={`/glossary/${term.slug}`}
-        eyebrow="Definition"
+        route={route}
+        n="I"
         question={`What does ${heading.toLowerCase()} mean in ${science}?`}
         answer={`${term.short} Astrologer Kavita uses the term in this sense when reading a client's birth chart and home together, and defines it fully below.`}
-        layout="split"
+        className="pt-8 sm:pt-10"
       >
-        <Prose className="text-lg">
+        <Prose className="font-serif text-[1.25rem] leading-[1.7]">
           <p>{term.definition}</p>
         </Prose>
         <TermChips terms={related} label="Related terms" />
-      </QuestionSection>
+      </FigureSection>
 
       {articles.length > 0 ? (
-        <QuestionSection
+        <FigureSection
           id="articles"
-          route={`/glossary/${term.slug}`}
-          eyebrow="In use"
+          route={route}
+          n="II"
+          tone="muted"
           question={`Which guides use the term ${heading.toLowerCase()}?`}
           answer={`The guides below from Astrologer Kavita use ${heading.toLowerCase()} in context — in a worked explanation rather than a definition — so the meaning above can be seen doing its work. Each opens with a self-contained answer, defines every term on first use, and links back to this glossary entry where the term appears.`}
-          tone="muted"
         >
-          <ArticleGrid articles={articles} columns={3} />
-        </QuestionSection>
+          <ArticleGrid articles={articles} columns={2} caption="In use" captionAlign="start" />
+        </FigureSection>
       ) : null}
 
-      <CtaBand
+      <CtaDisc
         eyebrow="Next step"
         title="Would you like this read in your own chart and home?"
         body="A consultation with Astrologer Kavita explains every term as it arises in your own kundli and floor plan, online in your local hours, with a written summary afterwards."
@@ -116,7 +145,7 @@ export default async function GlossaryTermPage({ params }: PageProps<"/glossary/
         primaryLabel="Book a consultation"
         secondaryHref="/glossary"
         secondaryLabel="All glossary terms"
-        motif={term.category === "vastu" ? "compass" : "south-chart"}
+        motif={vastu ? "compass" : "south-chart"}
       />
     </>
   );

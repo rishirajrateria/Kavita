@@ -4,14 +4,24 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import {
   Byline,
-  CtaBand,
-  FaqBlock,
-  PageHero,
+  CtaDisc,
+  FigureSection,
+  Foot,
+  MotifSprite,
   Prose,
-  QuestionSection,
+  SceneHero,
   Toc,
 } from "@/components/content";
-import { ArticleGrid, TermChips, articleSchema, learnMetadata } from "@/components/learn";
+import {
+  ArticleGrid,
+  CENTRED_PLATE,
+  LearnFigure,
+  TermChips,
+  articleSchema,
+  learnCtaMotif,
+  learnFigureRatio,
+  learnMetadata,
+} from "@/components/learn";
 import { JsonLd } from "@/components/seo/json-ld";
 import { Container } from "@/components/ui/container";
 import { Section } from "@/components/ui/section";
@@ -49,9 +59,10 @@ export async function generateMetadata({
 }
 
 /**
- * `/learn/[category]/[slug]` — the article template: hero with breadcrumbs, E-E-A-T byline,
- * sticky table of contents, the MDX body (question H2s each with an `.answer`), the glossary
- * terms it uses, its FAQ (FAQPage JSON-LD), related reading, and the closing CTA. Article
+ * `/learn/[category]/[slug]` — the article: its category's instrument as the hero, the
+ * E-E-A-T byline, the sticky table of contents, then the MDX body visible in full (question
+ * H2s each with an `.answer`, untouched) in a 42rem measure beside the terms it uses as chip
+ * doors, the readers' questions in the foot, related reading as doors, and the disc. Article
  * JSON-LD names the practitioner as author. Everything is server-rendered HTML.
  */
 export default async function ArticlePage({ params }: PageProps<"/learn/[category]/[slug]">) {
@@ -72,11 +83,17 @@ export default async function ArticlePage({ params }: PageProps<"/learn/[categor
   return (
     <>
       <JsonLd id="article-schema" data={articleSchema({ article, siteUrl, authorName, terms })} />
-      <PageHero
-        eyebrow={`Learn · ${cat.name}`}
+      <MotifSprite />
+      <SceneHero
         title={article.title}
+        titleFont="serif"
+        tagline={`Learn · ${cat.name}`}
         lede={article.description}
-        motif={cat.motif}
+        figure={
+          <LearnFigure motif={cat.motif} size="small" title={`The instrument of ${cat.name}`} />
+        }
+        figureSize="small"
+        figureRatio={learnFigureRatio(cat.motif)}
         breadcrumbs={[
           { name: "Learn", href: "/learn" },
           { name: cat.name, href: `/learn/${cat.slug}` },
@@ -90,23 +107,25 @@ export default async function ArticlePage({ params }: PageProps<"/learn/[categor
           datePublished={article.datePublished}
           dateModified={article.dateModified}
           readingMinutes={article.readingMinutes}
+          withoutPhoto
         />
       </Container>
 
       <Toc items={article.toc} className="mt-6" />
 
       <Section as="article" spacing="lg" className="pt-10">
-        <Container size="wide" className="grid gap-12 lg:grid-cols-[minmax(0,1fr)_16rem] lg:gap-16">
-          <Prose className="min-w-0 text-lg [&_.answer]:my-6 [&_h2]:scroll-mt-32 [&_h3]:scroll-mt-32">
+        <Container
+          size="wide"
+          className="grid gap-12 lg:grid-cols-[minmax(0,42rem)_16rem] lg:justify-center lg:gap-16"
+        >
+          <Prose className="min-w-0 font-serif text-[1.25rem] leading-[1.7] [&_.answer]:my-6 [&_.answer]:text-[1.3rem] [&_.answer]:leading-[1.55] [&_figcaption]:font-sans [&_h2]:scroll-mt-32 [&_h3]:scroll-mt-32 [&_table]:font-sans">
             {body}
           </Prose>
           <aside className="space-y-8 border-t border-accent-border/50 pt-6 lg:sticky lg:top-32 lg:self-start lg:border-t-0 lg:border-l lg:pt-0 lg:pl-8">
             <TermChips terms={terms} label="Terms in this article" />
             <div className="space-y-3">
-              <p className="font-sans text-[0.68rem] font-semibold tracking-[0.14em] text-accent-strong uppercase">
-                About the author
-              </p>
-              <p className="text-sm leading-relaxed text-muted-foreground">
+              <p className="plate-n">About the author</p>
+              <p className="font-serif text-[1.05rem] leading-relaxed text-foreground/80">
                 {practitioner
                   ? `${practitioner} practises as Astrologer Kavita, reading`
                   : "Astrologer Kavita reads"}{" "}
@@ -125,27 +144,26 @@ export default async function ArticlePage({ params }: PageProps<"/learn/[categor
         </Container>
       </Section>
 
-      <FaqBlock
+      <Foot
         route={article.href}
         heading={`What do people ask about ${shortTopic(article.title)}?`}
         answer={`The questions below are the ones readers most often ask after this guide, each answered briefly by Astrologer Kavita. They cover the practical edge cases the main text does not dwell on, and every answer stands on its own so it can be read without the article — though the article explains the reasoning behind it.`}
-        items={article.faq}
-        tone="muted"
+        faqs={article.faq}
       />
 
       {related.length > 0 ? (
-        <QuestionSection
+        <FigureSection
           id="related"
           route={article.href}
-          eyebrow="Keep reading"
+          className={CENTRED_PLATE}
           question="What should you read next?"
           answer={`After this guide, Astrologer Kavita suggests the related articles below: they take up the questions this one raises — the companion topics in ${cat.name.toLowerCase()} and the neighbouring sections — and each opens, as this one does, with a self-contained answer and defines every term on first use.`}
         >
-          <ArticleGrid articles={related} columns={3} />
-        </QuestionSection>
+          <ArticleGrid articles={related} columns={3} spread caption="Keep reading" />
+        </FigureSection>
       ) : null}
 
-      <CtaBand
+      <CtaDisc
         eyebrow="Next step"
         title="Would you like this read against your own chart and home?"
         body="A consultation with Astrologer Kavita applies what this guide explains to your own kundli and floor plan — online, in your local hours, with a written summary afterwards."
@@ -153,7 +171,7 @@ export default async function ArticlePage({ params }: PageProps<"/learn/[categor
         primaryLabel="Book a consultation"
         secondaryHref={`/learn/${cat.slug}`}
         secondaryLabel={`More in ${cat.name.toLowerCase()}`}
-        motif={cat.motif === "compass" ? "compass" : "south-chart"}
+        motif={learnCtaMotif(cat.motif)}
       />
     </>
   );

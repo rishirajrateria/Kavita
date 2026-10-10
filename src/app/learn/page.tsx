@@ -1,9 +1,17 @@
 import type { Metadata } from "next";
 import { applyPageSeo } from "@/lib/seo/page-seo";
-import Link from "next/link";
-import { CtaBand, PageHero, QuestionSection } from "@/components/content";
-import { ArticleGrid, CategoryCard, GlossaryList, learnMetadata } from "@/components/learn";
-import { Button } from "@/components/ui/button";
+import { CtaDisc, FigureSection, MotifSprite, SceneHero } from "@/components/content";
+import {
+  ArticleGrid,
+  CENTRED_PLATE,
+  CategoryDoors,
+  DoorSpread,
+  GhostLink,
+  GlossaryList,
+  InstrumentRow,
+  LearnFigure,
+  learnMetadata,
+} from "@/components/learn";
 import { getArticleCategories, getArticles, getGlossaryTerms } from "@/lib/articles";
 import { getSiteUrl } from "@/lib/site";
 
@@ -25,7 +33,14 @@ export function generateMetadata(): Promise<Metadata> {
 
 const FEATURED_TERMS = ["kundli", "dasha", "lagna", "brahmasthan", "ishaan", "muhurat"];
 
-/** `/learn` — the library hub: categories with counts, latest articles, glossary teaser. */
+/**
+ * `/learn` — the library as doors. The astronomical lines open the page; then three plates in
+ * the order figure → line → question → answer → doors: the four sections under their four
+ * instruments, the six newest guides as a quiet ruled block (no instrument means them), and six
+ * of the glossary's terms under the chart and the compass rose; the parchment disc closes it.
+ * Server-rendered HTML throughout — every description, definition and link is served without
+ * JavaScript.
+ */
 export default function LearnPage() {
   const categories = getArticleCategories();
   const latest = getArticles().slice(0, 6);
@@ -33,68 +48,91 @@ export default function LearnPage() {
 
   return (
     <>
-      <PageHero
-        eyebrow="Learn · guides, articles and glossary"
+      <MotifSprite />
+      <SceneHero
         title={TITLE}
+        tagline="Learn · guides, articles and glossary"
         lede="Answers to the questions people actually ask about a birth chart and a home — written plainly, with every Sanskrit term defined the first time it appears, by the practitioner who reads both together."
-        motif="lines"
+        figure={
+          <LearnFigure
+            motif="lines"
+            size="wide"
+            title="Astronomical orbital linework"
+            description="Thin orbital arcs, ecliptic ticks and a few small bodies drawn in gold hairlines."
+          />
+        }
+        figureSize="wide"
+        figureRatio="16/9"
         breadcrumbs={[{ name: "Learn", href: "/learn" }]}
         actions={
           <>
-            <Button asChild variant="gold" size="xl">
-              <Link href="#categories">Browse the guides</Link>
-            </Button>
-            <Button asChild variant="ghost" size="xl">
-              <Link href="/glossary">
-                Glossary of terms
-                <span aria-hidden="true" data-arrow className="inline-block">
-                  →
-                </span>
-              </Link>
-            </Button>
+            <GhostLink href="#categories">Browse the guides</GhostLink>
+            <GhostLink href="/glossary">Glossary of terms</GhostLink>
           </>
         }
       />
 
-      <QuestionSection
+      <FigureSection
         route="/learn"
         id="categories"
-        eyebrow="Four sections"
+        n="I"
         question="What will you find in the Learn library?"
         answer="The Learn library from Astrologer Kavita holds four sections: astrology basics, vastu basics, how astrology and vastu work together, and how to prepare for a consultation. Each article answers one real question — is vastu applicable to apartments, do I need my exact birth time — in plain English, with every term defined."
+        figure={
+          <InstrumentRow
+            items={categories.map((c) => ({
+              motif: c.motif,
+              title: `The instrument of ${c.name}`,
+            }))}
+          />
+        }
+        figureWidth="default"
+        line="Four sections"
       >
-        <div className="grid gap-5 md:grid-cols-2">
-          {categories.map((c) => (
-            <CategoryCard key={c.slug} category={c} />
-          ))}
-        </div>
-      </QuestionSection>
+        <DoorSpread width="wide">
+          <CategoryDoors categories={categories} />
+        </DoorSpread>
+      </FigureSection>
 
-      <QuestionSection
+      <FigureSection
         route="/learn"
         id="latest"
-        eyebrow="Latest"
+        n="II"
+        tone="muted"
+        className={CENTRED_PLATE}
         question="Which guides are newest?"
         answer="The newest guides from Astrologer Kavita are listed below with the date each was last revised and its reading time. Every article is written for a first-time reader, opens each section with a self-contained answer, closes with the questions people most often ask, and links the terms it uses to the glossary."
-        tone="muted"
       >
-        <ArticleGrid articles={latest} />
-      </QuestionSection>
+        <ArticleGrid articles={latest} columns={3} spread />
+      </FigureSection>
 
-      <QuestionSection
+      <FigureSection
         route="/learn"
         id="glossary"
-        eyebrow="Glossary"
+        n="III"
         question="What do the terms in a reading actually mean?"
         answer="The glossary from Astrologer Kavita defines the terms a reading uses — kundli, dasha, lagna, nakshatra, brahmasthan, ishaan and others — in one short standalone sentence and one fuller definition each, noting where traditions differ and never promising an outcome. A few of the most-used terms are defined below; the full list has twenty-five."
+        figure={
+          <InstrumentRow
+            className="max-w-[24rem]"
+            items={[
+              { motif: "north-chart", title: "North Indian birth chart layout" },
+              { motif: "compass", title: "Vastu compass rose showing the eight directions" },
+            ]}
+          />
+        }
+        figureWidth="narrow"
+        line="Glossary"
       >
-        <GlossaryList terms={terms} />
-        <Button asChild variant="link" className="px-0">
-          <Link href="/glossary">See all glossary terms →</Link>
-        </Button>
-      </QuestionSection>
+        <DoorSpread>
+          <GlossaryList terms={terms} />
+        </DoorSpread>
+        <p className="text-center">
+          <GhostLink href="/glossary">See all glossary terms</GhostLink>
+        </p>
+      </FigureSection>
 
-      <CtaBand
+      <CtaDisc
         eyebrow="Beyond reading"
         title="Ready to have your chart and your home read together?"
         body="Reading is a good start; a consultation applies it to your own kundli and your own floor plan. Astrologer Kavita reads both in one session, online in your local hours, and sends a written summary afterwards."

@@ -1,10 +1,15 @@
 import type { Metadata } from "next";
 import { applyPageSeo } from "@/lib/seo/page-seo";
-import Link from "next/link";
-import { CtaBand, PageHero, QuestionSection } from "@/components/content";
-import { GlossaryList, definedTermSetSchema, learnMetadata } from "@/components/learn";
+import { CtaDisc, FigureSection, MotifSprite, SceneHero } from "@/components/content";
+import {
+  DoorSpread,
+  GhostLink,
+  GlossaryList,
+  LearnFigure,
+  definedTermSetSchema,
+  learnMetadata,
+} from "@/components/learn";
 import { JsonLd } from "@/components/seo/json-ld";
-import { Button } from "@/components/ui/button";
 import { getGlossaryTerms } from "@/lib/articles";
 import { getSiteUrl } from "@/lib/site";
 
@@ -24,7 +29,12 @@ export function generateMetadata(): Promise<Metadata> {
   return applyPageSeo(BASE_METADATA, "/glossary");
 }
 
-/** `/glossary` — every term grouped by science, with the short definitions in the HTML. */
+/**
+ * `/glossary` — every term grouped by science: each plate is that science's instrument (the
+ * North Indian chart for astrology, the compass rose for vastu) with the count ruled beneath,
+ * the question and its answer, then the terms as a ruled field of doors with every short
+ * definition visible in the HTML. The South Indian chart opens the page, the disc closes it.
+ */
 export default function GlossaryPage() {
   const siteUrl = getSiteUrl();
   const all = getGlossaryTerms();
@@ -34,54 +44,73 @@ export default function GlossaryPage() {
   return (
     <>
       <JsonLd id="glossary-schema" data={definedTermSetSchema(all, siteUrl)} />
-      <PageHero
-        eyebrow="Learn · Glossary"
+      <MotifSprite />
+      <SceneHero
         title={TITLE}
+        tagline="Learn · Glossary"
         lede="The words a reading uses, defined in one plain sentence and one fuller paragraph each. Where traditions differ, the entry says so; no entry promises an outcome."
-        motif="south-chart"
+        figure={
+          <LearnFigure motif="south-chart" size="half" title="South Indian birth chart layout" />
+        }
+        figureSize="half"
+        figureRatio="1/1"
         breadcrumbs={[
           { name: "Learn", href: "/learn" },
           { name: "Glossary", href: "/glossary" },
         ]}
         actions={
           <>
-            <Button asChild variant="gold" size="xl">
-              <Link href="#astrology">Astrology terms</Link>
-            </Button>
-            <Button asChild variant="ghost" size="xl">
-              <Link href="#vastu">
-                Vastu terms
-                <span aria-hidden="true" data-arrow className="inline-block">
-                  →
-                </span>
-              </Link>
-            </Button>
+            <GhostLink href="#astrology">Astrology terms</GhostLink>
+            <GhostLink href="#vastu">Vastu terms</GhostLink>
           </>
         }
       />
 
-      <QuestionSection
+      <FigureSection
         route="/glossary"
         id="astrology"
-        eyebrow={`${astrology.length} terms`}
+        n="I"
         question="What do the Vedic astrology terms in a reading mean?"
         answer="The Vedic astrology terms below — kundli, lagna, rashi, nakshatra, dasha, navamsa and the rest — are the vocabulary Astrologer Kavita uses when reading a birth chart. Each is defined here in one standalone sentence; the term's own page carries the fuller definition, related terms and the guides that use it."
+        figure={
+          <div className="aspect-square w-[min(100%,11rem)] md:w-[min(100%,18rem)]">
+            <LearnFigure motif="north-chart" size="plate" title="North Indian birth chart layout" />
+          </div>
+        }
+        figureWidth="narrow"
+        line={`${astrology.length} terms`}
       >
-        <GlossaryList terms={astrology} />
-      </QuestionSection>
+        <DoorSpread>
+          <GlossaryList terms={astrology} />
+        </DoorSpread>
+      </FigureSection>
 
-      <QuestionSection
+      <FigureSection
         route="/glossary"
         id="vastu"
-        eyebrow={`${vastu.length} terms`}
+        n="II"
+        tone="muted"
         question="What do the vastu shastra terms in a reading mean?"
         answer="The vastu shastra terms below — the vastu purusha mandala, the brahmasthan, and the four corner directions ishaan, agneya, nairutya and vayavya — are the vocabulary Astrologer Kavita uses when reading a home or workplace. Each is defined in one standalone sentence, with the fuller definition on the term's own page."
-        tone="muted"
+        figure={
+          <div className="aspect-square w-[min(100%,20rem)]">
+            <LearnFigure
+              motif="compass"
+              size="plate"
+              labels
+              title="Vastu compass rose showing the eight directions"
+            />
+          </div>
+        }
+        figureWidth="default"
+        line={`${vastu.length} terms`}
       >
-        <GlossaryList terms={vastu} />
-      </QuestionSection>
+        <DoorSpread>
+          <GlossaryList terms={vastu} />
+        </DoorSpread>
+      </FigureSection>
 
-      <CtaBand
+      <CtaDisc
         eyebrow="Beyond definitions"
         title="Would you like these terms applied to your own chart and home?"
         body="A consultation with Astrologer Kavita reads your kundli and your floor plan together, explains every term as it comes up, and leaves you with a written summary you can read against this glossary."
