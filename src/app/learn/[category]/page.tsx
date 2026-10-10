@@ -1,8 +1,15 @@
 import type { Metadata } from "next";
 import { applyPageSeo } from "@/lib/seo/page-seo";
 import { notFound } from "next/navigation";
-import { CtaBand, FaqBlock, PageHero, QuestionSection } from "@/components/content";
-import { ArticleGrid, learnMetadata } from "@/components/learn";
+import { CtaDisc, FigureSection, Foot, MotifSprite, SceneHero } from "@/components/content";
+import {
+  ArticleGrid,
+  LearnFigure,
+  articleGridWidth,
+  learnCtaMotif,
+  learnFigureRatio,
+  learnMetadata,
+} from "@/components/learn";
 import { ARTICLE_CATEGORIES, getArticleCategory } from "@/content/article-categories";
 import { getArticles, getCategoryFaqs } from "@/lib/articles";
 import { getSiteUrl } from "@/lib/site";
@@ -31,7 +38,11 @@ export async function generateMetadata({
   );
 }
 
-/** `/learn/[category]` — one section of the library: its articles and their FAQs. */
+/**
+ * `/learn/[category]` — one section of the library: its instrument as the hero, its guides as
+ * doors with the count ruled beneath and the section's question and answer under that, the
+ * readers' questions in the foot, the disc.
+ */
 export default async function CategoryPage({ params }: PageProps<"/learn/[category]">) {
   const { category } = await params;
   const cat = getArticleCategory(category);
@@ -39,39 +50,43 @@ export default async function CategoryPage({ params }: PageProps<"/learn/[catego
   const articles = getArticles(cat.slug);
   const faqs = getCategoryFaqs(cat.slug);
   const count = articles.length === 1 ? "one guide" : `${articles.length} guides`;
+  const route = `/learn/${cat.slug}`;
 
   return (
     <>
-      <PageHero
-        eyebrow={`Learn · ${cat.name}`}
+      <MotifSprite />
+      <SceneHero
         title={cat.name}
+        tagline={`Learn · ${cat.name}`}
         lede={cat.description}
-        motif={cat.motif}
+        figure={<LearnFigure motif={cat.motif} title={`The instrument of ${cat.name}`} />}
+        figureSize="small"
+        figureRatio={learnFigureRatio(cat.motif)}
         breadcrumbs={[
           { name: "Learn", href: "/learn" },
-          { name: cat.name, href: `/learn/${cat.slug}` },
+          { name: cat.name, href: route },
         ]}
       />
 
-      <QuestionSection
+      <FigureSection
         id="articles"
-        route={`/learn/${cat.slug}`}
-        eyebrow={count}
+        route={route}
+        n="I"
         question={cat.question}
         answer={cat.answer}
-      >
-        <ArticleGrid articles={articles} showCategory={false} />
-      </QuestionSection>
-
-      <FaqBlock
-        route={`/learn/${cat.slug}`}
-        heading={`What do readers ask about ${cat.name.toLowerCase()}?`}
-        answer={`These are the questions readers most often bring to the ${cat.name.toLowerCase()} guides, each answered in a few sentences by Astrologer Kavita. Every answer is drawn from the articles in this section, so the fuller explanation — with its tables, definitions and examples — is one click away in the guide it comes from.`}
-        items={faqs}
-        tone="muted"
+        figure={<ArticleGrid articles={articles} showCategory={false} columns={3} />}
+        figureWidth={articleGridWidth(articles.length)}
+        line={count}
       />
 
-      <CtaBand
+      <Foot
+        route={route}
+        heading={`What do readers ask about ${cat.name.toLowerCase()}?`}
+        answer={`These are the questions readers most often bring to the ${cat.name.toLowerCase()} guides, each answered in a few sentences by Astrologer Kavita. Every answer is drawn from the articles in this section, so the fuller explanation — with its tables, definitions and examples — is one click away in the guide it comes from.`}
+        faqs={faqs}
+      />
+
+      <CtaDisc
         eyebrow="Next step"
         title="Would you like this applied to your own chart and home?"
         body="A consultation with Astrologer Kavita takes what these guides explain and reads it against your kundli and your floor plan, online in your local hours, with a written summary afterwards."
@@ -79,7 +94,7 @@ export default async function CategoryPage({ params }: PageProps<"/learn/[catego
         primaryLabel="Book a consultation"
         secondaryHref="/learn"
         secondaryLabel="Back to all guides"
-        motif={cat.motif === "compass" ? "compass" : "south-chart"}
+        motif={learnCtaMotif(cat.motif)}
       />
     </>
   );

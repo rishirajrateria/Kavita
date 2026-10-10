@@ -1,57 +1,38 @@
-import Link from "next/link";
-import { Heading } from "@/components/ui/heading";
+import { DoorField, type Door } from "@/components/content";
 import type { GlossaryTerm } from "@/content/glossary";
 
+/** A term's door: the chart for an astrology term, the compass rose for a vastu term. */
+function termDoor(t: GlossaryTerm, withShort: boolean): Door {
+  return {
+    href: `/glossary/${t.slug}`,
+    label: t.term,
+    motif: t.category === "vastu" ? "compass" : "north-chart",
+    ...(withShort ? { line: t.short, meta: t.sanskrit } : {}),
+  };
+}
+
 /**
- * Ruled definition list of glossary terms — every `short` definition in the HTML, so the index
- * page itself answers "what is a dasha" without a click. Each term links to its own page.
+ * The glossary as a ruled field of doors — every `short` definition visible in the HTML, so the
+ * index page itself answers "what is a dasha" without a click. Two columns from tablet width;
+ * each term links to its own page and carries the instrument of its science. Rendered in a
+ * plate's `figure` slot, so it fills the figure's measure.
  */
 export function GlossaryList({ terms, id }: { terms: GlossaryTerm[]; id?: string }) {
   if (terms.length === 0) return null;
   return (
-    <dl id={id} className="divide-y divide-accent-border/40 border-y border-accent-border/40">
-      {terms.map((t) => (
-        <div key={t.slug} className="grid gap-2 py-5 sm:grid-cols-[14rem_1fr] sm:gap-8">
-          <dt>
-            <Heading as="span" level={4} className="text-xl">
-              <Link
-                href={`/glossary/${t.slug}`}
-                className="hover:text-accent-strong hover:underline hover:decoration-accent-border hover:underline-offset-4"
-              >
-                {t.term}
-              </Link>
-            </Heading>
-            {t.sanskrit ? (
-              <span className="block text-sm text-muted-foreground italic">{t.sanskrit}</span>
-            ) : null}
-          </dt>
-          <dd className="max-w-prose text-base leading-relaxed">{t.short}</dd>
-        </div>
-      ))}
-    </dl>
+    <div id={id} className="w-full">
+      <DoorField doors={terms.map((t) => termDoor(t, true))} variant="station" columns={2} />
+    </div>
   );
 }
 
-/** Compact inline list of term links (related terms, "terms used in this article"). */
+/** Inline chips of term links (related terms, "terms in this article") under a Cinzel caption. */
 export function TermChips({ terms, label }: { terms: GlossaryTerm[]; label: string }) {
   if (terms.length === 0) return null;
   return (
-    <div className="space-y-3">
-      <p className="font-sans text-[0.68rem] font-semibold tracking-[0.14em] text-accent-strong uppercase">
-        {label}
-      </p>
-      <ul className="flex flex-wrap gap-2">
-        {terms.map((t) => (
-          <li key={t.slug}>
-            <Link
-              href={`/glossary/${t.slug}`}
-              className="inline-flex min-h-9 items-center rounded-full border border-accent-border/60 px-3.5 font-serif text-base text-foreground transition-colors hover:border-accent-strong hover:text-accent-strong"
-            >
-              {t.term}
-            </Link>
-          </li>
-        ))}
-      </ul>
+    <div className="space-y-4">
+      <p className="plate-n">{label}</p>
+      <DoorField doors={terms.map((t) => termDoor(t, false))} variant="chip" />
     </div>
   );
 }
