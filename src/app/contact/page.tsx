@@ -1,12 +1,20 @@
 import type { Metadata } from "next";
 import { applyPageSeo } from "@/lib/seo/page-seo";
-import { Byline, CtaBand, FaqBlock, PageHero, QuestionSection } from "@/components/content";
+import {
+  Byline,
+  CtaDisc,
+  DoorField,
+  FigureSection,
+  Foot,
+  MotifSprite,
+  SceneHero,
+  type Door,
+} from "@/components/content";
 import { ContactForm } from "@/components/forms/contact-form";
 import { contactPointSchema } from "@/components/forms/contact-schema";
 import { statusFromSearchParams } from "@/components/forms/form-status";
-import { NapBlock } from "@/components/forms/nap-block";
+import { HoursFigure, NapBlock } from "@/components/forms/nap-block";
 import { JsonLd } from "@/components/seo/json-ld";
-import { Button } from "@/components/ui/button";
 import { Container } from "@/components/ui/container";
 import {
   CONTACT_CHANNELS,
@@ -21,6 +29,7 @@ import { PRACTITIONER } from "@/content/practitioner";
 import { getCountries, getSiteSettings } from "@/lib/data";
 import { postalAddressFromSettings } from "@/lib/seo/schema";
 import { getSiteUrl, mailtoHref, realValue, telHref, whatsappHref } from "@/lib/site";
+import { cn } from "@/lib/utils";
 
 const BASE_METADATA: Metadata = {
   title: { absolute: CONTACT_META.title },
@@ -39,7 +48,13 @@ export function generateMetadata(): Promise<Metadata> {
   return applyPageSeo(BASE_METADATA, "/contact");
 }
 
-/** Contact: channels from `site_settings`, NAP with microdata, form, map only with a real address. */
+/**
+ * Contact, in the language of the home hero (SPEC §3): the practitioner's hours on a 24-hour
+ * ring as the opening instrument, the real channels as a row of doors beneath it, the NAP on
+ * the page's one glass plate, the form, the notes, the disc. Channels come from
+ * `site_settings`; a map is embedded only with a real address. Every answer, every FAQ and
+ * every link is in the served HTML.
+ */
 export default async function ContactPage({ searchParams }: PageProps<"/contact">) {
   const sp = await searchParams;
   const [settings, countries] = await Promise.all([getSiteSettings(), getCountries()]);
@@ -60,6 +75,27 @@ export default async function ContactPage({ searchParams }: PageProps<"/contact"
         .join(", ")
     : null;
   const languages = realValue(PRACTITIONER.languages)?.split(/,\s*/);
+  const L = CONTACT_CHANNELS.labels;
+
+  // The stations: only channels with a real destination become doors; the form is always one.
+  const stations: Door[] = [];
+  if (wa) {
+    stations.push({
+      href: wa,
+      label: L.whatsapp,
+      line: realValue(settings.whatsapp),
+      motif: "ornament",
+    });
+  }
+  if (tel) stations.push({ href: tel, label: "Call", line: channels.phoneText, motif: "ornament" });
+  if (mail)
+    stations.push({ href: mail, label: L.email, line: channels.emailText, motif: "ornament" });
+  stations.push({
+    href: "#form",
+    label: CONTACT_FORM.eyebrow,
+    line: "Send a message",
+    motif: "ornament",
+  });
 
   return (
     <>
@@ -71,81 +107,85 @@ export default async function ContactPage({ searchParams }: PageProps<"/contact"
           areaServed: countries.map((c) => c.name),
         })}
       />
-      <PageHero
-        eyebrow={CONTACT_HERO.eyebrow}
+      <MotifSprite />
+
+      <SceneHero
+        id="contact-hero"
         title={CONTACT_HERO.title}
+        tagline={CONTACT_HERO.eyebrow}
         lede={CONTACT_HERO.lede}
-        motif="compass"
+        figure={<HoursFigure settings={settings} />}
+        figureSize="half"
+        figureRatio="1/1"
         breadcrumbs={[{ name: "Contact", href: "/contact" }]}
         actions={
-          <>
-            {wa ? (
-              <Button asChild variant="gold" size="xl">
-                <a href={wa} rel="noopener">
-                  WhatsApp
-                </a>
-              </Button>
-            ) : null}
-            {tel ? (
-              <Button asChild variant="gold-outline" size="xl">
-                <a href={tel}>Call</a>
-              </Button>
-            ) : null}
-            <Button asChild variant="ghost" size="xl">
-              <a href="#form">Send a message</a>
-            </Button>
-          </>
+          <DoorField
+            doors={stations}
+            variant="station"
+            columns={2}
+            className={cn(
+              "w-full border-b border-border/60",
+              stations.length > 1 ? "max-w-[40rem]" : "max-w-[18rem] grid-cols-1! text-left",
+            )}
+          />
         }
       />
       <Container size="wide">
-        <Byline datePublished={CONTACT_DATES.published} dateModified={CONTACT_DATES.modified} />
+        <Byline
+          datePublished={CONTACT_DATES.published}
+          dateModified={CONTACT_DATES.modified}
+          withoutPhoto
+        />
       </Container>
 
-      <QuestionSection
+      <FigureSection
         route="/contact"
         id={CONTACT_CHANNELS.id}
-        eyebrow={CONTACT_CHANNELS.eyebrow}
+        n="I"
         question={CONTACT_CHANNELS.question}
         answer={CONTACT_CHANNELS.answer}
-      >
-        <div className="grid gap-6 lg:grid-cols-[1.1fr_1fr] lg:gap-10">
-          <NapBlock settings={settings} />
-          {mapQuery ? (
-            <div className="overflow-hidden rounded-xl border border-accent-border/40">
-              <iframe
-                title={`Map of ${settings.brandName}`}
-                src={`https://www.google.com/maps?q=${encodeURIComponent(mapQuery)}&output=embed`}
-                loading="lazy"
-                referrerPolicy="no-referrer-when-downgrade"
-                className="aspect-[4/3] w-full"
-              />
+        line={CONTACT_CHANNELS.eyebrow}
+        figureWidth={mapQuery ? "wide" : "narrow"}
+        figure={
+          mapQuery ? (
+            <div className="grid w-full gap-6 lg:grid-cols-[1.1fr_1fr] lg:gap-10">
+              <NapBlock settings={settings} />
+              <div className="overflow-hidden rounded-xl border border-accent-border/40">
+                <iframe
+                  title={`Map of ${settings.brandName}`}
+                  src={`https://www.google.com/maps?q=${encodeURIComponent(mapQuery)}&output=embed`}
+                  loading="lazy"
+                  referrerPolicy="no-referrer-when-downgrade"
+                  className="aspect-[4/3] w-full"
+                />
+              </div>
             </div>
-          ) : null}
-        </div>
-      </QuestionSection>
-
-      <QuestionSection
-        route="/contact"
-        id="message"
-        eyebrow={CONTACT_FORM.eyebrow}
-        question={CONTACT_FORM.question}
-        answer={CONTACT_FORM.answer}
-        tone="muted"
-      >
-        <div className="max-w-[44rem]">
-          <ContactForm channels={channels} initialStatus={statusFromSearchParams(sp)} />
-        </div>
-      </QuestionSection>
-
-      <FaqBlock
-        route="/contact"
-        heading={CONTACT_FAQ.heading}
-        answer={CONTACT_FAQ.answer}
-        eyebrow={CONTACT_FAQ.eyebrow}
-        items={[...CONTACT_FAQ.items]}
+          ) : (
+            <NapBlock settings={settings} />
+          )
+        }
       />
 
-      <CtaBand
+      <FigureSection
+        route="/contact"
+        id="message"
+        n="II"
+        tone="muted"
+        question={CONTACT_FORM.question}
+        answer={CONTACT_FORM.answer}
+      >
+        <ContactForm channels={channels} initialStatus={statusFromSearchParams(sp)} />
+      </FigureSection>
+
+      <Foot
+        route="/contact"
+        eyebrow={CONTACT_FAQ.eyebrow}
+        heading={CONTACT_FAQ.heading}
+        answer={CONTACT_FAQ.answer}
+        faqs={[...CONTACT_FAQ.items]}
+      />
+
+      <CtaDisc
         title={CONTACT_CTA.title}
         body={CONTACT_CTA.body}
         primaryHref={CONTACT_CTA.primaryHref}

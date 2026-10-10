@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
 import { applyPageSeo } from "@/lib/seo/page-seo";
-import { Byline, CtaBand, PageHero, QuestionSection, Toc } from "@/components/content";
+import { Byline, CtaDisc, FigureSection, Rule, SceneHero, Toc } from "@/components/content";
 import { FaqGroup, type FaqSubgroup } from "@/components/faq/faq-group";
 import { FaqSearch } from "@/components/faq/faq-search";
+import { Instrument } from "@/components/motifs";
 import { JsonLd } from "@/components/seo/json-ld";
 import { Container } from "@/components/ui/container";
 import { ASTROLOGY_FAQ } from "@/content/pages/astrology";
@@ -37,8 +38,10 @@ export function generateMetadata(): Promise<Metadata> {
 
 /**
  * Master FAQ (CLAUDE.md §5): home, service, astrology, vastu and location questions in one
- * page, every answer in the HTML. The search box is the page's only client component and only
- * hides non-matching `<details>`.
+ * page, every answer in the HTML, in the language of the home hero (SPEC §3): the Instrument
+ * as the opening figure, the intro plate with the filter, then five groups in the ruled voice
+ * of the "Notes to the plates" foot. The search box is the page's only client component and
+ * only hides non-matching `<details>`.
  */
 export default async function FaqPage() {
   // Countries and featured cities only: every publishable location would put ~300 questions
@@ -89,27 +92,34 @@ export default async function FaqPage() {
   return (
     <>
       <JsonLd data={withSpeakable(faqPageSchema(all), [".answer"])} id="faq-schema" />
-      <PageHero
-        eyebrow={FAQ_HERO.eyebrow}
+      <SceneHero
+        id="faq-hero"
         title={FAQ_HERO.title}
+        tagline={FAQ_HERO.eyebrow}
         lede={FAQ_HERO.lede}
-        motif="lines"
+        figure={<Instrument />}
+        figureSize="small"
+        figureRatio="1/1"
         breadcrumbs={[{ name: "FAQ", href: "/faq" }]}
       />
       <Container size="wide">
-        <Byline datePublished={FAQ_DATES.published} dateModified={FAQ_DATES.modified} />
+        <Byline
+          datePublished={FAQ_DATES.published}
+          dateModified={FAQ_DATES.modified}
+          withoutPhoto
+        />
       </Container>
 
-      <QuestionSection
+      <FigureSection
         route="/faq"
         id={FAQ_INTRO.id}
-        eyebrow={FAQ_INTRO.eyebrow}
+        n="I"
         question={FAQ_INTRO.question}
         answer={FAQ_INTRO.answer}
-        spacing="md"
       >
+        <Rule tone="muted">{FAQ_INTRO.eyebrow}</Rule>
         <FaqSearch total={all.length} />
-      </QuestionSection>
+      </FigureSection>
 
       <Toc items={toc} />
 
@@ -156,7 +166,7 @@ export default async function FaqPage() {
         subgroups={locationGroups}
       />
 
-      <CtaBand
+      <CtaDisc
         title={FAQ_CTA.title}
         body={FAQ_CTA.body}
         primaryHref={FAQ_CTA.primaryHref}
