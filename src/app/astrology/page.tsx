@@ -196,7 +196,7 @@ export default async function AstrologyPage() {
         figure={<TransitArc className="text-accent-strong" />}
       >
         <Paragraphs section={ASTROLOGY_WHAT} />
-        <Ledger table={ASTROLOGY_VS_WESTERN} open stack />
+        <Ledger table={ASTROLOGY_VS_WESTERN} stack />
       </FigureSection>
 
       {/* Plate II — the kundli */}

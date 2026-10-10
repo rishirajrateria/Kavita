@@ -181,10 +181,23 @@ animation may add JavaScript to a page**; slow enough that a loop is never notic
   for the pointer. A single source: edit the SVG, re-render the PNG. Never redraw them flat.
 - Clicking a house warps into the page: `@view-transition { navigation: auto }` with a zoom-and-blur
   pair in globals.css. CSS-only and progressive; browsers without it just navigate.
-- The old home sections (`comparison`, `services-overview`, `how-it-works`, `serving`,
-  `testimonials-strip`, `method`, `key-facts`, `faq`, `final-cta`) are no longer rendered but
-  stay on disk because `question-heading` is shared with the geo pages; remove them when the
-  other pages are redesigned.
+- **Every page now speaks the hero's language (2026-10-10).** The client asked for "very visual,
+  not too much text, no compromise on aesthetics". Shared primitives in `src/components/content/`:
+  `SceneHero` (centred Cinzel H1, ruled tagline, one large instrument), `FigureSection` (a plate:
+  figure → one Cinzel line → question H2 → visible `.answer` → `More`/`Ledger` folds), `Foot`
+  ("Notes to the plates": quiet real H2s with their answers, then the FAQs), `CtaDisc` (the
+  parchment `Disc` as the closing call to action), `DoorField`/`Door` (every list of links is a
+  field of doors; a door's planet comes only from `HUB` via `hubHouseFor`), `CompassDoors`
+  (/vastu), `StepLine`, `Tablets` (testimonials, real rows only), `PortraitPlate`, `Orb`, `Rule`,
+  `More`, `Ledger`. New motifs: `Disc`, `Clocks`, `DashaRing`. Styles in `src/styles/scene.css`
+  and `src/styles/doors.css` (imported from globals.css; keep each under 300 lines).
+- **Folding rules.** Long elaboration sits in native `<details>` (`More`); secondary tables rest
+  folded (`Ledger`); every question H2 and its `.answer`, every FAQ, every link, legal text,
+  article and glossary prose, honesty lists and the geo pages' researched copy stay visible.
+  Before and after any page change, compare `h1`, `h2`, `.answer`, links, tables and words in the
+  served HTML; none may drop.
+- **By day the chart's interior stays night**, so labels on it use the night palette's golds in
+  both themes; door labels on parchment take `--accent-strong` on hover, never a pale planet glow.
 
 ## 5. Site map and URL structure
 

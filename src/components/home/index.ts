@@ -1,13 +1,4 @@
-export { Comparison } from "./comparison";
-export { FaqSection } from "./faq";
-export { FinalCta } from "./final-cta";
 export { Hero } from "./hero";
-export { HowItWorks } from "./how-it-works";
-export { KeyFacts } from "./key-facts";
-export { Method } from "./method";
-export { Serving } from "./serving";
-export { ServicesOverview } from "./services-overview";
-export { TestimonialsStrip } from "./testimonials-strip";
 export { Instruments } from "./instruments";
 export { Timing } from "./timing";
 export { Practitioner } from "./practitioner";
