@@ -199,7 +199,6 @@ export default async function ServicesPage() {
         className="[&>div>div]:max-w-[64rem]"
       >
         <Ledger
-          open
           summary={`Table · ${SERVICES_COMPARISON.caption.split(":")[0]}`}
           table={<ServicesComparisonTable services={services} />}
         />

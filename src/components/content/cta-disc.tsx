@@ -111,7 +111,7 @@ export async function CtaDisc({
           />
         </div>
         {secondary ? (
-          <p className="mt-10">
+          <p className="mt-14">
             {external ? (
               <a href={secondaryHref} rel="noopener" className={ghost}>
                 {secondary}

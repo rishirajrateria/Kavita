@@ -75,11 +75,18 @@ a.door:focus-visible,
 }
 /* The lit house of the chart (`KundliNav lit={n}`): a service page holds its own house in the
  * hover state at rest — a 14% glow and a gold label. A real hover still wins (globals.css later). */
+/* The chart's interior is night in both themes, so the lit label and wedge use the pale gold of
+ * the night palette by day as well (brass-700 on the interior was ~3.3:1). */
 .kundli-nav .kundli-house[data-lit] .kundli-house-fill {
-  fill: color-mix(in srgb, var(--house-glow, var(--accent-strong)) 14%, transparent);
+  fill: color-mix(in srgb, var(--brass-300) 16%, transparent);
 }
 .kundli-nav .kundli-house[data-lit] .kundli-house-label {
-  fill: var(--accent-strong);
+  fill: var(--brass-200);
+}
+/* At half size the centre disc is ~77px wide; the hub's fluid label would cross its rim. */
+.kundli-nav[data-size="half"] .kundli-centre {
+  font-size: 0.62rem;
+  letter-spacing: 0.08em;
 }
 
 .kundli-nav[data-size="half"] .kundli-house-label {
@@ -91,7 +98,6 @@ a.door:focus-visible,
 /* HTML doors (`DoorField`): a tile, a station row or a chip, each `<a class="door">` in reading
  * order; a planet drawing or a sprite symbol for the glyph, a halo behind it, the label, rule. */
 .door-field {
-  margin: 0;
   padding: 0;
   list-style: none;
   display: grid;
@@ -199,6 +205,13 @@ a.door:focus-visible,
 }
 .door[data-lit] .door-label {
   color: var(--door-glow, var(--accent-strong));
+}
+/* By day the planet and place glows are pale golds and creams on parchment (~1.3:1), so the
+ * label takes the deep brass accent instead; the glow stays in the halo and the tint. */
+:root[data-theme="light"] .door:hover .door-label,
+:root[data-theme="light"] .door:focus-visible .door-label,
+:root[data-theme="light"] .door[data-lit] .door-label {
+  color: var(--accent-strong);
 }
 .door[data-lit] .door-rule,
 .door:hover .door-rule,
