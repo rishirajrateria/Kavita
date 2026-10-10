@@ -1,38 +1,41 @@
-import { formatDisplayDate } from "@/components/content/byline";
-import { CtaBand } from "@/components/content/cta-band";
-import { PageHero } from "@/components/content/page-hero";
-import { Toc, type TocItem } from "@/components/content/toc";
+import { Fragment } from "react";
+import { CtaDisc, SceneHero, Toc, formatDisplayDate, type TocItem } from "@/components/content";
 import { Container } from "@/components/ui/container";
-import { Heading } from "@/components/ui/heading";
-import { Prose } from "@/components/ui/prose";
 import { Section } from "@/components/ui/section";
 import type { LegalDocument } from "@/content/legal";
-import { cn } from "@/lib/utils";
-import { LegalBlockView } from "./legal-blocks";
 import { getLegalContext } from "./context";
+import { LegalLines } from "./legal-lines";
+import { LegalDivider, LegalSection } from "./legal-section";
 
 /**
- * Shared layout of `/privacy`, `/terms` and `/disclaimer`: hero with breadcrumbs, an issued-by
- * / last-updated line, a sticky "On this page" list, and every section as an editorial split
- * — numbered question H2 on the left, `.answer` and body on the right, hairline rules between.
- * Server component; JSON-LD is the BreadcrumbList only (no FAQ/Article markup on legal text).
+ * Shared layout of `/privacy`, `/terms` and `/disclaimer` in the language of the home hero
+ * (SPEC §3): the astronomical linework as the one instrument under the Cinzel H1 and its ruled
+ * tagline, the lede and the issued-by line visible, the "On this page" rail, then every section
+ * as a numbered plate on one quiet pane — numeral, question H2, `.answer`, every block visible,
+ * the divider mark on a hairline between — and the parchment disc to close. Legal text is never
+ * folded. Server component; JSON-LD is the BreadcrumbList only (no FAQ/Article markup on legal text).
  */
 export async function LegalPage({ doc }: { doc: LegalDocument }) {
   const ctx = await getLegalContext();
-  const toc: TocItem[] = doc.sections.map((s) => ({
+  const toc: TocItem[] = doc.sections.map((s, i) => ({
     id: s.id,
     text: s.tocLabel ?? s.heading,
     level: 2,
+    n: String(i + 1).padStart(2, "0"),
   }));
   const modified = doc.dateModified !== doc.datePublished ? doc.dateModified : undefined;
 
   return (
     <>
-      <PageHero
-        eyebrow={`${doc.eyebrow} · ${ctx.brandName}`}
+      <SceneHero
         title={doc.title}
+        tagline={`${doc.eyebrow} · ${ctx.brandName}`}
         lede={doc.lede}
-        motif="lines"
+        figureSize="small"
+        figureRatio="16/9"
+        figure={
+          <LegalLines description="Thin orbital arcs around one central body, with the ecliptic drawn as a ticked arc across the frame." />
+        }
         breadcrumbs={[{ name: doc.title, href: `/${doc.slug}` }]}
         entity={
           <>
@@ -55,40 +58,19 @@ export async function LegalPage({ doc }: { doc: LegalDocument }) {
 
       <Toc items={toc} />
 
-      <Section spacing="none" className="pt-4 pb-12 sm:pb-16">
+      <Section as="div" tone="muted" spacing="none" className="pt-4 pb-12 sm:pb-16">
         <Container size="wide">
-          <div className="divide-y divide-accent-border/40">
-            {doc.sections.map((section, index) => (
-              <section
-                key={section.id}
-                id={section.id}
-                aria-labelledby={`${section.id}-heading`}
-                className="scroll-mt-32 py-12 sm:py-14 lg:grid lg:grid-cols-[minmax(0,1fr)_minmax(0,1.6fr)] lg:gap-16"
-              >
-                <div className="reveal mb-6 lg:mb-0">
-                  <Heading
-                    as="h2"
-                    level={2}
-                    id={`${section.id}-heading`}
-                    eyebrow={`Section ${String(index + 1).padStart(2, "0")}`}
-                    className="max-w-[22ch] lg:sticky lg:top-32"
-                  >
-                    {section.heading}
-                  </Heading>
-                </div>
-                <Prose unbounded className={cn("max-w-[42rem]")}>
-                  {section.answer ? <p className="answer">{section.answer}</p> : null}
-                  {section.blocks.map((block, i) => (
-                    <LegalBlockView key={`${section.id}-${i}`} block={block} />
-                  ))}
-                </Prose>
-              </section>
-            ))}
-          </div>
+          {doc.sections.map((section, index) => (
+            <Fragment key={section.id}>
+              {index > 0 ? <LegalDivider /> : null}
+              <LegalSection section={section} index={index} />
+            </Fragment>
+          ))}
         </Container>
       </Section>
 
-      <CtaBand
+      <CtaDisc
+        id="ask"
         eyebrow="Questions"
         title="Anything here you would like explained?"
         body={`${ctx.brandName} answers questions about how a consultation works, how birth details and floor plans are protected, and what a reading can and cannot do — before you book.`}
@@ -97,7 +79,6 @@ export async function LegalPage({ doc }: { doc: LegalDocument }) {
         secondaryHref="/services"
         secondaryLabel="See the services"
         motif="compass"
-        id="ask"
       />
     </>
   );
