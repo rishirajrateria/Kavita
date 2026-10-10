@@ -12,6 +12,7 @@ import {
 } from "@/components/content";
 import { AstronomicalLines } from "@/components/motifs";
 import { JsonLd } from "@/components/seo/json-ld";
+import { EyebrowPlate } from "@/components/testimonials/eyebrow-plate";
 import { TestimonialFilters } from "@/components/testimonials/filters";
 import { GhostLink } from "@/components/testimonials/ghost-link";
 import { loadTestimonialContext } from "@/components/testimonials/resolve";
@@ -53,10 +54,10 @@ const one = (v: string | string[] | undefined) => (typeof v === "string" && v ? 
 
 /**
  * All client experiences (CLAUDE.md §12), in the redesign's language (SPEC §3): the orbital
- * linework as the scene, a quiet ruled plate on how experiences are collected, then the
- * experiences themselves as levitating glass tablets — the picture of Plate II, with the
- * placeholder warning above them unchanged so the production build gate still trips. Filters
- * are plain links handled here on the server. The questions sit in the foot; the parchment disc
+ * linework as the scene, a quiet ruled plate on how experiences are collected, then Plate II:
+ * its question and answer, the filters (plain links handled here on the server), the
+ * placeholder warning unchanged so the production build gate still trips, and the experiences
+ * themselves as levitating glass tablets. The questions sit in the foot; the parchment disc
  * closes the page. Review / AggregateRating JSON-LD only when at least one real, consented
  * testimonial exists.
  */
@@ -144,31 +145,42 @@ export default async function TestimonialsPage({ searchParams }: PageProps<"/tes
         />
       </Container>
 
-      <FigureSection
-        route={ROUTE}
-        id={TESTIMONIALS_INTRO.id}
-        n="I"
-        question={TESTIMONIALS_INTRO.question}
-        answer={TESTIMONIALS_INTRO.answer}
-      >
-        <More>
-          {TESTIMONIALS_INTRO.body.map((p) => (
-            <p key={p}>{p}</p>
-          ))}
-        </More>
-      </FigureSection>
+      <EyebrowPlate eyebrow={TESTIMONIALS_INTRO.eyebrow}>
+        <FigureSection
+          route={ROUTE}
+          id={TESTIMONIALS_INTRO.id}
+          n="I"
+          className="pt-6!"
+          question={TESTIMONIALS_INTRO.question}
+          answer={TESTIMONIALS_INTRO.answer}
+        >
+          <More>
+            {TESTIMONIALS_INTRO.body.map((p) => (
+              <p key={p}>{p}</p>
+            ))}
+          </More>
+        </FigureSection>
+      </EyebrowPlate>
 
-      <FigureSection
-        route={ROUTE}
-        id={TESTIMONIALS_LIST.id}
-        n="II"
-        tone="muted"
-        question={TESTIMONIALS_LIST.question}
-        answer={TESTIMONIALS_LIST.answer}
-        figureWidth="wide"
-        line={TESTIMONIALS_LIST.eyebrow}
-        figure={
-          <div className="w-full space-y-8">
+      <EyebrowPlate eyebrow={TESTIMONIALS_LIST.eyebrow} tone="muted">
+        <FigureSection
+          route={ROUTE}
+          id={TESTIMONIALS_LIST.id}
+          n="II"
+          className="pt-6!"
+          question={TESTIMONIALS_LIST.question}
+          answer={TESTIMONIALS_LIST.answer}
+        >
+          {testimonials.length ? (
+            <TestimonialFilters
+              services={ctx.services}
+              regions={ctx.regions}
+              activeService={activeService}
+              activeRegion={activeRegion}
+            />
+          ) : null}
+          {/* Break out of the plate's 60ch column so the tablets keep their three-up grid. */}
+          <div className="relative left-1/2 w-[min(76rem,calc(100vw-2rem))] -translate-x-1/2 space-y-8 pt-4">
             {hasPlaceholders ? (
               <Callout
                 variant="warn"
@@ -180,22 +192,13 @@ export default async function TestimonialsPage({ searchParams }: PageProps<"/tes
             ) : null}
             <Tablets items={items} single={single} className={items.length ? "" : "mx-auto"} />
           </div>
-        }
-      >
-        {testimonials.length ? (
-          <TestimonialFilters
-            services={ctx.services}
-            regions={ctx.regions}
-            activeService={activeService}
-            activeRegion={activeRegion}
-          />
-        ) : null}
-        <p className="text-center">
-          <GhostLink href={TESTIMONIALS_LIST.shareLink.href}>
-            {TESTIMONIALS_LIST.shareLink.label}
-          </GhostLink>
-        </p>
-      </FigureSection>
+          <p className="pt-4 text-center">
+            <GhostLink href={TESTIMONIALS_LIST.shareLink.href}>
+              {TESTIMONIALS_LIST.shareLink.label}
+            </GhostLink>
+          </p>
+        </FigureSection>
+      </EyebrowPlate>
 
       <Foot
         route={ROUTE}

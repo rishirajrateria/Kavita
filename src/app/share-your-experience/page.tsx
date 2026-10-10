@@ -4,6 +4,7 @@ import { Byline, FigureSection, SceneHero } from "@/components/content";
 import { statusFromSearchParams } from "@/components/forms/form-status";
 import { TestimonialForm } from "@/components/forms/testimonial-form";
 import { AstronomicalLines } from "@/components/motifs";
+import { EyebrowPlate } from "@/components/testimonials/eyebrow-plate";
 import { Container } from "@/components/ui/container";
 import { Heading } from "@/components/ui/heading";
 import { Section } from "@/components/ui/section";
@@ -71,13 +72,16 @@ export default async function ShareYourExperiencePage({
         />
       </Container>
 
-      <FigureSection
-        route={ROUTE}
-        id={SHARE_INTRO.id}
-        n="I"
-        question={SHARE_INTRO.question}
-        answer={SHARE_INTRO.answer}
-      />
+      <EyebrowPlate eyebrow={SHARE_INTRO.eyebrow}>
+        <FigureSection
+          route={ROUTE}
+          id={SHARE_INTRO.id}
+          n="I"
+          className="pt-6!"
+          question={SHARE_INTRO.question}
+          answer={SHARE_INTRO.answer}
+        />
+      </EyebrowPlate>
 
       <Section id="share" spacing="lg" tone="muted" className="scroll-mt-20">
         <Container size="default">
