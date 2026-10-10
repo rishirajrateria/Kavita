@@ -162,7 +162,7 @@ export default async function AstrologyPage() {
               size="sm"
               href={ASTROLOGY_HERO.primaryCta.href}
               label={ASTROLOGY_HERO.primaryCta.label}
-              className="[&_.disc-link]:text-[0.58rem]"
+              className="[&_.disc-link]:px-[9%] [&_.disc-link]:text-[0.62rem] [&_.disc-link]:tracking-[0.1em]"
             />
             <Link href={ASTROLOGY_HERO.secondaryCta.href} className={GHOST}>
               {ASTROLOGY_HERO.secondaryCta.label}
@@ -226,8 +226,12 @@ export default async function AstrologyPage() {
         figureWidth="wide"
         line="120 years, nine periods"
         figure={
-          <div className="w-full">
-            <DashaTimeline tickEvery={10} travel className="text-accent-strong" />
+          <div className="relative mx-auto w-full max-sm:h-[24rem] max-sm:max-w-[17rem]">
+            {/* On a phone the rule stands upright (one SVG, turned a quarter) so every period
+                keeps a readable height and its name sits level with it. */}
+            <div className="max-sm:absolute max-sm:top-0 max-sm:left-[3.6rem] max-sm:w-[24rem] max-sm:origin-top-left max-sm:rotate-90">
+              <DashaTimeline tickEvery={10} travel className="text-accent-strong" />
+            </div>
             <DashaNames proportional />
           </div>
         }
@@ -250,9 +254,25 @@ export default async function AstrologyPage() {
         <Paragraphs section={ASTROLOGY_PREPARE} />
       </FigureSection>
 
-      {/* Plate VI — the reading, as steps on a ruled line */}
-      <FigureSection {...plate(ASTROLOGY_PROCESS, 5)}>
-        <StepLine steps={ASTROLOGY_STEPS.map((s) => ({ ...s }))} />
+      {/* Plate VI — the reading, as steps on a ruled line: the titles are the figure, the bodies fold */}
+      <FigureSection
+        {...plate(ASTROLOGY_PROCESS, 5)}
+        figureWidth="wide"
+        line={ASTROLOGY_PROCESS.eyebrow}
+        figure={
+          <StepLine className="w-full" steps={ASTROLOGY_STEPS.map(({ title }) => ({ title }))} />
+        }
+      >
+        <More summary="The steps in full">
+          <ol>
+            {ASTROLOGY_STEPS.map((s) => (
+              <li key={s.title}>
+                <h3>{s.title}</h3>
+                <p className="mt-2">{s.body}</p>
+              </li>
+            ))}
+          </ol>
+        </More>
       </FigureSection>
 
       {/* Plate VII — two drawings of one chart */}
@@ -288,26 +308,26 @@ export default async function AstrologyPage() {
       </FigureSection>
 
       {/* Plate IX — services as doors */}
-      <FigureSection
-        {...plate(ASTROLOGY_SERVICES, 8)}
-        tone="muted"
-        className="[&>div>div]:max-w-[64rem]"
-      >
-        <ServiceList services={own} allLink={ASTROLOGY_SERVICE_LABELS.allLink} />
+      <FigureSection {...plate(ASTROLOGY_SERVICES, 8)} tone="muted">
+        <Doorway>
+          <ServiceList services={own} allLink={ASTROLOGY_SERVICE_LABELS.allLink} columns={4} />
+        </Doorway>
       </FigureSection>
 
       {/* Plate X — where: country doors and the city list */}
-      <FigureSection {...plate(ASTROLOGY_WHERE, 9)} className="[&>div>div]:max-w-[64rem]">
-        <GeoLinkLists
-          service="astrologer"
-          countries={countries}
-          cities={cities}
-          linkLabel={ASTROLOGY_WHERE_LABELS.linkLabel}
-          headings={{
-            countries: ASTROLOGY_WHERE_LABELS.countries,
-            cities: ASTROLOGY_WHERE_LABELS.cities,
-          }}
-        />
+      <FigureSection {...plate(ASTROLOGY_WHERE, 9)}>
+        <Doorway>
+          <GeoLinkLists
+            service="astrologer"
+            countries={countries}
+            cities={cities}
+            linkLabel={ASTROLOGY_WHERE_LABELS.linkLabel}
+            headings={{
+              countries: ASTROLOGY_WHERE_LABELS.countries,
+              cities: ASTROLOGY_WHERE_LABELS.cities,
+            }}
+          />
+        </Doorway>
       </FigureSection>
 
       <Foot
@@ -348,6 +368,19 @@ function Paragraphs({ section }: { section: HubSection }) {
   );
 }
 
+/**
+ * Widens a door grid past the 40 rem prose column to 64 rem (inset 2 rem from the viewport on
+ * smaller screens), centred on it, so the H2 and its answer keep their measure while the doors
+ * get room. The service meta ("Astrology-led · 60 min") never breaks before its unit.
+ */
+function Doorway({ children }: { children: React.ReactNode }) {
+  return (
+    <div className="lg:mx-[calc(50%-min(32rem,50vw-2rem))] [&_.door-meta]:whitespace-nowrap">
+      {children}
+    </div>
+  );
+}
+
 /** An honesty or preparation list: a Cinzel heading and ruled Cormorant items, always visible. */
 function RuledList({ heading, items }: { heading: string; items: readonly string[] }) {
   return (
@@ -372,8 +405,9 @@ function RuledList({ heading, items }: { heading: string; items: readonly string
 
 /**
  * The nine periods named in HTML beneath a figure (never inside the SVG): an equal ruled row
- * under the ring in the hero, or sized to their segments under the timeline (`proportional`).
- * On a phone the names fall into a 3 × 3 grid rather than wrapping under the wrong segments.
+ * under the ring in the hero (a 3 × 3 grid on a phone; a little wider than the ring from 640 px
+ * so "Saturn" and "Mercury" never touch), or sized to their segments under the timeline
+ * (`proportional`) — on a phone a column ruled level with the upright rule beside it.
  */
 function DashaNames({ proportional = false }: { proportional?: boolean }) {
   const fractions = dashaSegmentFractions();
@@ -382,8 +416,8 @@ function DashaNames({ proportional = false }: { proportional?: boolean }) {
       aria-label="The nine planetary periods and their lengths in years"
       className={
         proportional
-          ? "mt-3 grid w-full grid-cols-3 gap-y-3 text-center sm:mt-1 sm:flex sm:gap-0"
-          : "grid w-full shrink-0 grid-cols-3 gap-y-1.5 border-t border-accent-border/40 pt-3 text-center sm:flex sm:gap-0"
+          ? "flex w-full text-center max-sm:absolute max-sm:inset-y-0 max-sm:right-0 max-sm:left-[4.75rem] max-sm:w-auto max-sm:flex-col max-sm:text-left sm:mt-1"
+          : "grid w-full shrink-0 grid-cols-3 gap-y-1.5 border-t border-accent-border/40 pt-3 text-center sm:flex sm:w-[calc(100%+3rem)] sm:gap-0 lg:w-[calc(100%+6rem)]"
       }
     >
       {VIMSHOTTARI_GRAHAS.map((key, i) => {
@@ -393,7 +427,7 @@ function DashaNames({ proportional = false }: { proportional?: boolean }) {
             key={key}
             className={
               proportional
-                ? "sm:min-w-0 sm:[flex:0_0_calc(var(--w)*100%)] sm:px-1"
+                ? "min-w-0 [flex:0_0_calc(var(--w)*100%)] max-sm:flex max-sm:items-center max-sm:gap-2 max-sm:border-t max-sm:border-accent-border/30 max-sm:last:border-b sm:px-1"
                 : "flex items-baseline justify-center gap-1.5 sm:block sm:flex-1"
             }
             style={
@@ -402,14 +436,10 @@ function DashaNames({ proportional = false }: { proportional?: boolean }) {
                 : undefined
             }
           >
-            <span
-              className={`font-display text-[0.62rem] font-semibold tracking-[0.18em] text-muted-foreground uppercase ${proportional ? "block" : "sm:block"}`}
-            >
+            <span className="font-display text-[0.62rem] font-semibold tracking-[0.18em] text-muted-foreground uppercase sm:block">
               {PLANETS[key].name}
             </span>
-            <span
-              className={`font-serif text-sm leading-snug text-muted-foreground ${proportional ? "block" : "sm:block"}`}
-            >
+            <span className="font-serif text-sm leading-none text-muted-foreground sm:block sm:leading-snug">
               {VIMSHOTTARI_YEARS[i]} yrs
             </span>
           </li>
